@@ -1,0 +1,54 @@
+{
+    "appData": {
+        "2025-08-04": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Bachelorarbeit schreiben",
+                    "note": "Hallo",
+                    "percentage": 0
+                }
+            ],
+            "workHours": 8
+        },
+        "2025-08-05": {
+            "status": "dokumentiert",
+            "workHours": 8,
+            "tags": [
+                {
+                    "name": "Analysieren",
+                    "percentage": 90,
+                    "note": "Hallo"
+                },
+                {
+                    "name": "Dokumentieren",
+                    "percentage": 30,
+                    "note": "Bye"
+                },
+                {
+                    "name": "Orga",
+                    "percentage": 300,
+                    "note": "Hallo"
+                }
+            ]
+        },
+        "2025-08-06": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 8
+        }
+    },
+    "tagCategoryMap": {
+        "Analysieren": "Analyse",
+        "Bachelorarbeit schreiben": "Dokumentation",
+        "Berechnen (Herleiten)": "Analyse",
+        "Dokumentieren": "Dokumentation",
+        "Meetings": "Organisation",
+        "Messen": "Technik",
+        "Planung": "Organisation",
+        "Programmieren": "Technik",
+        "Soziales": "Soziales",
+        "Tabellen ausfüllen": "Dokumentation",
+        "Orga": "Dokumentation"
+    }
+}

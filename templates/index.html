@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tägliche Dokumentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+        }
+        .tag-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .tag-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        #notification {
+            transition: opacity 0.5s, transform 0.5s;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Notification Element -->
+    <div id="notification" class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50">
+        Eine Nachricht
+    </div>
+
+    <div class="container mx-auto p-4 md:p-6 lg:p-8">
+
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation</h1>
+            <p class="text-lg text-gray-600 mt-2">Erfasse und analysiere deine täglichen Aktivitäten.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Linke Spalte: Steuerung & Berichte -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Kalender & Steuerung -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Steuerung</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum auswählen</label>
+                            <input type="date" id="date-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="status-select" class="block text-sm font-medium text-gray-700">Tagesstatus</label>
+                            <select id="status-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                                <option value="dokumentiert">Dokumentiert ✔</option>
+                                <option value="urlaub">Urlaub 🌴</option>
+                                <option value="krank">Krank 🤒</option>
+                                <option value="abwesend">Abwesend 🚶</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label for="work-hours" class="block text-sm font-medium text-gray-700">Arbeitssollzeit (Stunden)</label>
+                            <input type="number" id="work-hours" value="8" min="0" max="24" step="0.5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Berichte -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Berichte</h2>
+                    <div class="space-y-2">
+                        <button id="generate-week-report" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Wochenbericht erstellen</button>
+                        <button id="generate-month-report" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Monatsbericht erstellen</button>
+                        <button id="generate-all-report" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Gesamtbericht erstellen</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rechte Spalte: Tageseintrag & Tag-Bibliothek -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Tageseintrag -->
+                <div id="main-content-panel" class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex justify-between items-center border-b pb-2 mb-4">
+                        <h2 class="text-2xl font-bold">Eintrag für <span id="current-date-display"></span></h2>
+                        <div class="text-right">
+                             <p class="text-lg font-semibold">Gesamt: <span id="total-percentage">0</span>%</p>
+                             <p id="percentage-warning" class="text-red-500 text-sm hidden">Summe überschreitet 100%!</p>
+                        </div>
+                    </div>
+
+                    <div id="daily-tags-container" class="space-y-4 mb-4">
+                        <!-- Tägliche Tags werden hier per JS eingefügt -->
+                    </div>
+
+                    <div class="mt-6 text-right">
+                        <button id="save-day-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-lg">Tag speichern</button>
+                    </div>
+                </div>
+
+                <!-- Tag-Bibliothek -->
+                <div id="tag-library-container" class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Tag-Bibliothek</h2>
+                    <div id="tag-library" class="flex flex-wrap gap-2 mb-4">
+                        <!-- Tags werden hier per JS eingefügt -->
+                    </div>
+                    <div class="space-y-2">
+                        <input type="text" id="new-tag-input" placeholder="Name des neuen Tags" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        <div class="flex gap-2">
+                            <select id="new-tag-category" class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                                <!-- Kategorien werden hier per JS eingefügt -->
+                            </select>
+                            <button id="add-new-tag-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramm-Steuerung -->
+        <div class="mt-8 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">Diagramm-Zeitraum</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                <div>
+                    <label for="diagram-start-date" class="block text-sm font-medium text-gray-700">Startdatum</label>
+                    <input type="date" id="diagram-start-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
+                <div>
+                    <label for="diagram-end-date" class="block text-sm font-medium text-gray-700">Enddatum</label>
+                    <input type="date" id="diagram-end-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
+                <button id="update-diagram-btn" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Diagramme aktualisieren</button>
+            </div>
+        </div>
+
+
+        <!-- Diagramme -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold mb-4">Tätigkeiten im Zeitraum</h2>
+                <div class="chart-container">
+                    <canvas id="weekly-bar-chart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold mb-4">Kategorien im Zeitraum</h2>
+                <div class="chart-container">
+                    <canvas id="weekly-radar-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // --- DOM-Elemente ---
+            const datePicker = document.getElementById('date-picker');
+            const currentDateDisplay = document.getElementById('current-date-display');
+            const statusSelect = document.getElementById('status-select');
+            const workHoursInput = document.getElementById('work-hours');
+            const dailyTagsContainer = document.getElementById('daily-tags-container');
+            const totalPercentageEl = document.getElementById('total-percentage');
+            const percentageWarning = document.getElementById('percentage-warning');
+            const saveDayBtn = document.getElementById('save-day-btn');
+            const tagLibrary = document.getElementById('tag-library');
+            const newTagInput = document.getElementById('new-tag-input');
+            const newTagCategorySelect = document.getElementById('new-tag-category');
+            const addNewTagBtn = document.getElementById('add-new-tag-btn');
+            const generateWeekReportBtn = document.getElementById('generate-week-report');
+            const generateMonthReportBtn = document.getElementById('generate-month-report');
+            const generateAllReportBtn = document.getElementById('generate-all-report');
+            const notificationEl = document.getElementById('notification');
+            const mainContentPanel = document.getElementById('main-content-panel');
+            const tagLibraryContainer = document.getElementById('tag-library-container');
+            const diagramStartDateInput = document.getElementById('diagram-start-date');
+            const diagramEndDateInput = document.getElementById('diagram-end-date');
+            const updateDiagramBtn = document.getElementById('update-diagram-btn');
+
+
+            // --- Anwendungsstatus & Daten ---
+            let appData = {};
+            let tagCategoryMap = {};
+            let weeklyBarChart, weeklyRadarChart;
+            const CATEGORIES = ['Technik', 'Analyse', 'Dokumentation', 'Organisation', 'Soziales', 'Sonstiges'];
+            const CATEGORY_COLORS = {
+                'Technik': 'rgba(255, 99, 132, 0.6)',
+                'Analyse': 'rgba(54, 162, 235, 0.6)',
+                'Dokumentation': 'rgba(255, 206, 86, 0.6)',
+                'Organisation': 'rgba(75, 192, 192, 0.6)',
+                'Soziales': 'rgba(153, 102, 255, 0.6)',
+                'Sonstiges': 'rgba(255, 159, 64, 0.6)'
+            };
+
+            // --- Initialisierung ---
+            async function init() {
+                await loadDataFromServer(); // Load data from server first
+                initializeDefaultTags();
+                populateCategorySelect();
+                renderTagLibrary();
+
+                const today = new Date().toISOString().split('T')[0];
+                datePicker.value = today;
+
+                datePicker.addEventListener('change', () => loadDay(datePicker.value));
+                statusSelect.addEventListener('change', handleStatusChange);
+                saveDayBtn.addEventListener('click', saveCurrentDay);
+                addNewTagBtn.addEventListener('click', addNewTag);
+                newTagInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewTag(); });
+
+                generateWeekReportBtn.addEventListener('click', handleGenerateWeekReport);
+                generateMonthReportBtn.addEventListener('click', handleGenerateMonthReport);
+                generateAllReportBtn.addEventListener('click', handleGenerateAllReport);
+                updateDiagramBtn.addEventListener('click', updateCharts);
+
+                initCharts();
+                setInitialDiagramDates();
+                loadDay(today);
+            }
+
+            // --- Benachrichtigungen ---
+            function showNotification(message, isError = false) {
+                notificationEl.textContent = message;
+                notificationEl.classList.toggle('bg-green-500', !isError);
+                notificationEl.classList.toggle('bg-red-500', isError);
+                notificationEl.classList.remove('opacity-0', 'translate-x-full');
+                setTimeout(() => { notificationEl.classList.add('opacity-0', 'translate-x-full'); }, 3000);
+            }
+
+            // --- Datenmanagement (Server) ---
+            async function loadDataFromServer() {
+                try {
+                    const response = await fetch('/load');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    appData = data.appData || {};
+                    tagCategoryMap = data.tagCategoryMap || {};
+                    showNotification("Daten vom Server geladen.", false);
+                } catch (e) {
+                    console.error("Fehler beim Laden der Daten vom Server:", e);
+                    showNotification("Keine Verbindung zum Server. Starte das Python-Skript.", true);
+                    appData = {};
+                    tagCategoryMap = {};
+                }
+            }
+
+            async function saveDataToServer() {
+                const dataToSave = { appData, tagCategoryMap };
+                try {
+                    const response = await fetch('/save', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dataToSave),
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const result = await response.json();
+                    showNotification(result.message || "Daten gespeichert!", false);
+                } catch (e) {
+                     console.error("Fehler beim Speichern der Daten auf dem Server:", e);
+                     showNotification("Speichern fehlgeschlagen. Läuft der Server?", true);
+                }
+            }
+
+            function initializeDefaultTags() {
+                const defaultTags = {
+                    'Messen': 'Technik', 'Programmieren': 'Technik',
+                    'Analysieren': 'Analyse', 'Berechnen (Herleiten)': 'Analyse',
+                    'Dokumentieren': 'Dokumentation', 'Tabellen ausfüllen': 'Dokumentation', 'Bachelorarbeit schreiben': 'Dokumentation',
+                    'Planung': 'Organisation', 'Meetings': 'Organisation',
+                    'Soziales': 'Soziales'
+                };
+                for (const [tag, category] of Object.entries(defaultTags)) {
+                    if (!tagCategoryMap[tag]) tagCategoryMap[tag] = category;
+                }
+            }
+
+            function populateCategorySelect() {
+                newTagCategorySelect.innerHTML = '';
+                CATEGORIES.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    newTagCategorySelect.appendChild(option);
+                });
+            }
+
+            // --- Tageslogik ---
+            function loadDay(dateString) {
+                currentDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                dailyTagsContainer.innerHTML = '';
+                const dayData = appData[dateString] || { status: 'dokumentiert', workHours: 8, tags: [] };
+                appData[dateString] = dayData;
+                statusSelect.value = dayData.status;
+                workHoursInput.value = dayData.workHours;
+                dayData.tags.forEach(tag => renderDailyTag(tag.name, tag.percentage, tag.note));
+                updateTotalPercentage();
+                handleStatusChange();
+                updateCharts();
+            }
+
+            function saveCurrentDay() {
+                const dateString = datePicker.value;
+                const dailyTags = [];
+                dailyTagsContainer.querySelectorAll('.daily-tag-item').forEach(item => {
+                    const name = item.dataset.tagName;
+                    const percentage = parseInt(item.querySelector('.tag-percentage-input').value, 10) || 0;
+                    const note = item.querySelector('.tag-note-input').value.trim();
+                    if(name) dailyTags.push({ name, percentage, note });
+                });
+                appData[dateString] = {
+                    status: statusSelect.value,
+                    workHours: parseFloat(workHoursInput.value) || 8,
+                    tags: dailyTags,
+                };
+                saveDataToServer();
+                updateCharts();
+            }
+
+            function handleStatusChange() {
+                const isDocumented = statusSelect.value === 'dokumentiert';
+                mainContentPanel.style.opacity = isDocumented ? '1' : '0.5';
+                mainContentPanel.querySelectorAll('input, textarea, button').forEach(el => el.disabled = !isDocumented);
+                saveDayBtn.disabled = false;
+                tagLibraryContainer.style.opacity = isDocumented ? '1' : '0.5';
+            }
+
+            // --- Tag-Management ---
+            function renderTagLibrary() {
+                tagLibrary.innerHTML = '';
+                const sortedTags = Object.keys(tagCategoryMap).sort();
+                sortedTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.textContent = tag;
+                    button.title = `Kategorie: ${tagCategoryMap[tag]}`;
+                    button.className = 'tag-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium py-1 px-3 rounded-full';
+                    button.onclick = () => addTagToDay(tag);
+                    tagLibrary.appendChild(button);
+                });
+            }
+
+            function addNewTag() {
+                const tagName = newTagInput.value.trim();
+                const category = newTagCategorySelect.value;
+                if (tagName && !tagCategoryMap.hasOwnProperty(tagName)) {
+                    tagCategoryMap[tagName] = category;
+                    renderTagLibrary();
+                    saveDataToServer();
+                    showNotification(`Tag "${tagName}" hinzugefügt.`);
+                } else if (tagName) {
+                    showNotification(`Der Tag "${tagName}" existiert bereits.`, true);
+                }
+                newTagInput.value = '';
+            }
+
+            function addTagToDay(tagName) {
+                const existingTags = Array.from(dailyTagsContainer.querySelectorAll('.daily-tag-item')).map(el => el.dataset.tagName);
+                if (existingTags.includes(tagName)) {
+                    showNotification(`Tag "${tagName}" wurde bereits hinzugefügt.`, true);
+                    return;
+                }
+                renderDailyTag(tagName, 0, '');
+            }
+
+            function renderDailyTag(name, percentage, note) {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'daily-tag-item p-3 rounded-lg bg-gray-50 border border-gray-200';
+                tagEl.dataset.tagName = name;
+                tagEl.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="flex-grow font-semibold">${name}</div>
+                        <input type="number" value="${percentage}" min="0" max="100" class="tag-percentage-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1">
+                        <span class="text-gray-500">%</span>
+                        <button class="remove-tag-btn text-red-500 hover:text-red-700 font-bold text-xl">&times;</button>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" class="tag-note-input block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-1.5" placeholder="Notiz für diese Tätigkeit..." value="${note || ''}">
+                    </div>
+                `;
+                tagEl.querySelector('.tag-percentage-input').addEventListener('input', updateTotalPercentage);
+                tagEl.querySelector('.remove-tag-btn').addEventListener('click', () => { tagEl.remove(); updateTotalPercentage(); });
+                dailyTagsContainer.appendChild(tagEl);
+            }
+
+            function updateTotalPercentage() {
+                let total = 0;
+                dailyTagsContainer.querySelectorAll('.tag-percentage-input').forEach(input => { total += parseInt(input.value, 10) || 0; });
+                totalPercentageEl.textContent = total;
+                totalPercentageEl.classList.toggle('text-red-500', total > 100);
+                percentageWarning.classList.toggle('hidden', total <= 100);
+            }
+
+            // --- Diagramme ---
+            function setInitialDiagramDates() {
+                const today = new Date();
+                const dayOfWeek = today.getDay();
+                const firstDayOfWeek = new Date(today);
+                firstDayOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+                const lastDayOfWeek = new Date(firstDayOfWeek);
+                lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+
+                diagramStartDateInput.value = firstDayOfWeek.toISOString().split('T')[0];
+                diagramEndDateInput.value = lastDayOfWeek.toISOString().split('T')[0];
+            }
+
+            function initCharts() {
+                const pointColors = CATEGORIES.map(cat => CATEGORY_COLORS[cat] || 'rgba(201, 203, 207, 0.6)');
+
+                const barCtx = document.getElementById('weekly-bar-chart').getContext('2d');
+                weeklyBarChart = new Chart(barCtx, { type: 'bar', data: { labels: [], datasets: [] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}%` } } } } });
+
+                const radarCtx = document.getElementById('weekly-radar-chart').getContext('2d');
+                weeklyRadarChart = new Chart(radarCtx, { type: 'radar', data: { labels: CATEGORIES, datasets: [{ label: 'Fokus', data: [], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: pointColors, pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: pointColors }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, suggestedMax: 50 } }, elements: { line: { tension: 0.1 } } } });
+            }
+
+            function getPeriodDataForCharts(startDateStr, endDateStr) {
+                const data = {};
+                if (!startDateStr || !endDateStr) return data;
+
+                let currentDate = new Date(startDateStr + 'T00:00:00');
+                const endDate = new Date(endDateStr + 'T00:00:00');
+
+                while(currentDate <= endDate) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    if (appData[dateStr]) {
+                        data[dateStr] = appData[dateStr];
+                    }
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                return data;
+            }
+
+            function updateCharts() {
+                const periodData = getPeriodDataForCharts(diagramStartDateInput.value, diagramEndDateInput.value);
+
+                // Bar chart
+                const periodLabels = Object.keys(periodData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }));
+                const allPeriodTags = new Set();
+                Object.values(periodData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allPeriodTags.add(t.name)); });
+
+                weeklyBarChart.data.labels = periodLabels;
+                weeklyBarChart.data.datasets = Array.from(allPeriodTags).map(tag => ({
+                    label: tag,
+                    data: Object.keys(periodData).map(date => {
+                        const day = periodData[date];
+                        if (!day || day.status !== 'dokumentiert') return 0;
+                        const dayTag = day.tags.find(t => t.name === tag);
+                        return dayTag ? dayTag.percentage : 0;
+                    }),
+                    backgroundColor: getRandomColor(tag),
+                }));
+                weeklyBarChart.update();
+
+                // Radar chart
+                const categoryTotals = CATEGORIES.reduce((acc, cat) => ({...acc, [cat]: 0}), {});
+                let totalDays = 0;
+                Object.values(periodData).forEach(day => {
+                    if (day && day.status === 'dokumentiert') {
+                        totalDays++;
+                        day.tags.forEach(tag => {
+                            const category = tagCategoryMap[tag.name];
+                            if (category) categoryTotals[category] += tag.percentage;
+                        });
+                    }
+                });
+
+                // Average percentage per day for the period
+                const avgCategoryData = totalDays > 0 ? Object.values(categoryTotals).map(total => total / totalDays) : [];
+                weeklyRadarChart.data.datasets[0].data = avgCategoryData;
+                weeklyRadarChart.update();
+            }
+
+            function getRandomColor(seed) {
+                let hash = 0;
+                for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+                let color = '#';
+                for (let i = 0; i < 3; i++) color += ('00' + ((hash >> (i * 8)) & 0xFF).toString(16)).substr(-2);
+                return color + 'B3';
+            }
+
+            // --- Berichtsgenerator ---
+            function getPeriodData(baseDateString, periodType) {
+                let startDate, endDate;
+                const baseDate = new Date(baseDateString + 'T00:00:00');
+
+                if (periodType === 'week') {
+                    const dayOfWeek = baseDate.getDay();
+                    startDate = new Date(baseDate);
+                    startDate.setDate(baseDate.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + 6);
+                } else if (periodType === 'month') {
+                    startDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+                    endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 0);
+                } else { // 'all'
+                    const allDates = Object.keys(appData).sort();
+                    if (allDates.length === 0) return { data: {}, firstDay: null, lastDay: null };
+                    startDate = new Date(allDates[0] + 'T00:00:00');
+                    endDate = new Date(allDates[allDates.length - 1] + 'T00:00:00');
+                }
+
+                const data = {};
+                let currentDate = new Date(startDate);
+                while(currentDate <= endDate) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    if (appData[dateStr]) {
+                        data[dateStr] = appData[dateStr];
+                    }
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                return { data, firstDay: startDate.toISOString().split('T')[0], lastDay: endDate.toISOString().split('T')[0] };
+            }
+
+            function handleGenerateWeekReport() {
+                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'week');
+                generateReport('Wochenbericht', data, firstDay, lastDay);
+            }
+
+            function handleGenerateMonthReport() {
+                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'month');
+                generateReport('Monatsbericht', data, firstDay, lastDay);
+            }
+
+            function handleGenerateAllReport() {
+                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'all');
+                generateReport('Gesamtbericht', data, firstDay, lastDay);
+            }
+
+            async function generateReport(reportTitle, reportData, firstDay, lastDay) {
+                if (!firstDay || !lastDay || Object.keys(reportData).length === 0) {
+                    showNotification("Keine Daten für den Bericht vorhanden.", true);
+                    return;
+                }
+
+                const tempBarCanvas = document.createElement('canvas');
+                tempBarCanvas.width = 800; tempBarCanvas.height = 400;
+                const tempRadarCanvas = document.createElement('canvas');
+                tempRadarCanvas.width = 500; tempRadarCanvas.height = 500;
+
+                const allReportTags = new Set();
+                Object.values(reportData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allReportTags.add(t.name)); });
+
+                const barDatasets = Array.from(allReportTags).map(tag => ({
+                    label: tag,
+                    data: Object.keys(reportData).map(date => {
+                        const day = reportData[date];
+                        if (!day || day.status !== 'dokumentiert') return 0;
+                        const dayTag = day.tags.find(t => t.name === tag);
+                        return dayTag ? dayTag.percentage : 0;
+                    }),
+                    backgroundColor: getRandomColor(tag),
+                }));
+
+                const barChartImg = await new Promise(resolve => {
+                    new Chart(tempBarCanvas, {
+                        type: 'bar',
+                        data: { labels: Object.keys(reportData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })), datasets: barDatasets },
+                        options: { responsive: false, animation: false, plugins: { legend: { display: allReportTags.size <= 10 } } }
+                    });
+                     // Use a timeout to ensure canvas is rendered before getting image
+                    setTimeout(() => resolve(tempBarCanvas.toDataURL('image/png')), 500);
+                });
+
+                const categoryTotals = CATEGORIES.reduce((acc, cat) => ({...acc, [cat]: 0}), {});
+                Object.values(reportData).forEach(day => {
+                    if (day && day.status === 'dokumentiert') {
+                        day.tags.forEach(tag => {
+                            const category = tagCategoryMap[tag.name];
+                            if (category) categoryTotals[category] += tag.percentage;
+                        });
+                    }
+                });
+                const pointColors = CATEGORIES.map(cat => CATEGORY_COLORS[cat] || 'rgba(201, 203, 207, 0.6)');
+                const radarChartImg = await new Promise(resolve => {
+                     new Chart(tempRadarCanvas, {
+                        type: 'radar',
+                        data: { labels: CATEGORIES, datasets: [{ label: 'Fokus', data: Object.values(categoryTotals), pointBackgroundColor: pointColors, }] },
+                        options: { responsive: false, animation: false, }
+                    });
+                    setTimeout(() => resolve(tempRadarCanvas.toDataURL('image/png')), 500);
+                });
+
+                let dailyDetailsHtml = '';
+                Object.keys(reportData).sort().forEach(date => {
+                    const dayData = reportData[date];
+                    const dayDate = new Date(date + 'T00:00:00');
+                    let detailHtml = `<div class="mb-6 p-4 border rounded-lg break-inside-avoid"><h3 class="text-xl font-bold">${dayDate.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</h3>`;
+                    if (!dayData || dayData.status !== 'dokumentiert') {
+                        const statusText = dayData ? {urlaub: 'Urlaub', krank: 'Krank', abwesend: 'Abwesend'}[dayData.status] : 'Kein Eintrag';
+                        detailHtml += `<p class="text-gray-500 italic">${statusText}</p>`;
+                    } else {
+                        detailHtml += '<ul class="list-disc list-inside">';
+                        dayData.tags.forEach(tag => {
+                            if(tag.percentage > 0) {
+                                detailHtml += `<li><strong>${tag.name}:</strong> ${tag.percentage}%`;
+                                if (tag.note) {
+                                    detailHtml += `<div class="pl-6 text-sm text-gray-600">${tag.note}</div>`;
+                                }
+                                detailHtml += `</li>`;
+                            }
+                        });
+                        detailHtml += '</ul>';
+                    }
+                    detailHtml += `</div>`;
+                    dailyDetailsHtml += detailHtml;
+                });
+
+                const reportHtml = `
+                    <!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>${reportTitle}</title>
+                    <script src="https://cdn.tailwindcss.com/"><\/script>
+                    <style> body { font-family: sans-serif; } @media print { .no-print { display: none; } } </style>
+                    </head><body class="bg-gray-100 p-8"><div class="max-w-4xl mx-auto bg-white p-10 rounded-lg shadow-lg">
+                    <button onclick="window.print()" class="no-print fixed top-4 right-4 bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-600">Drucken</button>
+                    <h1 class="text-4xl font-bold text-center mb-2">${reportTitle}</h1>
+                    <p class="text-center text-gray-600 text-lg mb-8">${new Date(firstDay).toLocaleDateString('de-DE')} - ${new Date(lastDay).toLocaleDateString('de-DE')}</p>
+                    <h2 class="text-2xl font-bold mt-10 mb-4 border-b pb-2">Visuelle Auswertung</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div><h3 class="font-bold text-center mb-2">Tätigkeiten</h3><img src="${barChartImg}" alt="Balkendiagramm"></div>
+                        <div><h3 class="font-bold text-center mb-2">Kategorien-Fokus</h3><img src="${radarChartImg}" alt="Spinnendiagramm"></div>
+                    </div>
+                    <h2 class="text-2xl font-bold mt-10 mb-4 border-b pb-2">Tagesdetails</h2>
+                    ${dailyDetailsHtml}</div></body></html>`;
+
+                const reportWindow = window.open('', '_blank');
+                reportWindow.document.write(reportHtml);
+                reportWindow.document.close();
+            }
+
+            // --- Start the app ---
+            init();
+        });
+    </script>
+</body>
+</html>
