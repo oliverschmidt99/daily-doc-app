@@ -41,6 +41,13 @@
         #notification {
             transition: opacity 0.5s, transform 0.5s;
         }
+        .nav-arrow {
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .nav-arrow:hover {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -101,10 +108,14 @@
                 <!-- Tageseintrag -->
                 <div id="main-content-panel" class="bg-white p-6 rounded-xl shadow-md">
                     <div class="flex justify-between items-center border-b pb-2 mb-4">
-                        <h2 class="text-2xl font-bold">Eintrag für <span id="current-date-display"></span></h2>
+                        <div class="flex items-center gap-4">
+                             <svg id="prev-day-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                             <h2 class="text-2xl font-bold text-center">Eintrag für <span id="current-date-display"></span></h2>
+                             <svg id="next-day-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </div>
                         <div class="text-right">
-                             <p class="text-lg font-semibold">Gesamt: <span id="total-percentage">0</span>%</p>
-                             <p id="percentage-warning" class="text-red-500 text-sm hidden">Summe überschreitet 100%!</p>
+                             <p class="text-lg font-semibold">Gesamt: <span id="total-hours">0</span>h</p>
+                             <p class="text-sm text-gray-500"><span id="total-percentage">0</span>%</p>
                         </div>
                     </div>
 
@@ -138,33 +149,35 @@
 
         <!-- Diagramm-Steuerung -->
         <div class="mt-8 bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-bold mb-4 border-b pb-2">Diagramm-Zeitraum</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                <div>
-                    <label for="diagram-start-date" class="block text-sm font-medium text-gray-700">Startdatum</label>
-                    <input type="date" id="diagram-start-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">Diagramm-Ansicht</h2>
+            <div class="flex items-center gap-4 mb-4">
+                <label><input type="radio" name="diagram-view" value="week" checked class="mr-1">Wochenansicht</label>
+                <label><input type="radio" name="diagram-view" value="day" class="mr-1">Tagesansicht</label>
+            </div>
+            <div id="diagram-controls">
+                <div id="week-view-controls">
+                    <label for="diagram-week-picker" class="block text-sm font-medium text-gray-700">Kalenderwoche auswählen</label>
+                    <input type="week" id="diagram-week-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
-                <div>
-                    <label for="diagram-end-date" class="block text-sm font-medium text-gray-700">Enddatum</label>
-                    <input type="date" id="diagram-end-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                <div id="day-view-controls" class="hidden">
+                    <label for="diagram-day-picker" class="block text-sm font-medium text-gray-700">Tag auswählen</label>
+                    <input type="date" id="diagram-day-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
-                <button id="update-diagram-btn" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Diagramme aktualisieren</button>
             </div>
         </div>
-
 
         <!-- Diagramme -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <h2 class="text-xl font-bold mb-4">Tätigkeiten im Zeitraum</h2>
+                <h2 id="bar-chart-title" class="text-xl font-bold mb-4">Tätigkeiten</h2>
                 <div class="chart-container">
-                    <canvas id="weekly-bar-chart"></canvas>
+                    <canvas id="bar-chart"></canvas>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <h2 class="text-xl font-bold mb-4">Kategorien im Zeitraum</h2>
+                <h2 id="radar-chart-title" class="text-xl font-bold mb-4">Kategorien</h2>
                 <div class="chart-container">
-                    <canvas id="weekly-radar-chart"></canvas>
+                    <canvas id="radar-chart"></canvas>
                 </div>
             </div>
         </div>
@@ -178,8 +191,8 @@
             const statusSelect = document.getElementById('status-select');
             const workHoursInput = document.getElementById('work-hours');
             const dailyTagsContainer = document.getElementById('daily-tags-container');
+            const totalHoursEl = document.getElementById('total-hours');
             const totalPercentageEl = document.getElementById('total-percentage');
-            const percentageWarning = document.getElementById('percentage-warning');
             const saveDayBtn = document.getElementById('save-day-btn');
             const tagLibrary = document.getElementById('tag-library');
             const newTagInput = document.getElementById('new-tag-input');
@@ -191,28 +204,30 @@
             const notificationEl = document.getElementById('notification');
             const mainContentPanel = document.getElementById('main-content-panel');
             const tagLibraryContainer = document.getElementById('tag-library-container');
-            const diagramStartDateInput = document.getElementById('diagram-start-date');
-            const diagramEndDateInput = document.getElementById('diagram-end-date');
-            const updateDiagramBtn = document.getElementById('update-diagram-btn');
-
+            const prevDayBtn = document.getElementById('prev-day-btn');
+            const nextDayBtn = document.getElementById('next-day-btn');
+            const diagramViewRadios = document.querySelectorAll('input[name="diagram-view"]');
+            const weekViewControls = document.getElementById('week-view-controls');
+            const dayViewControls = document.getElementById('day-view-controls');
+            const diagramWeekPicker = document.getElementById('diagram-week-picker');
+            const diagramDayPicker = document.getElementById('diagram-day-picker');
+            const barChartTitle = document.getElementById('bar-chart-title');
+            const radarChartTitle = document.getElementById('radar-chart-title');
 
             // --- Anwendungsstatus & Daten ---
             let appData = {};
             let tagCategoryMap = {};
-            let weeklyBarChart, weeklyRadarChart;
+            let barChart, radarChart;
             const CATEGORIES = ['Technik', 'Analyse', 'Dokumentation', 'Organisation', 'Soziales', 'Sonstiges'];
             const CATEGORY_COLORS = {
-                'Technik': 'rgba(255, 99, 132, 0.6)',
-                'Analyse': 'rgba(54, 162, 235, 0.6)',
-                'Dokumentation': 'rgba(255, 206, 86, 0.6)',
-                'Organisation': 'rgba(75, 192, 192, 0.6)',
-                'Soziales': 'rgba(153, 102, 255, 0.6)',
-                'Sonstiges': 'rgba(255, 159, 64, 0.6)'
+                'Technik': 'rgba(255, 99, 132, 0.6)', 'Analyse': 'rgba(54, 162, 235, 0.6)',
+                'Dokumentation': 'rgba(255, 206, 86, 0.6)', 'Organisation': 'rgba(75, 192, 192, 0.6)',
+                'Soziales': 'rgba(153, 102, 255, 0.6)', 'Sonstiges': 'rgba(255, 159, 64, 0.6)'
             };
 
             // --- Initialisierung ---
             async function init() {
-                await loadDataFromServer(); // Load data from server first
+                await loadDataFromServer();
                 initializeDefaultTags();
                 populateCategorySelect();
                 renderTagLibrary();
@@ -226,10 +241,16 @@
                 addNewTagBtn.addEventListener('click', addNewTag);
                 newTagInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewTag(); });
 
+                prevDayBtn.addEventListener('click', () => changeDay(-1));
+                nextDayBtn.addEventListener('click', () => changeDay(1));
+
                 generateWeekReportBtn.addEventListener('click', handleGenerateWeekReport);
                 generateMonthReportBtn.addEventListener('click', handleGenerateMonthReport);
                 generateAllReportBtn.addEventListener('click', handleGenerateAllReport);
-                updateDiagramBtn.addEventListener('click', updateCharts);
+
+                diagramViewRadios.forEach(radio => radio.addEventListener('change', handleDiagramViewChange));
+                diagramWeekPicker.addEventListener('change', updateCharts);
+                diagramDayPicker.addEventListener('change', updateCharts);
 
                 initCharts();
                 setInitialDiagramDates();
@@ -257,8 +278,6 @@
                 } catch (e) {
                     console.error("Fehler beim Laden der Daten vom Server:", e);
                     showNotification("Keine Verbindung zum Server. Starte das Python-Skript.", true);
-                    appData = {};
-                    tagCategoryMap = {};
                 }
             }
 
@@ -281,11 +300,10 @@
 
             function initializeDefaultTags() {
                 const defaultTags = {
-                    'Messen': 'Technik', 'Programmieren': 'Technik',
-                    'Analysieren': 'Analyse', 'Berechnen (Herleiten)': 'Analyse',
-                    'Dokumentieren': 'Dokumentation', 'Tabellen ausfüllen': 'Dokumentation', 'Bachelorarbeit schreiben': 'Dokumentation',
-                    'Planung': 'Organisation', 'Meetings': 'Organisation',
-                    'Soziales': 'Soziales'
+                    'Messen': 'Technik', 'Programmieren': 'Technik', 'Analysieren': 'Analyse',
+                    'Berechnen (Herleiten)': 'Analyse', 'Dokumentieren': 'Dokumentation',
+                    'Tabellen ausfüllen': 'Dokumentation', 'Bachelorarbeit schreiben': 'Dokumentation',
+                    'Planung': 'Organisation', 'Meetings': 'Organisation', 'Soziales': 'Soziales'
                 };
                 for (const [tag, category] of Object.entries(defaultTags)) {
                     if (!tagCategoryMap[tag]) tagCategoryMap[tag] = category;
@@ -303,15 +321,26 @@
             }
 
             // --- Tageslogik ---
+            function changeDay(offset) {
+                const parts = datePicker.value.split('-').map(Number);
+                const currentDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+                currentDate.setUTCDate(currentDate.getUTCDate() + offset);
+                const year = currentDate.getUTCFullYear();
+                const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getUTCDate()).padStart(2, '0');
+                datePicker.value = `${year}-${month}-${day}`;
+                loadDay(datePicker.value);
+            }
+
             function loadDay(dateString) {
-                currentDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                currentDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
                 dailyTagsContainer.innerHTML = '';
                 const dayData = appData[dateString] || { status: 'dokumentiert', workHours: 8, tags: [] };
                 appData[dateString] = dayData;
                 statusSelect.value = dayData.status;
                 workHoursInput.value = dayData.workHours;
-                dayData.tags.forEach(tag => renderDailyTag(tag.name, tag.percentage, tag.note));
-                updateTotalPercentage();
+                dayData.tags.forEach(tag => renderDailyTag(tag.name, tag.time, tag.note));
+                updateTotals();
                 handleStatusChange();
                 updateCharts();
             }
@@ -321,9 +350,9 @@
                 const dailyTags = [];
                 dailyTagsContainer.querySelectorAll('.daily-tag-item').forEach(item => {
                     const name = item.dataset.tagName;
-                    const percentage = parseInt(item.querySelector('.tag-percentage-input').value, 10) || 0;
+                    const time = parseFloat(item.querySelector('.tag-time-input').value) || 0;
                     const note = item.querySelector('.tag-note-input').value.trim();
-                    if(name) dailyTags.push({ name, percentage, note });
+                    if(name) dailyTags.push({ name, time, note });
                 });
                 appData[dateString] = {
                     status: statusSelect.value,
@@ -379,113 +408,168 @@
                 renderDailyTag(tagName, 0, '');
             }
 
-            function renderDailyTag(name, percentage, note) {
+            function renderDailyTag(name, time, note) {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'daily-tag-item p-3 rounded-lg bg-gray-50 border border-gray-200';
                 tagEl.dataset.tagName = name;
                 tagEl.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="flex-grow font-semibold">${name}</div>
-                        <input type="number" value="${percentage}" min="0" max="100" class="tag-percentage-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1">
-                        <span class="text-gray-500">%</span>
+                        <input type="number" value="${time || 0}" min="0" step="0.25" class="tag-time-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1">
+                        <span class="text-gray-500">h</span>
+                        <span class="tag-percentage-display text-sm text-gray-500 w-12 text-right">0%</span>
                         <button class="remove-tag-btn text-red-500 hover:text-red-700 font-bold text-xl">&times;</button>
                     </div>
                     <div class="mt-2">
                         <input type="text" class="tag-note-input block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-1.5" placeholder="Notiz für diese Tätigkeit..." value="${note || ''}">
                     </div>
                 `;
-                tagEl.querySelector('.tag-percentage-input').addEventListener('input', updateTotalPercentage);
-                tagEl.querySelector('.remove-tag-btn').addEventListener('click', () => { tagEl.remove(); updateTotalPercentage(); });
+                tagEl.querySelector('.tag-time-input').addEventListener('input', updateTotals);
+                tagEl.querySelector('.remove-tag-btn').addEventListener('click', () => { tagEl.remove(); updateTotals(); });
                 dailyTagsContainer.appendChild(tagEl);
             }
 
-            function updateTotalPercentage() {
+            function updateTotals() {
                 let total = 0;
-                dailyTagsContainer.querySelectorAll('.tag-percentage-input').forEach(input => { total += parseInt(input.value, 10) || 0; });
-                totalPercentageEl.textContent = total;
-                totalPercentageEl.classList.toggle('text-red-500', total > 100);
-                percentageWarning.classList.toggle('hidden', total <= 100);
+                dailyTagsContainer.querySelectorAll('.tag-time-input').forEach(input => { total += parseFloat(input.value) || 0; });
+                totalHoursEl.textContent = total.toFixed(2);
+
+                dailyTagsContainer.querySelectorAll('.daily-tag-item').forEach(item => {
+                    const timeInput = item.querySelector('.tag-time-input');
+                    const percentageDisplay = item.querySelector('.tag-percentage-display');
+                    const time = parseFloat(timeInput.value) || 0;
+                    const percentage = total > 0 ? (time / total) * 100 : 0;
+                    percentageDisplay.textContent = `${percentage.toFixed(0)}%`;
+                });
+
+                const totalPercentage = Array.from(dailyTagsContainer.querySelectorAll('.tag-percentage-display'))
+                    .reduce((sum, el) => sum + parseFloat(el.textContent.replace('%','')), 0);
+                totalPercentageEl.textContent = `${totalPercentage.toFixed(0)}%`;
             }
 
             // --- Diagramme ---
+            function getWeekNumber(d) {
+                d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+                d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+                var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                return [d.getUTCFullYear(), weekNo];
+            }
+
             function setInitialDiagramDates() {
                 const today = new Date();
-                const dayOfWeek = today.getDay();
-                const firstDayOfWeek = new Date(today);
-                firstDayOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+                const [year, week] = getWeekNumber(today);
+                diagramWeekPicker.value = `${year}-W${String(week).padStart(2, '0')}`;
+                diagramDayPicker.value = today.toISOString().split('T')[0];
+                updateCharts();
+            }
 
-                const lastDayOfWeek = new Date(firstDayOfWeek);
-                lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-
-                diagramStartDateInput.value = firstDayOfWeek.toISOString().split('T')[0];
-                diagramEndDateInput.value = lastDayOfWeek.toISOString().split('T')[0];
+            function handleDiagramViewChange(event) {
+                const isWeekView = event.target.value === 'week';
+                weekViewControls.classList.toggle('hidden', !isWeekView);
+                dayViewControls.classList.toggle('hidden', isWeekView);
+                updateCharts();
             }
 
             function initCharts() {
+                const barCtx = document.getElementById('bar-chart').getContext('2d');
+                barChart = new Chart(barCtx, { type: 'bar', options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}h` } } } } });
+
+                const radarCtx = document.getElementById('radar-chart').getContext('2d');
                 const pointColors = CATEGORIES.map(cat => CATEGORY_COLORS[cat] || 'rgba(201, 203, 207, 0.6)');
-
-                const barCtx = document.getElementById('weekly-bar-chart').getContext('2d');
-                weeklyBarChart = new Chart(barCtx, { type: 'bar', data: { labels: [], datasets: [] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}%` } } } } });
-
-                const radarCtx = document.getElementById('weekly-radar-chart').getContext('2d');
-                weeklyRadarChart = new Chart(radarCtx, { type: 'radar', data: { labels: CATEGORIES, datasets: [{ label: 'Fokus', data: [], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: pointColors, pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: pointColors }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, suggestedMax: 50 } }, elements: { line: { tension: 0.1 } } } });
+                radarChart = new Chart(radarCtx, { type: 'radar', data: { labels: CATEGORIES, datasets: [{ label: 'Fokus (Durchschnitt pro Tag)', data: [], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: pointColors, pointBorderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, suggestedMax: 4 } }, elements: { line: { tension: 0.1 } } } });
             }
 
-            function getPeriodDataForCharts(startDateStr, endDateStr) {
+            function getPeriodDataForCharts() {
+                const view = document.querySelector('input[name="diagram-view"]:checked').value;
                 const data = {};
-                if (!startDateStr || !endDateStr) return data;
 
-                let currentDate = new Date(startDateStr + 'T00:00:00');
-                const endDate = new Date(endDateStr + 'T00:00:00');
+                if (view === 'week') {
+                    const weekValue = diagramWeekPicker.value;
+                    if (!weekValue) return {};
+                    const [year, week] = weekValue.split('-W').map(Number);
+                    const d = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
+                    const dayOfWeek = d.getUTCDay();
+                    const diff = d.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Monday
+                    const startDate = new Date(d.setUTCDate(diff));
 
-                while(currentDate <= endDate) {
-                    const dateStr = currentDate.toISOString().split('T')[0];
-                    if (appData[dateStr]) {
+                    for (let i = 0; i < 7; i++) {
+                        const currentDate = new Date(startDate);
+                        currentDate.setUTCDate(startDate.getUTCDate() + i);
+                        const dateStr = currentDate.toISOString().split('T')[0];
+                        if (appData[dateStr]) {
+                            data[dateStr] = appData[dateStr];
+                        } else {
+                            // Add empty entry to ensure week always has 7 days for chart labels
+                            data[dateStr] = null;
+                        }
+                    }
+                } else { // day view
+                    const dateStr = diagramDayPicker.value;
+                    if (dateStr && appData[dateStr]) {
                         data[dateStr] = appData[dateStr];
                     }
-                    currentDate.setDate(currentDate.getDate() + 1);
                 }
                 return data;
             }
 
             function updateCharts() {
-                const periodData = getPeriodDataForCharts(diagramStartDateInput.value, diagramEndDateInput.value);
+                const periodData = getPeriodDataForCharts();
+                const view = document.querySelector('input[name="diagram-view"]:checked').value;
 
-                // Bar chart
-                const periodLabels = Object.keys(periodData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }));
-                const allPeriodTags = new Set();
-                Object.values(periodData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allPeriodTags.add(t.name)); });
+                // Bar/Pie Chart
+                if (barChart) barChart.destroy();
+                const barCtx = document.getElementById('bar-chart').getContext('2d');
 
-                weeklyBarChart.data.labels = periodLabels;
-                weeklyBarChart.data.datasets = Array.from(allPeriodTags).map(tag => ({
-                    label: tag,
-                    data: Object.keys(periodData).map(date => {
-                        const day = periodData[date];
-                        if (!day || day.status !== 'dokumentiert') return 0;
-                        const dayTag = day.tags.find(t => t.name === tag);
-                        return dayTag ? dayTag.percentage : 0;
-                    }),
-                    backgroundColor: getRandomColor(tag),
-                }));
-                weeklyBarChart.update();
+                if (view === 'week') {
+                    barChartTitle.textContent = "Tätigkeiten pro Tag";
+                    const allPeriodTags = new Set();
+                    Object.values(periodData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allPeriodTags.add(t.name)); });
+                    const periodLabels = Object.keys(periodData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short' }));
+                    barChart = new Chart(barCtx, { type: 'bar', data: { labels: periodLabels, datasets: Array.from(allPeriodTags).map(tag => ({
+                        label: tag,
+                        data: Object.values(periodData).map(day => {
+                            if (!day || day.status !== 'dokumentiert') return 0;
+                            const dayTag = day.tags.find(t => t.name === tag);
+                            return dayTag ? dayTag.time : 0;
+                        }),
+                        backgroundColor: getRandomColor(tag),
+                    }))}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Stunden' } } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}h` } } } } });
+                } else { // Day view
+                    barChartTitle.textContent = "Tagesverteilung";
+                    const dayData = Object.values(periodData)[0];
+                    const filteredTags = dayData ? dayData.tags.filter(t => t.time > 0) : [];
+                    const labels = filteredTags.map(t => t.name);
+                    const data = filteredTags.map(t => t.time);
+                    barChart = new Chart(barCtx, { type: 'pie', data: { labels: labels, datasets: [{
+                        data: data,
+                        backgroundColor: labels.map(label => getRandomColor(label)),
+                    }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: context => `${context.label}: ${context.formattedValue}h` } } } } });
+                }
 
                 // Radar chart
+                radarChartTitle.textContent = view === 'week' ? "Kategorien-Fokus (Woche, Ø pro Tag)" : "Kategorien-Fokus (Tag, Gesamtstunden)";
                 const categoryTotals = CATEGORIES.reduce((acc, cat) => ({...acc, [cat]: 0}), {});
-                let totalDays = 0;
-                Object.values(periodData).forEach(day => {
-                    if (day && day.status === 'dokumentiert') {
-                        totalDays++;
-                        day.tags.forEach(tag => {
-                            const category = tagCategoryMap[tag.name];
-                            if (category) categoryTotals[category] += tag.percentage;
-                        });
-                    }
+
+                const documentedDays = Object.values(periodData).filter(day => day && day.status === 'dokumentiert');
+                documentedDays.forEach(day => {
+                    day.tags.forEach(tag => {
+                        const category = tagCategoryMap[tag.name];
+                        if (category) categoryTotals[category] += tag.time || 0;
+                    });
                 });
 
-                // Average percentage per day for the period
-                const avgCategoryData = totalDays > 0 ? Object.values(categoryTotals).map(total => total / totalDays) : [];
-                weeklyRadarChart.data.datasets[0].data = avgCategoryData;
-                weeklyRadarChart.update();
+                let radarData;
+                if (view === 'week') {
+                    const totalDays = documentedDays.length;
+                    radarData = totalDays > 0 ? Object.values(categoryTotals).map(total => total / totalDays) : [];
+                } else {
+                    radarData = Object.values(categoryTotals);
+                }
+
+                radarChart.data.datasets[0].data = radarData;
+                radarChart.data.datasets[0].label = view === 'week' ? 'Fokus (Ø pro Tag in h)' : 'Fokus (Stunden)';
+                radarChart.update();
             }
 
             function getRandomColor(seed) {
@@ -521,9 +605,7 @@
                 let currentDate = new Date(startDate);
                 while(currentDate <= endDate) {
                     const dateStr = currentDate.toISOString().split('T')[0];
-                    if (appData[dateStr]) {
-                        data[dateStr] = appData[dateStr];
-                    }
+                    if (appData[dateStr]) data[dateStr] = appData[dateStr];
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
                 return { data, firstDay: startDate.toISOString().split('T')[0], lastDay: endDate.toISOString().split('T')[0] };
@@ -550,10 +632,8 @@
                     return;
                 }
 
-                const tempBarCanvas = document.createElement('canvas');
-                tempBarCanvas.width = 800; tempBarCanvas.height = 400;
-                const tempRadarCanvas = document.createElement('canvas');
-                tempRadarCanvas.width = 500; tempRadarCanvas.height = 500;
+                const tempBarCanvas = document.createElement('canvas'); tempBarCanvas.width = 800; tempBarCanvas.height = 400;
+                const tempRadarCanvas = document.createElement('canvas'); tempRadarCanvas.width = 500; tempRadarCanvas.height = 500;
 
                 const allReportTags = new Set();
                 Object.values(reportData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allReportTags.add(t.name)); });
@@ -564,7 +644,7 @@
                         const day = reportData[date];
                         if (!day || day.status !== 'dokumentiert') return 0;
                         const dayTag = day.tags.find(t => t.name === tag);
-                        return dayTag ? dayTag.percentage : 0;
+                        return dayTag ? dayTag.time : 0;
                     }),
                     backgroundColor: getRandomColor(tag),
                 }));
@@ -573,9 +653,8 @@
                     new Chart(tempBarCanvas, {
                         type: 'bar',
                         data: { labels: Object.keys(reportData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })), datasets: barDatasets },
-                        options: { responsive: false, animation: false, plugins: { legend: { display: allReportTags.size <= 10 } } }
+                        options: { responsive: false, animation: false, plugins: { legend: { display: allReportTags.size <= 10 } }, scales: { y: { title: { display: true, text: 'Stunden' } } } }
                     });
-                     // Use a timeout to ensure canvas is rendered before getting image
                     setTimeout(() => resolve(tempBarCanvas.toDataURL('image/png')), 500);
                 });
 
@@ -584,7 +663,7 @@
                     if (day && day.status === 'dokumentiert') {
                         day.tags.forEach(tag => {
                             const category = tagCategoryMap[tag.name];
-                            if (category) categoryTotals[category] += tag.percentage;
+                            if (category) categoryTotals[category] += tag.time || 0;
                         });
                     }
                 });
@@ -592,7 +671,7 @@
                 const radarChartImg = await new Promise(resolve => {
                      new Chart(tempRadarCanvas, {
                         type: 'radar',
-                        data: { labels: CATEGORIES, datasets: [{ label: 'Fokus', data: Object.values(categoryTotals), pointBackgroundColor: pointColors, }] },
+                        data: { labels: CATEGORIES, datasets: [{ label: 'Gesamtstunden', data: Object.values(categoryTotals), pointBackgroundColor: pointColors, }] },
                         options: { responsive: false, animation: false, }
                     });
                     setTimeout(() => resolve(tempRadarCanvas.toDataURL('image/png')), 500);
@@ -609,8 +688,8 @@
                     } else {
                         detailHtml += '<ul class="list-disc list-inside">';
                         dayData.tags.forEach(tag => {
-                            if(tag.percentage > 0) {
-                                detailHtml += `<li><strong>${tag.name}:</strong> ${tag.percentage}%`;
+                            if(tag.time > 0) {
+                                detailHtml += `<li><strong>${tag.name}:</strong> ${tag.time}h`;
                                 if (tag.note) {
                                     detailHtml += `<div class="pl-6 text-sm text-gray-600">${tag.note}</div>`;
                                 }
