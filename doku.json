@@ -7,24 +7,24 @@
         },
         "2025-08-01": {
             "status": "dokumentiert",
-            "workHours": 8,
             "tags": [
                 {
                     "name": "Meetings",
-                    "time": 2,
-                    "note": "Sicherheitsunterweisung"
+                    "note": "Sicherheitsunterweisung",
+                    "time": 2
                 },
                 {
                     "name": "Soziales",
-                    "time": 3,
-                    "note": "Miarbeiter kennengelernt"
+                    "note": "Miarbeiter kennengelernt",
+                    "time": 3
                 },
                 {
                     "name": "System einrichten",
-                    "time": 1,
-                    "note": "Sein Arbeitsplatz eingerichtet und sich etwas eingelbt"
+                    "note": "Sein Arbeitsplatz eingerichtet und sich etwas eingelbt",
+                    "time": 1
                 }
-            ]
+            ],
+            "workHours": 8
         },
         "2025-08-02": {
             "status": "dokumentiert",
@@ -38,29 +38,50 @@
         },
         "2025-08-04": {
             "status": "dokumentiert",
-            "workHours": 8,
             "tags": [
                 {
                     "name": "Orga",
-                    "time": 5,
-                    "note": "Sich mit den System bekannt machen. Die Wiki kennen gelernt"
+                    "note": "Sich mit den System bekannt machen. Die Wiki kennen gelernt",
+                    "time": 5
                 },
                 {
                     "name": "Mitarbeiter gespräch",
-                    "time": 1,
-                    "note": "Sich mit einem Kollegen unterhalten"
+                    "note": "Sich mit einem Kollegen unterhalten",
+                    "time": 1
                 },
                 {
                     "name": "Tabellen ausfüllen",
-                    "time": 2,
-                    "note": "Tabelle für die Wandler erstellt"
+                    "note": "Tabelle für die Wandler erstellt",
+                    "time": 2
                 }
-            ]
+            ],
+            "workHours": 8
         },
         "2025-08-05": {
             "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
+            "tags": [
+                {
+                    "name": "Lesen von Dokumenten",
+                    "note": "",
+                    "time": 4
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Mitarbeiter gespräch",
+                    "note": "",
+                    "time": 1
+                },
+                {
+                    "name": "Dokumentieren",
+                    "note": "",
+                    "time": 1
+                }
+            ],
+            "workHours": 8
         },
         "2025-08-06": {
             "status": "dokumentiert",
@@ -68,6 +89,16 @@
                 {
                     "name": "Lesen von Dokumenten",
                     "note": "Lesen von Die Genauigkeit von Stromwandlern unter dem Einfluss von Fremdfeldern nach R.A. Pfuntner",
+                    "time": 3
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Berechnen (Herleiten)",
+                    "note": "3",
                     "time": 3
                 }
             ],
@@ -79,16 +110,37 @@
                 {
                     "name": "Meetings",
                     "note": "Praxisphase besprochen",
-                    "time": 30
+                    "time": 0.5
                 },
                 {
                     "name": "Berechnen (Herleiten)",
-                    "note": "BErechnung für B-Felder in der zweiten Dimension und überlagerungen berechnet.",
-                    "time": 6
+                    "note": "Berechnung für B-Felder in der zweiten Dimension und überlagerungen berechnet.",
+                    "time": 5.75
                 },
                 {
                     "name": "Tabellen ausfüllen",
                     "note": "Wandler eingetragen",
+                    "time": 2
+                }
+            ],
+            "workHours": 8
+        },
+        "2025-08-08": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Berechnen (Herleiten)",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Programmieren",
+                    "note": "",
+                    "time": 3
+                },
+                {
+                    "name": "Lesen von Dokumenten",
+                    "note": "",
                     "time": 2
                 }
             ],
@@ -99,35 +151,51 @@
             "tags": [],
             "workHours": 8
         },
-        "2025-08-08": {
+        "2025-08-10": {
             "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
+            "tags": [],
+            "workHours": 8
         },
         "2025-08-11": {
             "status": "dokumentiert",
             "workHours": 8,
-            "tags": []
+            "tags": [
+                {
+                    "name": "Simuliert",
+                    "time": 5,
+                    "note": "Mit der Software FEM habe ich die erste simulation für die beeinflussung der Magnetische Einfluss auf L2."
+                },
+                {
+                    "name": "Mitarbeiter gespräch",
+                    "time": 0.75,
+                    "note": "Die Software mit den Simulationen gezeigt"
+                },
+                {
+                    "name": "Soziales",
+                    "time": 1.25,
+                    "note": "Eine Mitarbeiterin gespräch geführt, ob man eine .msg Datei in einer .csv Datei inhalte kopieren kann"
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "time": 1.25,
+                    "note": "Tabelle für die Bestellung zuende gemacht"
+                }
+            ]
         },
         "2025-08-12": {
             "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
+            "tags": [],
+            "workHours": 8
         },
         "2025-08-13": {
             "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
+            "tags": [],
+            "workHours": 8
         },
         "2025-08-14": {
             "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
-        },
-        "2025-08-10": {
-            "status": "dokumentiert",
-            "workHours": 8,
-            "tags": []
+            "tags": [],
+            "workHours": 8
         }
     },
     "tagCategoryMap": {
@@ -138,12 +206,13 @@
         "Lesen von Dokumenten": "Analyse",
         "Meetings": "Organisation",
         "Messen": "Technik",
+        "Mitarbeiter gespräch": "Soziales",
         "Orga": "Dokumentation",
         "Planung": "Organisation",
         "Programmieren": "Technik",
         "Soziales": "Soziales",
-        "Tabellen ausfüllen": "Dokumentation",
         "System einrichten": "Organisation",
-        "Mitarbeiter gespräch": "Soziales"
+        "Tabellen ausfüllen": "Dokumentation",
+        "Simuliert": "Analyse"
     }
 }
