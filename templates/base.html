@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tägliche Dokumentation{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="data:,">
+</head>
+
+<body class="text-gray-800">
+
+    <div id="notification"
+        class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50">
+    </div>
+
+    <div class="container mx-auto p-4 md:p-6 lg:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation & To-Do</h1>
+            <p class="text-lg text-gray-600 mt-2">Erfasse und analysiere deine täglichen Aktivitäten und Aufgaben.</p>
+        </header>
+
+        <div class="mb-8 p-2 bg-white rounded-xl shadow-md max-w-md mx-auto">
+            <nav class="flex justify-center space-x-4">
+                <a href="{{ url_for('index') }}"
+                    class="px-4 py-2 rounded-lg font-semibold {% if request.path == '/' %}bg-indigo-600 text-white{% else %}text-gray-600 hover:bg-gray-200{% endif %}">
+                    Dokumentation
+                </a>
+                <a href="{{ url_for('todo') }}"
+                    class="px-4 py-2 rounded-lg font-semibold {% if request.path == '/todo' %}bg-indigo-600 text-white{% else %}text-gray-600 hover:bg-gray-200{% endif %}">
+                    To-Do Liste
+                </a>
+            </nav>
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

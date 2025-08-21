@@ -4,7 +4,7 @@ import subprocess
 from flask import Flask, request, jsonify, render_template
 
 # Initialisiert die Flask-Anwendung
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__)
 
 # Der Dateiname für die JSON-Datenbank
 DATA_FILE = "doku.json"
@@ -16,8 +16,14 @@ DATA_FILE = "doku.json"
 
 @app.route("/")
 def index():
-    """Zeigt die Hauptseite (index.html) an."""
-    return render_template("index.html")
+    """Zeigt die Hauptseite (Dokumentation) an."""
+    return render_template("documentation.html")
+
+
+@app.route("/todo")
+def todo():
+    """Zeigt die To-Do-Seite an."""
+    return render_template("todo.html")
 
 
 @app.route("/load", methods=["GET"])
@@ -62,23 +68,18 @@ def save_data():
 def run_git_command(command):
     """Führt einen Git-Befehl aus und gibt das Ergebnis zurück."""
     try:
-        # Führt den Befehl im aktuellen Verzeichnis aus
         result = subprocess.run(
             command, check=True, capture_output=True, text=True, shell=True
         )
         return {"success": True, "output": result.stdout.strip()}
     except subprocess.CalledProcessError as e:
-        # Gibt bei einem Fehler die Fehlermeldung von Git zurück
         return {"success": False, "output": e.stderr.strip()}
 
 
 @app.route("/git/status", methods=["GET"])
 def git_status():
     """Prüft den Git-Status (lokal vs. remote)."""
-    # Holt die neuesten Informationen vom Remote-Repository
     run_git_command("git fetch")
-
-    # Prüft den Status des Branches
     status_result = run_git_command("git status -sb")
     if not status_result["success"]:
         return jsonify({"status": "error", "message": status_result["output"]}), 500
@@ -96,7 +97,6 @@ def git_status():
             }
         )
     else:
-        # Prüft, ob es ungetrackte oder geänderte Dateien gibt
         local_status = run_git_command("git status --porcelain")
         if local_status["output"]:
             return jsonify(
@@ -126,11 +126,8 @@ def git_pull():
 @app.route("/git/push", methods=["POST"])
 def git_push():
     """Führt 'git push' aus."""
-    # Zuerst lokale Änderungen committen
     run_git_command("git add doku.json")
-    # Commit nur, wenn es Änderungen gibt
     run_git_command('git commit -m "Daten-Update via App"')
-
     result = run_git_command("git push")
     if result["success"]:
         return jsonify({"status": "success", "message": "Push erfolgreich!"})
