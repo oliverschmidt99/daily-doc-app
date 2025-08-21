@@ -158,44 +158,174 @@
         },
         "2025-08-11": {
             "status": "dokumentiert",
-            "workHours": 8,
             "tags": [
                 {
                     "name": "Simuliert",
-                    "time": 5,
-                    "note": "Mit der Software FEM habe ich die erste simulation für die beeinflussung der Magnetische Einfluss auf L2."
+                    "note": "Mit der Software FEM habe ich die erste simulation für die beeinflussung der Magnetische Einfluss auf L2.",
+                    "time": 5
                 },
                 {
                     "name": "Mitarbeiter gespräch",
-                    "time": 0.75,
-                    "note": "Die Software mit den Simulationen gezeigt"
+                    "note": "Die Software mit den Simulationen gezeigt",
+                    "time": 0.75
                 },
                 {
                     "name": "Soziales",
-                    "time": 1.25,
-                    "note": "Eine Mitarbeiterin gespräch geführt, ob man eine .msg Datei in einer .csv Datei inhalte kopieren kann"
+                    "note": "Eine Mitarbeiterin gespräch geführt, ob man eine .msg Datei in einer .csv Datei inhalte kopieren kann",
+                    "time": 1.25
                 },
                 {
                     "name": "Tabellen ausfüllen",
-                    "time": 1.25,
-                    "note": "Tabelle für die Bestellung zuende gemacht"
+                    "note": "Tabelle für die Bestellung zuende gemacht",
+                    "time": 1.25
                 }
-            ]
+            ],
+            "workHours": 8
         },
         "2025-08-12": {
             "status": "dokumentiert",
-            "tags": [],
-            "workHours": 8
+            "tags": [
+                {
+                    "name": "Programmieren",
+                    "note": "Für die Simulationssoftware ein Code geschrieben, damit man verschiedene Messsenarien Simulieren kann",
+                    "time": 6
+                },
+                {
+                    "name": "Soziales",
+                    "note": "",
+                    "time": 1.5
+                },
+                {
+                    "name": "Orga",
+                    "note": "Ordner Struktur aufgeräumt",
+                    "time": 1
+                }
+            ],
+            "workHours": 8.25
         },
         "2025-08-13": {
             "status": "dokumentiert",
-            "tags": [],
+            "tags": [
+                {
+                    "name": "Meetings",
+                    "note": "Tabelle besprochen",
+                    "time": 0.5
+                },
+                {
+                    "name": "Programmieren",
+                    "note": "Die Simulation weiter Programmiert",
+                    "time": 5
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "Es mussten Wandler mit einer Messauflösung von 1 A herrausgesucht werden.",
+                    "time": 3
+                }
+            ],
             "workHours": 8
         },
         "2025-08-14": {
             "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Programmieren",
+                    "note": "",
+                    "time": 6
+                },
+                {
+                    "name": "Simuliert",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 0.5
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-15": {
+            "status": "dokumentiert",
             "tags": [],
-            "workHours": 8
+            "workHours": 7
+        },
+        "2025-08-18": {
+            "entries": [
+                {
+                    "note": "Die Simulation weiter geführt. Matlab skript angepasst sodass man verschiedne Wanler und Schienen hinzufügen",
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 7.5
+                },
+                {
+                    "note": "Praxisphase besprochen",
+                    "tagNames": [
+                        "Meetings",
+                        "Soziales"
+                    ],
+                    "time": 2
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 9.5
+        },
+        "2025-08-19": {
+            "entries": [
+                {
+                    "note": "Eine Software Programmiert, damit man die Weihnachtspostkarten, automatisch sortiert und augeben bekommt.",
+                    "tagNames": [
+                        "Programmieren",
+                        "Soziales"
+                    ],
+                    "time": 4.58
+                },
+                {
+                    "note": "Simulationssoftware UI weiter Programmiert",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 4.58
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 9.15
+        },
+        "2025-08-20": {
+            "entries": [
+                {
+                    "note": "Simulationssoftware UI weiter programmiert",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 7.75
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.97
+        },
+        "2025-08-21": {
+            "status": "dokumentiert",
+            "workHours": 8.95,
+            "entries": [
+                {
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 5.95,
+                    "note": "Bauteileditor wurde hinzugefügt. Es ist möglich Bauteile einzubauen"
+                },
+                {
+                    "tagNames": [
+                        "Tabellen ausfüllen"
+                    ],
+                    "time": 3,
+                    "note": "Musst tabelle mit Internen Bestellnummern ausfüllen"
+                }
+            ]
         }
     },
     "tagCategoryMap": {
@@ -210,9 +340,9 @@
         "Orga": "Dokumentation",
         "Planung": "Organisation",
         "Programmieren": "Technik",
+        "Simuliert": "Analyse",
         "Soziales": "Soziales",
         "System einrichten": "Organisation",
-        "Tabellen ausfüllen": "Dokumentation",
-        "Simuliert": "Analyse"
+        "Tabellen ausfüllen": "Dokumentation"
     }
 }

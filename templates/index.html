@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,144 +11,214 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Tailwind gray-100 */
+            background-color: #f3f4f6;
         }
-        /* Custom scrollbar for better aesthetics */
+
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
         .chart-container {
             position: relative;
             height: 40vh;
             width: 100%;
         }
+
         .tag-button {
             transition: all 0.2s ease-in-out;
+            color: white;
         }
+
         .tag-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
+
         #notification {
             transition: opacity 0.5s, transform 0.5s;
         }
+
         .nav-arrow {
             cursor: pointer;
             transition: transform 0.1s;
         }
+
         .nav-arrow:hover {
             transform: scale(1.2);
         }
+
+        #main-content-panel {
+            transition: background-color 0.5s ease;
+        }
+
+        .autocomplete-suggestions {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .autocomplete-suggestion {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #f0f0f0;
+        }
+
+        .tag-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: white;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .tag-badge-remove {
+            margin-left: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body class="text-gray-800">
 
-    <!-- Notification Element -->
-    <div id="notification" class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50">
-        Eine Nachricht
+    <div id="notification"
+        class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50">
     </div>
 
     <div class="container mx-auto p-4 md:p-6 lg:p-8">
-
         <header class="mb-8 text-center">
             <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation</h1>
             <p class="text-lg text-gray-600 mt-2">Erfasse und analysiere deine täglichen Aktivitäten.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- Linke Spalte: Steuerung & Berichte -->
             <div class="lg:col-span-1 space-y-6">
-                <!-- Kalender & Steuerung -->
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-bold mb-4 border-b pb-2">Steuerung</h2>
                     <div class="space-y-4">
                         <div>
-                            <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum auswählen</label>
-                            <input type="date" id="date-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                            <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum
+                                auswählen</label>
+                            <input type="date" id="date-picker"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                         </div>
                         <div>
-                            <label for="status-select" class="block text-sm font-medium text-gray-700">Tagesstatus</label>
-                            <select id="status-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                            <label for="status-select"
+                                class="block text-sm font-medium text-gray-700">Tagesstatus</label>
+                            <select id="status-select"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                                 <option value="dokumentiert">Dokumentiert ✔</option>
                                 <option value="urlaub">Urlaub 🌴</option>
                                 <option value="krank">Krank 🤒</option>
                                 <option value="abwesend">Abwesend 🚶</option>
                             </select>
                         </div>
-                         <div>
-                            <label for="work-hours" class="block text-sm font-medium text-gray-700">Arbeitssollzeit (Stunden)</label>
-                            <input type="number" id="work-hours" value="8" min="0" max="24" step="0.5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        <div>
+                            <label for="work-hours" class="block text-sm font-medium text-gray-700">Arbeitssollzeit
+                                (Stunden)</label>
+                            <input type="number" id="work-hours" value="8" min="0" max="24" step="0.25"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        </div>
+                        <div class="border-t pt-4">
+                            <label class="block text-sm font-medium text-gray-700">Zeiterfassung</label>
+                            <div class="flex items-center gap-2 mt-1">
+                                <input type="time" id="start-time"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                <span>-</span>
+                                <input type="time" id="end-time"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                <button type="button" id="calculate-time-btn"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Berechnen</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                 <!-- Berichte -->
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-bold mb-4 border-b pb-2">Berichte</h2>
                     <div class="space-y-2">
-                        <button id="generate-week-report" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Wochenbericht erstellen</button>
-                        <button id="generate-month-report" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Monatsbericht erstellen</button>
-                        <button id="generate-all-report" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Gesamtbericht erstellen</button>
+                        <button type="button" id="generate-week-report"
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">Wochenbericht</button>
+                        <button type="button" id="generate-month-report"
+                            class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">Monatsbericht</button>
+                        <button type="button" id="generate-all-report"
+                            class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Gesamtbericht</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Rechte Spalte: Tageseintrag & Tag-Bibliothek -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Tageseintrag -->
                 <div id="main-content-panel" class="bg-white p-6 rounded-xl shadow-md">
                     <div class="flex justify-between items-center border-b pb-2 mb-4">
                         <div class="flex items-center gap-4">
-                             <svg id="prev-day-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                             <h2 class="text-2xl font-bold text-center">Eintrag für <span id="current-date-display"></span></h2>
-                             <svg id="next-day-btn" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            <svg id="prev-day-btn" xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                            <h2 class="text-2xl font-bold text-center">Eintrag für <span
+                                    id="current-date-display"></span></h2>
+                            <svg id="next-day-btn" xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
                         </div>
                         <div class="text-right">
-                             <p class="text-lg font-semibold">Gesamt: <span id="total-hours">0</span>h</p>
-                             <p class="text-sm text-gray-500"><span id="total-percentage">0</span>%</p>
+                            <p class="text-lg font-semibold">Gesamt: <span id="total-hours">0</span>h</p>
                         </div>
                     </div>
-
-                    <div id="daily-tags-container" class="space-y-4 mb-4">
-                        <!-- Tägliche Tags werden hier per JS eingefügt -->
-                    </div>
-
-                    <div class="mt-6 text-right">
-                        <button id="save-day-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-lg">Tag speichern</button>
+                    <div id="daily-entries-container" class="space-y-4 mb-4"></div>
+                    <div class="mt-6 flex justify-between items-center">
+                        <button type="button" id="add-entry-btn"
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">+ Eintrag
+                            hinzufügen</button>
+                        <button type="button" id="save-day-btn"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Tag
+                            speichern</button>
                     </div>
                 </div>
-
-                <!-- Tag-Bibliothek -->
                 <div id="tag-library-container" class="bg-white p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-bold mb-4 border-b pb-2">Tag-Bibliothek</h2>
-                    <div id="tag-library" class="flex flex-wrap gap-2 mb-4">
-                        <!-- Tags werden hier per JS eingefügt -->
-                    </div>
+                    <div id="tag-library" class="flex flex-wrap gap-2 mb-4"></div>
                     <div class="space-y-2">
-                        <input type="text" id="new-tag-input" placeholder="Name des neuen Tags" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        <input type="text" id="new-tag-input" placeholder="Name des neuen Tags"
+                            class="block w-full rounded-md border-gray-300 shadow-sm p-2">
                         <div class="flex gap-2">
-                            <select id="new-tag-category" class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
-                                <!-- Kategorien werden hier per JS eingefügt -->
-                            </select>
-                            <button id="add-new-tag-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">+</button>
+                            <select id="new-tag-category"
+                                class="flex-grow block w-full rounded-md border-gray-300 shadow-sm p-2"></select>
+                            <button type="button" id="add-new-tag-btn"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">+</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Diagramm-Steuerung -->
         <div class="mt-8 bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-xl font-bold mb-4 border-b pb-2">Diagramm-Ansicht</h2>
             <div class="flex items-center gap-4 mb-4">
@@ -156,73 +227,78 @@
             </div>
             <div id="diagram-controls">
                 <div id="week-view-controls">
-                    <label for="diagram-week-picker" class="block text-sm font-medium text-gray-700">Kalenderwoche auswählen</label>
-                    <input type="week" id="diagram-week-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    <label for="diagram-week-picker">Kalenderwoche</label>
+                    <input type="week" id="diagram-week-picker"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
                 <div id="day-view-controls" class="hidden">
-                    <label for="diagram-day-picker" class="block text-sm font-medium text-gray-700">Tag auswählen</label>
-                    <input type="date" id="diagram-day-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    <label for="diagram-day-picker">Tag</label>
+                    <input type="date" id="diagram-day-picker"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
             </div>
         </div>
-
-        <!-- Diagramme -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-white p-6 rounded-xl shadow-md">
                 <h2 id="bar-chart-title" class="text-xl font-bold mb-4">Tätigkeiten</h2>
-                <div class="chart-container">
-                    <canvas id="bar-chart"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="bar-chart"></canvas></div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md">
                 <h2 id="radar-chart-title" class="text-xl font-bold mb-4">Kategorien</h2>
-                <div class="chart-container">
-                    <canvas id="radar-chart"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="radar-chart"></canvas></div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // --- DOM-Elemente ---
-            const datePicker = document.getElementById('date-picker');
-            const currentDateDisplay = document.getElementById('current-date-display');
-            const statusSelect = document.getElementById('status-select');
-            const workHoursInput = document.getElementById('work-hours');
-            const dailyTagsContainer = document.getElementById('daily-tags-container');
-            const totalHoursEl = document.getElementById('total-hours');
-            const totalPercentageEl = document.getElementById('total-percentage');
-            const saveDayBtn = document.getElementById('save-day-btn');
-            const tagLibrary = document.getElementById('tag-library');
-            const newTagInput = document.getElementById('new-tag-input');
-            const newTagCategorySelect = document.getElementById('new-tag-category');
-            const addNewTagBtn = document.getElementById('add-new-tag-btn');
-            const generateWeekReportBtn = document.getElementById('generate-week-report');
-            const generateMonthReportBtn = document.getElementById('generate-month-report');
-            const generateAllReportBtn = document.getElementById('generate-all-report');
-            const notificationEl = document.getElementById('notification');
-            const mainContentPanel = document.getElementById('main-content-panel');
-            const tagLibraryContainer = document.getElementById('tag-library-container');
-            const prevDayBtn = document.getElementById('prev-day-btn');
-            const nextDayBtn = document.getElementById('next-day-btn');
-            const diagramViewRadios = document.querySelectorAll('input[name="diagram-view"]');
-            const weekViewControls = document.getElementById('week-view-controls');
-            const dayViewControls = document.getElementById('day-view-controls');
-            const diagramWeekPicker = document.getElementById('diagram-week-picker');
-            const diagramDayPicker = document.getElementById('diagram-day-picker');
-            const barChartTitle = document.getElementById('bar-chart-title');
-            const radarChartTitle = document.getElementById('radar-chart-title');
-
-            // --- Anwendungsstatus & Daten ---
+            // --- Globale Variablen & Konstanten ---
             let appData = {};
             let tagCategoryMap = {};
             let barChart, radarChart;
             const CATEGORIES = ['Technik', 'Analyse', 'Dokumentation', 'Organisation', 'Soziales', 'Sonstiges'];
-            const CATEGORY_COLORS = {
-                'Technik': 'rgba(255, 99, 132, 0.6)', 'Analyse': 'rgba(54, 162, 235, 0.6)',
-                'Dokumentation': 'rgba(255, 206, 86, 0.6)', 'Organisation': 'rgba(75, 192, 192, 0.6)',
-                'Soziales': 'rgba(153, 102, 255, 0.6)', 'Sonstiges': 'rgba(255, 159, 64, 0.6)'
+            const RADAR_CATEGORIES = ['Technik', 'Analyse', 'Dokumentation', 'Organisation', 'Soziales']; // Ohne "Sonstiges"
+            const CATEGORY_BACKGROUND_COLORS = {
+                'Technik': 'rgba(239, 68, 68, 0.1)', 'Analyse': 'rgba(59, 130, 246, 0.1)',
+                'Dokumentation': 'rgba(245, 158, 11, 0.1)', 'Organisation': 'rgba(16, 185, 129, 0.1)',
+                'Soziales': 'rgba(139, 92, 246, 0.1)', 'Sonstiges': 'rgba(107, 114, 128, 0.1)'
+            };
+            const CATEGORY_CHART_COLORS = {
+                'Technik': 'rgba(239, 68, 68, 0.8)', 'Analyse': 'rgba(59, 130, 246, 0.8)',
+                'Dokumentation': 'rgba(245, 158, 11, 0.8)', 'Organisation': 'rgba(16, 185, 129, 0.8)',
+                'Soziales': 'rgba(139, 92, 246, 0.8)', 'Sonstiges': 'rgba(107, 114, 128, 0.8)'
+            };
+            const DAILY_WORK_HOURS = { 1: 8.25, 2: 8.25, 3: 8.25, 4: 8.25, 5: 7.0, 6: 0, 0: 0 };
+
+            // --- DOM-Elemente ---
+            const dom = {
+                datePicker: document.getElementById('date-picker'),
+                currentDateDisplay: document.getElementById('current-date-display'),
+                statusSelect: document.getElementById('status-select'),
+                workHoursInput: document.getElementById('work-hours'),
+                dailyEntriesContainer: document.getElementById('daily-entries-container'),
+                totalHoursEl: document.getElementById('total-hours'),
+                saveDayBtn: document.getElementById('save-day-btn'),
+                tagLibrary: document.getElementById('tag-library'),
+                newTagInput: document.getElementById('new-tag-input'),
+                newTagCategorySelect: document.getElementById('new-tag-category'),
+                addNewTagBtn: document.getElementById('add-new-tag-btn'),
+                notificationEl: document.getElementById('notification'),
+                mainContentPanel: document.getElementById('main-content-panel'),
+                tagLibraryContainer: document.getElementById('tag-library-container'),
+                prevDayBtn: document.getElementById('prev-day-btn'),
+                nextDayBtn: document.getElementById('next-day-btn'),
+                diagramViewRadios: document.querySelectorAll('input[name="diagram-view"]'),
+                weekViewControls: document.getElementById('week-view-controls'),
+                dayViewControls: document.getElementById('day-view-controls'),
+                diagramWeekPicker: document.getElementById('diagram-week-picker'),
+                diagramDayPicker: document.getElementById('diagram-day-picker'),
+                barChartTitle: document.getElementById('bar-chart-title'),
+                radarChartTitle: document.getElementById('radar-chart-title'),
+                startTimeInput: document.getElementById('start-time'),
+                endTimeInput: document.getElementById('end-time'),
+                calculateTimeBtn: document.getElementById('calculate-time-btn'),
+                addEntryBtn: document.getElementById('add-entry-btn'),
             };
 
             // --- Initialisierung ---
@@ -231,39 +307,39 @@
                 initializeDefaultTags();
                 populateCategorySelect();
                 renderTagLibrary();
-
+                setupEventListeners();
                 const today = new Date().toISOString().split('T')[0];
-                datePicker.value = today;
-
-                datePicker.addEventListener('change', () => loadDay(datePicker.value));
-                statusSelect.addEventListener('change', handleStatusChange);
-                saveDayBtn.addEventListener('click', saveCurrentDay);
-                addNewTagBtn.addEventListener('click', addNewTag);
-                newTagInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewTag(); });
-
-                prevDayBtn.addEventListener('click', () => changeDay(-1));
-                nextDayBtn.addEventListener('click', () => changeDay(1));
-
-                generateWeekReportBtn.addEventListener('click', handleGenerateWeekReport);
-                generateMonthReportBtn.addEventListener('click', handleGenerateMonthReport);
-                generateAllReportBtn.addEventListener('click', handleGenerateAllReport);
-
-                diagramViewRadios.forEach(radio => radio.addEventListener('change', handleDiagramViewChange));
-                diagramWeekPicker.addEventListener('change', updateCharts);
-                diagramDayPicker.addEventListener('change', updateCharts);
-
+                dom.datePicker.value = today;
                 initCharts();
                 setInitialDiagramDates();
                 loadDay(today);
             }
 
+            function setupEventListeners() {
+                dom.datePicker.addEventListener('change', () => loadDay(dom.datePicker.value));
+                dom.statusSelect.addEventListener('change', handleStatusChange);
+                dom.saveDayBtn.addEventListener('click', saveCurrentDay);
+                dom.addNewTagBtn.addEventListener('click', addNewTag);
+                dom.newTagInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addNewTag(); });
+                dom.prevDayBtn.addEventListener('click', () => changeDay(-1));
+                dom.nextDayBtn.addEventListener('click', () => changeDay(1));
+                dom.calculateTimeBtn.addEventListener('click', calculateAndApplyWorkTime);
+                dom.addEntryBtn.addEventListener('click', () => renderDailyEntry());
+                document.getElementById('generate-week-report').addEventListener('click', () => handleGenerateReport('week'));
+                document.getElementById('generate-month-report').addEventListener('click', () => handleGenerateReport('month'));
+                document.getElementById('generate-all-report').addEventListener('click', () => handleGenerateReport('all'));
+                dom.diagramViewRadios.forEach(radio => radio.addEventListener('change', handleDiagramViewChange));
+                dom.diagramWeekPicker.addEventListener('change', updateCharts);
+                dom.diagramDayPicker.addEventListener('change', updateCharts);
+            }
+
             // --- Benachrichtigungen ---
             function showNotification(message, isError = false) {
-                notificationEl.textContent = message;
-                notificationEl.classList.toggle('bg-green-500', !isError);
-                notificationEl.classList.toggle('bg-red-500', isError);
-                notificationEl.classList.remove('opacity-0', 'translate-x-full');
-                setTimeout(() => { notificationEl.classList.add('opacity-0', 'translate-x-full'); }, 3000);
+                dom.notificationEl.textContent = message;
+                dom.notificationEl.classList.toggle('bg-green-500', !isError);
+                dom.notificationEl.classList.toggle('bg-red-500', isError);
+                dom.notificationEl.classList.remove('opacity-0', 'translate-x-full');
+                setTimeout(() => { dom.notificationEl.classList.add('opacity-0', 'translate-x-full'); }, 3000);
             }
 
             // --- Datenmanagement (Server) ---
@@ -274,301 +350,452 @@
                     const data = await response.json();
                     appData = data.appData || {};
                     tagCategoryMap = data.tagCategoryMap || {};
-                    showNotification("Daten vom Server geladen.", false);
                 } catch (e) {
-                    console.error("Fehler beim Laden der Daten vom Server:", e);
-                    showNotification("Keine Verbindung zum Server. Starte das Python-Skript.", true);
+                    showNotification("Keine Verbindung zum Server.", true);
                 }
             }
-
             async function saveDataToServer() {
-                const dataToSave = { appData, tagCategoryMap };
                 try {
                     const response = await fetch('/save', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dataToSave),
+                        body: JSON.stringify({ appData, tagCategoryMap }),
                     });
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const result = await response.json();
-                    showNotification(result.message || "Daten gespeichert!", false);
+                    showNotification("Daten gespeichert!", false);
                 } catch (e) {
-                     console.error("Fehler beim Speichern der Daten auf dem Server:", e);
-                     showNotification("Speichern fehlgeschlagen. Läuft der Server?", true);
+                    showNotification("Speichern fehlgeschlagen.", true);
                 }
             }
 
+            // --- Initialisierungs-Helfer ---
             function initializeDefaultTags() {
                 const defaultTags = {
-                    'Messen': 'Technik', 'Programmieren': 'Technik', 'Analysieren': 'Analyse',
-                    'Berechnen (Herleiten)': 'Analyse', 'Dokumentieren': 'Dokumentation',
+                    'Messen': 'Technik', 'Programmieren': 'Technik', 'Simuliert': 'Analyse', 'Analysieren': 'Analyse',
+                    'Berechnen (Herleiten)': 'Analyse', 'Lesen von Dokumenten': 'Analyse', 'Dokumentieren': 'Dokumentation',
                     'Tabellen ausfüllen': 'Dokumentation', 'Bachelorarbeit schreiben': 'Dokumentation',
-                    'Planung': 'Organisation', 'Meetings': 'Organisation', 'Soziales': 'Soziales'
+                    'Planung': 'Organisation', 'Meetings': 'Organisation', 'System einrichten': 'Organisation', 'Orga': 'Dokumentation',
+                    'Soziales': 'Soziales', 'Mitarbeiter gespräch': 'Soziales'
                 };
                 for (const [tag, category] of Object.entries(defaultTags)) {
                     if (!tagCategoryMap[tag]) tagCategoryMap[tag] = category;
                 }
             }
-
             function populateCategorySelect() {
-                newTagCategorySelect.innerHTML = '';
-                CATEGORIES.forEach(cat => {
-                    const option = document.createElement('option');
-                    option.value = cat;
-                    option.textContent = cat;
-                    newTagCategorySelect.appendChild(option);
-                });
+                dom.newTagCategorySelect.innerHTML = CATEGORIES.map(cat => `<option value="${cat}">${cat}</option>`).join('');
             }
 
-            // --- Tageslogik ---
+            // --- Tageslogik & UI ---
             function changeDay(offset) {
-                const parts = datePicker.value.split('-').map(Number);
-                const currentDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
-                currentDate.setUTCDate(currentDate.getUTCDate() + offset);
-                const year = currentDate.getUTCFullYear();
-                const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
-                const day = String(currentDate.getUTCDate()).padStart(2, '0');
-                datePicker.value = `${year}-${month}-${day}`;
-                loadDay(datePicker.value);
+                const currentDate = new Date(dom.datePicker.value + 'T00:00:00');
+                currentDate.setDate(currentDate.getDate() + offset);
+                dom.datePicker.value = currentDate.toISOString().split('T')[0];
+                loadDay(dom.datePicker.value);
             }
 
             function loadDay(dateString) {
-                currentDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-                dailyTagsContainer.innerHTML = '';
-                const dayData = appData[dateString] || { status: 'dokumentiert', workHours: 8, tags: [] };
+                dom.currentDateDisplay.textContent = new Date(dateString + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+                dom.dailyEntriesContainer.innerHTML = '';
+
+                const dayOfWeek = new Date(dateString + 'T00:00:00').getDay();
+                const defaultWorkHours = DAILY_WORK_HOURS[dayOfWeek];
+                const dayData = appData[dateString] || { status: 'dokumentiert', workHours: defaultWorkHours, entries: [] };
+
+                // Datenmigration: Altes Format (tags) auf neues (entries) umwandeln
+                if (dayData.tags && !dayData.entries) {
+                    dayData.entries = dayData.tags.map(tag => ({
+                        tagNames: [tag.name],
+                        time: tag.time,
+                        note: tag.note
+                    }));
+                    delete dayData.tags;
+                }
+
+                if (!appData[dateString]) dayData.workHours = defaultWorkHours;
+
                 appData[dateString] = dayData;
-                statusSelect.value = dayData.status;
-                workHoursInput.value = dayData.workHours;
-                dayData.tags.forEach(tag => renderDailyTag(tag.name, tag.time, tag.note));
+                dom.statusSelect.value = dayData.status;
+                dom.workHoursInput.value = dayData.workHours;
+
+                (dayData.entries || []).forEach(entry => renderDailyEntry(entry));
+                if ((dayData.entries || []).length === 0) renderDailyEntry();
+
                 updateTotals();
                 handleStatusChange();
                 updateCharts();
             }
 
             function saveCurrentDay() {
-                const dateString = datePicker.value;
-                const dailyTags = [];
-                dailyTagsContainer.querySelectorAll('.daily-tag-item').forEach(item => {
-                    const name = item.dataset.tagName;
-                    const time = parseFloat(item.querySelector('.tag-time-input').value) || 0;
-                    const note = item.querySelector('.tag-note-input').value.trim();
-                    if(name) dailyTags.push({ name, time, note });
+                const dateString = dom.datePicker.value;
+                const dailyEntries = [];
+                dom.dailyEntriesContainer.querySelectorAll('.daily-entry-item').forEach(item => {
+                    const tagNames = Array.from(item.querySelectorAll('.tag-badge')).map(badge => badge.dataset.tagName);
+                    const time = parseFloat(item.querySelector('.entry-time-input').value) || 0;
+                    const note = item.querySelector('.entry-note-input').value.trim();
+                    if (tagNames.length > 0 || note) {
+                        dailyEntries.push({ tagNames, time, note });
+                    }
                 });
                 appData[dateString] = {
-                    status: statusSelect.value,
-                    workHours: parseFloat(workHoursInput.value) || 8,
-                    tags: dailyTags,
+                    status: dom.statusSelect.value,
+                    workHours: parseFloat(dom.workHoursInput.value) || 8,
+                    entries: dailyEntries,
                 };
                 saveDataToServer();
                 updateCharts();
             }
 
             function handleStatusChange() {
-                const isDocumented = statusSelect.value === 'dokumentiert';
-                mainContentPanel.style.opacity = isDocumented ? '1' : '0.5';
-                mainContentPanel.querySelectorAll('input, textarea, button').forEach(el => el.disabled = !isDocumented);
-                saveDayBtn.disabled = false;
-                tagLibraryContainer.style.opacity = isDocumented ? '1' : '0.5';
+                const isDocumented = dom.statusSelect.value === 'dokumentiert';
+                dom.mainContentPanel.style.opacity = isDocumented ? '1' : '0.5';
+                dom.mainContentPanel.querySelectorAll('input, textarea, button, select').forEach(el => el.disabled = !isDocumented);
+                dom.saveDayBtn.disabled = false;
+                dom.tagLibraryContainer.style.opacity = isDocumented ? '1' : '0.5';
+                updateBackgroundColor();
             }
 
-            // --- Tag-Management ---
+            // --- Multi-Tag-Eintragslogik ---
+            function renderDailyEntry(entry = { tagNames: [], time: 0, note: '' }) {
+                const entryEl = document.createElement('div');
+                entryEl.className = 'daily-entry-item p-3 rounded-lg bg-gray-50 border border-gray-200';
+
+                entryEl.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="flex-grow">
+                            <div class="selected-tags-container flex flex-wrap items-center"></div>
+                            <div class="relative mt-2">
+                                <input type="text" class="tag-search-input w-full rounded-md border-gray-300 shadow-sm p-1.5" placeholder="+ Tag hinzufügen...">
+                                <div class="autocomplete-suggestions hidden"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="number" value="${entry.time || 0}" min="0" step="0.25" class="entry-time-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1">
+                            <span class="text-gray-500 ml-1">h</span>
+                            <button type="button" class="remove-entry-btn text-red-500 hover:text-red-700 font-bold text-xl ml-2">&times;</button>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" class="entry-note-input block w-full rounded-md border-gray-200 shadow-sm p-1.5" placeholder="Notiz für diesen Eintrag..." value="${entry.note || ''}">
+                    </div>
+                `;
+
+                const tagsContainer = entryEl.querySelector('.selected-tags-container');
+                (entry.tagNames || []).forEach(tagName => {
+                    tagsContainer.appendChild(createTagBadge(tagName, entryEl));
+                });
+
+                setupEntryEventListeners(entryEl);
+                dom.dailyEntriesContainer.appendChild(entryEl);
+            }
+
+            function setupEntryEventListeners(entryEl) {
+                entryEl.querySelector('.entry-time-input').addEventListener('input', updateTotals);
+                entryEl.querySelector('.remove-entry-btn').addEventListener('click', () => {
+                    if (dom.dailyEntriesContainer.children.length > 1) {
+                        entryEl.remove();
+                        updateTotals();
+                    } else {
+                        showNotification("Der letzte Eintrag kann nicht gelöscht werden.", true);
+                    }
+                });
+
+                const searchInput = entryEl.querySelector('.tag-search-input');
+                const suggestionsContainer = entryEl.querySelector('.autocomplete-suggestions');
+
+                searchInput.addEventListener('input', () => handleTagAutocomplete(searchInput, suggestionsContainer, entryEl));
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && searchInput.value.trim()) {
+                        e.preventDefault();
+                        const newTagName = searchInput.value.trim();
+                        if (tagCategoryMap[newTagName]) {
+                            addTagToEntry(newTagName, entryEl);
+                            searchInput.value = '';
+                            suggestionsContainer.classList.add('hidden');
+                        } else {
+                            showNotification(`Tag "${newTagName}" nicht in Bibliothek gefunden.`, true);
+                        }
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!entryEl.contains(e.target)) suggestionsContainer.classList.add('hidden');
+                });
+            }
+
+            function handleTagAutocomplete(input, suggestionsContainer, entryEl) {
+                const query = input.value.toLowerCase();
+                suggestionsContainer.innerHTML = '';
+                if (!query) {
+                    suggestionsContainer.classList.add('hidden');
+                    return;
+                }
+
+                const existingTags = Array.from(entryEl.querySelectorAll('.tag-badge')).map(b => b.dataset.tagName);
+                const filteredTags = Object.keys(tagCategoryMap)
+                    .filter(tag => tag.toLowerCase().includes(query) && !existingTags.includes(tag))
+                    .slice(0, 5);
+
+                if (filteredTags.length > 0) {
+                    filteredTags.forEach(tag => {
+                        const suggestionEl = document.createElement('div');
+                        suggestionEl.className = 'autocomplete-suggestion';
+                        suggestionEl.textContent = tag;
+                        suggestionEl.onclick = () => {
+                            addTagToEntry(tag, entryEl);
+                            input.value = '';
+                            suggestionsContainer.classList.add('hidden');
+                        };
+                        suggestionsContainer.appendChild(suggestionEl);
+                    });
+                    suggestionsContainer.classList.remove('hidden');
+                } else {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            }
+
+            function addTagToEntry(tagName, entryEl) {
+                const tagsContainer = entryEl.querySelector('.selected-tags-container');
+                const existingTags = Array.from(tagsContainer.querySelectorAll('.tag-badge')).map(b => b.dataset.tagName);
+                if (!existingTags.includes(tagName)) {
+                    tagsContainer.appendChild(createTagBadge(tagName, entryEl));
+                    updateTotals();
+                }
+            }
+
+            function createTagBadge(tagName, entryEl) {
+                const badge = document.createElement('div');
+                badge.className = 'tag-badge';
+                badge.textContent = tagName;
+                badge.dataset.tagName = tagName;
+                const category = tagCategoryMap[tagName];
+                badge.style.backgroundColor = CATEGORY_CHART_COLORS[category] || '#6B7280';
+
+                const removeBtn = document.createElement('span');
+                removeBtn.className = 'tag-badge-remove';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.onclick = () => {
+                    badge.remove();
+                    updateTotals();
+                };
+                badge.appendChild(removeBtn);
+                return badge;
+            }
+
+            function updateTotals() {
+                const total = Array.from(dom.dailyEntriesContainer.querySelectorAll('.entry-time-input'))
+                    .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+                dom.totalHoursEl.textContent = total.toFixed(2);
+                updateBackgroundColor();
+            }
+
+            function updateBackgroundColor() {
+                const categoryHours = CATEGORIES.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {});
+                dom.dailyEntriesContainer.querySelectorAll('.daily-entry-item').forEach(item => {
+                    const time = parseFloat(item.querySelector('.entry-time-input').value) || 0;
+                    const tags = item.querySelectorAll('.tag-badge');
+                    if (tags.length > 0) {
+                        const timePerTag = time / tags.length;
+                        tags.forEach(badge => {
+                            const category = tagCategoryMap[badge.dataset.tagName];
+                            if (category) categoryHours[category] += timePerTag;
+                        });
+                    }
+                });
+
+                let dominantCategory = null;
+                let maxHours = 0;
+                for (const [cat, hours] of Object.entries(categoryHours)) {
+                    if (hours > maxHours) {
+                        maxHours = hours;
+                        dominantCategory = cat;
+                    }
+                }
+
+                if (dominantCategory && dom.statusSelect.value === 'dokumentiert') {
+                    dom.mainContentPanel.style.backgroundColor = CATEGORY_BACKGROUND_COLORS[dominantCategory];
+                } else {
+                    dom.mainContentPanel.style.backgroundColor = '#ffffff';
+                }
+            }
+
+            // --- Tag-Bibliothek ---
             function renderTagLibrary() {
-                tagLibrary.innerHTML = '';
-                const sortedTags = Object.keys(tagCategoryMap).sort();
-                sortedTags.forEach(tag => {
+                dom.tagLibrary.innerHTML = '';
+                Object.keys(tagCategoryMap).sort().forEach(tag => {
                     const button = document.createElement('button');
+                    button.setAttribute('type', 'button');
                     button.textContent = tag;
-                    button.title = `Kategorie: ${tagCategoryMap[tag]}`;
-                    button.className = 'tag-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium py-1 px-3 rounded-full';
-                    button.onclick = () => addTagToDay(tag);
-                    tagLibrary.appendChild(button);
+                    const category = tagCategoryMap[tag];
+                    button.style.backgroundColor = CATEGORY_CHART_COLORS[category] || '#6B7280';
+                    button.title = `Kategorie: ${category}`;
+                    button.className = 'tag-button text-sm font-medium py-1 px-3 rounded-full';
+                    dom.tagLibrary.appendChild(button);
                 });
             }
 
             function addNewTag() {
-                const tagName = newTagInput.value.trim();
-                const category = newTagCategorySelect.value;
-                if (tagName && !tagCategoryMap.hasOwnProperty(tagName)) {
-                    tagCategoryMap[tagName] = category;
+                const tagName = dom.newTagInput.value.trim();
+                if (tagName && !tagCategoryMap[tagName]) {
+                    tagCategoryMap[tagName] = dom.newTagCategorySelect.value;
                     renderTagLibrary();
                     saveDataToServer();
                     showNotification(`Tag "${tagName}" hinzugefügt.`);
+                    dom.newTagInput.value = '';
                 } else if (tagName) {
-                    showNotification(`Der Tag "${tagName}" existiert bereits.`, true);
+                    showNotification(`Tag "${tagName}" existiert bereits.`, true);
                 }
-                newTagInput.value = '';
             }
 
-            function addTagToDay(tagName) {
-                const existingTags = Array.from(dailyTagsContainer.querySelectorAll('.daily-tag-item')).map(el => el.dataset.tagName);
-                if (existingTags.includes(tagName)) {
-                    showNotification(`Tag "${tagName}" wurde bereits hinzugefügt.`, true);
-                    return;
+            // --- Zeitberechnung ---
+            function calculateAndApplyWorkTime() {
+                if (!dom.startTimeInput.value || !dom.endTimeInput.value) return;
+                const start = new Date(`1970-01-01T${dom.startTimeInput.value}`);
+                const end = new Date(`1970-01-01T${dom.endTimeInput.value}`);
+                if (end <= start) return;
+                const diffHours = (end - start) / 3600000;
+                dom.workHoursInput.value = diffHours.toFixed(2);
+
+                const entries = dom.dailyEntriesContainer.querySelectorAll('.daily-entry-item');
+                if (entries.length > 0) {
+                    const timePerEntry = diffHours / entries.length;
+                    entries.forEach(entry => entry.querySelector('.entry-time-input').value = timePerEntry.toFixed(2));
+                    updateTotals();
                 }
-                renderDailyTag(tagName, 0, '');
             }
 
-            function renderDailyTag(name, time, note) {
-                const tagEl = document.createElement('div');
-                tagEl.className = 'daily-tag-item p-3 rounded-lg bg-gray-50 border border-gray-200';
-                tagEl.dataset.tagName = name;
-                tagEl.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="flex-grow font-semibold">${name}</div>
-                        <input type="number" value="${time || 0}" min="0" step="0.25" class="tag-time-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1">
-                        <span class="text-gray-500">h</span>
-                        <span class="tag-percentage-display text-sm text-gray-500 w-12 text-right">0%</span>
-                        <button class="remove-tag-btn text-red-500 hover:text-red-700 font-bold text-xl">&times;</button>
-                    </div>
-                    <div class="mt-2">
-                        <input type="text" class="tag-note-input block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-1.5" placeholder="Notiz für diese Tätigkeit..." value="${note || ''}">
-                    </div>
-                `;
-                tagEl.querySelector('.tag-time-input').addEventListener('input', updateTotals);
-                tagEl.querySelector('.remove-tag-btn').addEventListener('click', () => { tagEl.remove(); updateTotals(); });
-                dailyTagsContainer.appendChild(tagEl);
-            }
-
-            function updateTotals() {
-                let total = 0;
-                dailyTagsContainer.querySelectorAll('.tag-time-input').forEach(input => { total += parseFloat(input.value) || 0; });
-                totalHoursEl.textContent = total.toFixed(2);
-
-                dailyTagsContainer.querySelectorAll('.daily-tag-item').forEach(item => {
-                    const timeInput = item.querySelector('.tag-time-input');
-                    const percentageDisplay = item.querySelector('.tag-percentage-display');
-                    const time = parseFloat(timeInput.value) || 0;
-                    const percentage = total > 0 ? (time / total) * 100 : 0;
-                    percentageDisplay.textContent = `${percentage.toFixed(0)}%`;
-                });
-
-                const totalPercentage = Array.from(dailyTagsContainer.querySelectorAll('.tag-percentage-display'))
-                    .reduce((sum, el) => sum + parseFloat(el.textContent.replace('%','')), 0);
-                totalPercentageEl.textContent = `${totalPercentage.toFixed(0)}%`;
-            }
-
-            // --- Diagramme ---
+            // --- Diagramme & Berichte ---
             function getWeekNumber(d) {
                 d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-                d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-                var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-                var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+                var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+                var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
                 return [d.getUTCFullYear(), weekNo];
             }
 
             function setInitialDiagramDates() {
                 const today = new Date();
                 const [year, week] = getWeekNumber(today);
-                diagramWeekPicker.value = `${year}-W${String(week).padStart(2, '0')}`;
-                diagramDayPicker.value = today.toISOString().split('T')[0];
-                updateCharts();
+                dom.diagramWeekPicker.value = `${year}-W${String(week).padStart(2, '0')}`;
+                dom.diagramDayPicker.value = today.toISOString().split('T')[0];
             }
 
-            function handleDiagramViewChange(event) {
-                const isWeekView = event.target.value === 'week';
-                weekViewControls.classList.toggle('hidden', !isWeekView);
-                dayViewControls.classList.toggle('hidden', isWeekView);
+            function handleDiagramViewChange() {
+                const isWeekView = dom.diagramViewRadios[0].checked;
+                dom.weekViewControls.classList.toggle('hidden', !isWeekView);
+                dom.dayViewControls.classList.toggle('hidden', isWeekView);
                 updateCharts();
             }
 
             function initCharts() {
                 const barCtx = document.getElementById('bar-chart').getContext('2d');
-                barChart = new Chart(barCtx, { type: 'bar', options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}h` } } } } });
+                barChart = new Chart(barCtx, { type: 'bar', options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.formattedValue}h` } } } } });
 
                 const radarCtx = document.getElementById('radar-chart').getContext('2d');
-                const pointColors = CATEGORIES.map(cat => CATEGORY_COLORS[cat] || 'rgba(201, 203, 207, 0.6)');
-                radarChart = new Chart(radarCtx, { type: 'radar', data: { labels: CATEGORIES, datasets: [{ label: 'Fokus (Durchschnitt pro Tag)', data: [], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: pointColors, pointBorderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, suggestedMax: 4 } }, elements: { line: { tension: 0.1 } } } });
+                radarChart = new Chart(radarCtx, {
+                    type: 'radar',
+                    data: { labels: RADAR_CATEGORIES },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, suggestedMax: 4 } } }
+                });
+            }
+
+            function updateCharts() {
+                const isWeekView = dom.diagramViewRadios[0].checked;
+                const periodData = getPeriodDataForCharts();
+                updateBarChart(periodData, isWeekView);
+                updateRadarChart(periodData, isWeekView);
             }
 
             function getPeriodDataForCharts() {
-                const view = document.querySelector('input[name="diagram-view"]:checked').value;
                 const data = {};
-
-                if (view === 'week') {
-                    const weekValue = diagramWeekPicker.value;
-                    if (!weekValue) return {};
-                    const [year, week] = weekValue.split('-W').map(Number);
+                if (dom.diagramViewRadios[0].checked) { // Week view
+                    if (!dom.diagramWeekPicker.value) return {};
+                    const [year, week] = dom.diagramWeekPicker.value.split('-W').map(Number);
                     const d = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
                     const dayOfWeek = d.getUTCDay();
-                    const diff = d.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Monday
+                    const diff = d.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
                     const startDate = new Date(d.setUTCDate(diff));
-
                     for (let i = 0; i < 7; i++) {
                         const currentDate = new Date(startDate);
                         currentDate.setUTCDate(startDate.getUTCDate() + i);
                         const dateStr = currentDate.toISOString().split('T')[0];
-                        if (appData[dateStr]) {
-                            data[dateStr] = appData[dateStr];
-                        } else {
-                            // Add empty entry to ensure week always has 7 days for chart labels
-                            data[dateStr] = null;
-                        }
+                        data[dateStr] = appData[dateStr] || null;
                     }
-                } else { // day view
-                    const dateStr = diagramDayPicker.value;
-                    if (dateStr && appData[dateStr]) {
-                        data[dateStr] = appData[dateStr];
-                    }
+                } else { // Day view
+                    if (dom.diagramDayPicker.value) data[dom.diagramDayPicker.value] = appData[dom.diagramDayPicker.value] || null;
                 }
                 return data;
             }
 
-            function updateCharts() {
-                const periodData = getPeriodDataForCharts();
-                const view = document.querySelector('input[name="diagram-view"]:checked').value;
-
-                // Bar/Pie Chart
-                if (barChart) barChart.destroy();
-                const barCtx = document.getElementById('bar-chart').getContext('2d');
-
-                if (view === 'week') {
-                    barChartTitle.textContent = "Tätigkeiten pro Tag";
-                    const allPeriodTags = new Set();
-                    Object.values(periodData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allPeriodTags.add(t.name)); });
-                    const periodLabels = Object.keys(periodData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short' }));
-                    barChart = new Chart(barCtx, { type: 'bar', data: { labels: periodLabels, datasets: Array.from(allPeriodTags).map(tag => ({
-                        label: tag,
-                        data: Object.values(periodData).map(day => {
-                            if (!day || day.status !== 'dokumentiert') return 0;
-                            const dayTag = day.tags.find(t => t.name === tag);
-                            return dayTag ? dayTag.time : 0;
-                        }),
-                        backgroundColor: getRandomColor(tag),
-                    }))}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Stunden' } } }, plugins: { tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.formattedValue}h` } } } } });
-                } else { // Day view
-                    barChartTitle.textContent = "Tagesverteilung";
-                    const dayData = Object.values(periodData)[0];
-                    const filteredTags = dayData ? dayData.tags.filter(t => t.time > 0) : [];
-                    const labels = filteredTags.map(t => t.name);
-                    const data = filteredTags.map(t => t.time);
-                    barChart = new Chart(barCtx, { type: 'pie', data: { labels: labels, datasets: [{
-                        data: data,
-                        backgroundColor: labels.map(label => getRandomColor(label)),
-                    }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: context => `${context.label}: ${context.formattedValue}h` } } } } });
+            function updateBarChart(periodData, isWeekView) {
+                const newType = isWeekView ? 'bar' : 'pie';
+                if (barChart.config.type !== newType) {
+                    barChart.destroy();
+                    barChart = new Chart(document.getElementById('bar-chart').getContext('2d'), { type: newType, options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: c => `${c.label}: ${c.formattedValue}h` } } } } });
                 }
 
-                // Radar chart
-                radarChartTitle.textContent = view === 'week' ? "Kategorien-Fokus (Woche, Ø pro Tag)" : "Kategorien-Fokus (Tag, Gesamtstunden)";
-                const categoryTotals = CATEGORIES.reduce((acc, cat) => ({...acc, [cat]: 0}), {});
+                if (isWeekView) {
+                    dom.barChartTitle.textContent = "Tätigkeiten pro Tag";
+                    const allTags = [...new Set(Object.values(periodData).flatMap(d => d?.entries?.flatMap(e => e.tagNames) || []))];
+                    barChart.data.labels = Object.keys(periodData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short' }));
+                    barChart.options.scales = { x: { stacked: true }, y: { stacked: true, beginAtZero: true } };
+                    barChart.data.datasets = allTags.map(tag => ({
+                        label: tag,
+                        data: Object.values(periodData).map(day =>
+                            day?.entries?.reduce((sum, entry) => {
+                                const time = entry.tagNames.includes(tag) ? (entry.time / entry.tagNames.length) : 0;
+                                return sum + time;
+                            }, 0) || 0
+                        ),
+                        backgroundColor: CATEGORY_CHART_COLORS[tagCategoryMap[tag]] || getRandomColor(tag)
+                    }));
+                } else { // Day View
+                    dom.barChartTitle.textContent = "Tagesverteilung";
+                    const day = Object.values(periodData)[0];
+                    const tagTotals = {};
+                    day?.entries?.forEach(entry => {
+                        const timePerTag = entry.tagNames.length > 0 ? entry.time / entry.tagNames.length : 0;
+                        entry.tagNames.forEach(tn => {
+                            tagTotals[tn] = (tagTotals[tn] || 0) + timePerTag;
+                        });
+                    });
+                    barChart.data.labels = Object.keys(tagTotals);
+                    barChart.options.scales = {};
+                    barChart.data.datasets = [{
+                        data: Object.values(tagTotals),
+                        backgroundColor: Object.keys(tagTotals).map(tag => CATEGORY_CHART_COLORS[tagCategoryMap[tag]] || getRandomColor(tag))
+                    }];
+                }
+                barChart.update();
+            }
 
-                const documentedDays = Object.values(periodData).filter(day => day && day.status === 'dokumentiert');
+            function updateRadarChart(periodData, isWeekView) {
+                dom.radarChartTitle.textContent = isWeekView ? "Kategorien-Fokus (Woche, Ø pro Tag)" : "Kategorien-Fokus (Tag)";
+                const categoryTotals = RADAR_CATEGORIES.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {});
+                const documentedDays = Object.values(periodData).filter(d => d && d.status === 'dokumentiert');
+
                 documentedDays.forEach(day => {
-                    day.tags.forEach(tag => {
-                        const category = tagCategoryMap[tag.name];
-                        if (category) categoryTotals[category] += tag.time || 0;
+                    day.entries?.forEach(entry => {
+                        entry.tagNames.forEach(tn => {
+                            const category = tagCategoryMap[tn];
+                            if (category in categoryTotals) { // Nur relevante Kategorien zählen
+                                categoryTotals[category] += (entry.time / entry.tagNames.length);
+                            }
+                        });
                     });
                 });
 
-                let radarData;
-                if (view === 'week') {
-                    const totalDays = documentedDays.length;
-                    radarData = totalDays > 0 ? Object.values(categoryTotals).map(total => total / totalDays) : [];
-                } else {
-                    radarData = Object.values(categoryTotals);
-                }
+                const radarData = isWeekView
+                    ? (documentedDays.length > 0 ? Object.values(categoryTotals).map(t => t / documentedDays.length) : [])
+                    : Object.values(categoryTotals);
 
-                radarChart.data.datasets[0].data = radarData;
-                radarChart.data.datasets[0].label = view === 'week' ? 'Fokus (Ø pro Tag in h)' : 'Fokus (Stunden)';
+                radarChart.data.datasets = [{
+                    label: isWeekView ? 'Ø Stunden pro Tag' : 'Gesamtstunden',
+                    data: radarData,
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointBackgroundColor: RADAR_CATEGORIES.map(cat => CATEGORY_CHART_COLORS[cat]),
+                }];
                 radarChart.update();
             }
 
@@ -580,141 +807,41 @@
                 return color + 'B3';
             }
 
-            // --- Berichtsgenerator ---
-            function getPeriodData(baseDateString, periodType) {
-                let startDate, endDate;
-                const baseDate = new Date(baseDateString + 'T00:00:00');
-
-                if (periodType === 'week') {
-                    const dayOfWeek = baseDate.getDay();
-                    startDate = new Date(baseDate);
-                    startDate.setDate(baseDate.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-                    endDate = new Date(startDate);
-                    endDate.setDate(startDate.getDate() + 6);
-                } else if (periodType === 'month') {
-                    startDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
-                    endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 0);
-                } else { // 'all'
-                    const allDates = Object.keys(appData).sort();
-                    if (allDates.length === 0) return { data: {}, firstDay: null, lastDay: null };
-                    startDate = new Date(allDates[0] + 'T00:00:00');
-                    endDate = new Date(allDates[allDates.length - 1] + 'T00:00:00');
+            async function handleGenerateReport(periodType) {
+                const { data, firstDay, lastDay, reportTitle } = getPeriodDataForReport(dom.datePicker.value, periodType);
+                if (!firstDay || !lastDay || Object.keys(data).length === 0) {
+                    showNotification("Keine Daten für den Bericht vorhanden.", true); return;
                 }
-
-                const data = {};
-                let currentDate = new Date(startDate);
-                while(currentDate <= endDate) {
-                    const dateStr = currentDate.toISOString().split('T')[0];
-                    if (appData[dateStr]) data[dateStr] = appData[dateStr];
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-                return { data, firstDay: startDate.toISOString().split('T')[0], lastDay: endDate.toISOString().split('T')[0] };
-            }
-
-            function handleGenerateWeekReport() {
-                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'week');
-                generateReport('Wochenbericht', data, firstDay, lastDay);
-            }
-
-            function handleGenerateMonthReport() {
-                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'month');
-                generateReport('Monatsbericht', data, firstDay, lastDay);
-            }
-
-            function handleGenerateAllReport() {
-                const { data, firstDay, lastDay } = getPeriodData(datePicker.value, 'all');
-                generateReport('Gesamtbericht', data, firstDay, lastDay);
-            }
-
-            async function generateReport(reportTitle, reportData, firstDay, lastDay) {
-                if (!firstDay || !lastDay || Object.keys(reportData).length === 0) {
-                    showNotification("Keine Daten für den Bericht vorhanden.", true);
-                    return;
-                }
-
-                const tempBarCanvas = document.createElement('canvas'); tempBarCanvas.width = 800; tempBarCanvas.height = 400;
-                const tempRadarCanvas = document.createElement('canvas'); tempRadarCanvas.width = 500; tempRadarCanvas.height = 500;
-
-                const allReportTags = new Set();
-                Object.values(reportData).forEach(day => { if (day && day.status === 'dokumentiert') day.tags.forEach(t => allReportTags.add(t.name)); });
-
-                const barDatasets = Array.from(allReportTags).map(tag => ({
-                    label: tag,
-                    data: Object.keys(reportData).map(date => {
-                        const day = reportData[date];
-                        if (!day || day.status !== 'dokumentiert') return 0;
-                        const dayTag = day.tags.find(t => t.name === tag);
-                        return dayTag ? dayTag.time : 0;
-                    }),
-                    backgroundColor: getRandomColor(tag),
-                }));
-
-                const barChartImg = await new Promise(resolve => {
-                    new Chart(tempBarCanvas, {
-                        type: 'bar',
-                        data: { labels: Object.keys(reportData).map(d => new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })), datasets: barDatasets },
-                        options: { responsive: false, animation: false, plugins: { legend: { display: allReportTags.size <= 10 } }, scales: { y: { title: { display: true, text: 'Stunden' } } } }
-                    });
-                    setTimeout(() => resolve(tempBarCanvas.toDataURL('image/png')), 500);
-                });
-
-                const categoryTotals = CATEGORIES.reduce((acc, cat) => ({...acc, [cat]: 0}), {});
-                Object.values(reportData).forEach(day => {
-                    if (day && day.status === 'dokumentiert') {
-                        day.tags.forEach(tag => {
-                            const category = tagCategoryMap[tag.name];
-                            if (category) categoryTotals[category] += tag.time || 0;
-                        });
-                    }
-                });
-                const pointColors = CATEGORIES.map(cat => CATEGORY_COLORS[cat] || 'rgba(201, 203, 207, 0.6)');
-                const radarChartImg = await new Promise(resolve => {
-                     new Chart(tempRadarCanvas, {
-                        type: 'radar',
-                        data: { labels: CATEGORIES, datasets: [{ label: 'Gesamtstunden', data: Object.values(categoryTotals), pointBackgroundColor: pointColors, }] },
-                        options: { responsive: false, animation: false, }
-                    });
-                    setTimeout(() => resolve(tempRadarCanvas.toDataURL('image/png')), 500);
-                });
 
                 let dailyDetailsHtml = '';
-                Object.keys(reportData).sort().forEach(date => {
-                    const dayData = reportData[date];
+                Object.keys(data).sort().forEach(date => {
+                    const dayData = data[date];
                     const dayDate = new Date(date + 'T00:00:00');
-                    let detailHtml = `<div class="mb-6 p-4 border rounded-lg break-inside-avoid"><h3 class="text-xl font-bold">${dayDate.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</h3>`;
+                    dailyDetailsHtml += `<div class="mb-6 p-4 border rounded-lg break-inside-avoid"><h3 class="text-xl font-bold">${dayDate.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</h3>`;
                     if (!dayData || dayData.status !== 'dokumentiert') {
-                        const statusText = dayData ? {urlaub: 'Urlaub', krank: 'Krank', abwesend: 'Abwesend'}[dayData.status] : 'Kein Eintrag';
-                        detailHtml += `<p class="text-gray-500 italic">${statusText}</p>`;
+                        const statusText = dayData ? { urlaub: 'Urlaub', krank: 'Krank', abwesend: 'Abwesend' }[dayData.status] : 'Kein Eintrag';
+                        dailyDetailsHtml += `<p class="text-gray-500 italic">${statusText}</p>`;
                     } else {
-                        detailHtml += '<ul class="list-disc list-inside">';
-                        dayData.tags.forEach(tag => {
-                            if(tag.time > 0) {
-                                detailHtml += `<li><strong>${tag.name}:</strong> ${tag.time}h`;
-                                if (tag.note) {
-                                    detailHtml += `<div class="pl-6 text-sm text-gray-600">${tag.note}</div>`;
-                                }
-                                detailHtml += `</li>`;
+                        dailyDetailsHtml += '<ul class="list-disc list-inside">';
+                        dayData.entries?.forEach(entry => {
+                            if (entry.time > 0) {
+                                dailyDetailsHtml += `<li><strong>${entry.tagNames.join(', ')}:</strong> ${entry.time}h`;
+                                if (entry.note) dailyDetailsHtml += `<div class="pl-6 text-sm text-gray-600">${entry.note}</div>`;
+                                dailyDetailsHtml += `</li>`;
                             }
                         });
-                        detailHtml += '</ul>';
+                        dailyDetailsHtml += '</ul>';
                     }
-                    detailHtml += `</div>`;
-                    dailyDetailsHtml += detailHtml;
+                    dailyDetailsHtml += `</div>`;
                 });
 
                 const reportHtml = `
                     <!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>${reportTitle}</title>
-                    <script src="https://cdn.tailwindcss.com/"><\/script>
-                    <style> body { font-family: sans-serif; } @media print { .no-print { display: none; } } </style>
-                    </head><body class="bg-gray-100 p-8"><div class="max-w-4xl mx-auto bg-white p-10 rounded-lg shadow-lg">
-                    <button onclick="window.print()" class="no-print fixed top-4 right-4 bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-600">Drucken</button>
+                    <script src="https://cdn.tailwindcss.com/"><\/script><style>body{font-family:sans-serif} @media print{.no-print{display:none}}</style></head>
+                    <body class="bg-gray-100 p-8"><div class="max-w-4xl mx-auto bg-white p-10 rounded-lg shadow-lg">
+                    <button type="button" onclick="window.print()" class="no-print fixed top-4 right-4 bg-blue-500 text-white py-2 px-4 rounded">Drucken</button>
                     <h1 class="text-4xl font-bold text-center mb-2">${reportTitle}</h1>
                     <p class="text-center text-gray-600 text-lg mb-8">${new Date(firstDay).toLocaleDateString('de-DE')} - ${new Date(lastDay).toLocaleDateString('de-DE')}</p>
-                    <h2 class="text-2xl font-bold mt-10 mb-4 border-b pb-2">Visuelle Auswertung</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div><h3 class="font-bold text-center mb-2">Tätigkeiten</h3><img src="${barChartImg}" alt="Balkendiagramm"></div>
-                        <div><h3 class="font-bold text-center mb-2">Kategorien-Fokus</h3><img src="${radarChartImg}" alt="Spinnendiagramm"></div>
-                    </div>
                     <h2 class="text-2xl font-bold mt-10 mb-4 border-b pb-2">Tagesdetails</h2>
                     ${dailyDetailsHtml}</div></body></html>`;
 
@@ -723,9 +850,36 @@
                 reportWindow.document.close();
             }
 
-            // --- Start the app ---
+            function getPeriodDataForReport(baseDate, periodType) {
+                let startDate, endDate;
+                const base = new Date(baseDate + 'T00:00:00');
+                if (periodType === 'week') {
+                    const day = base.getDay();
+                    startDate = new Date(new Date(base).setDate(base.getDate() - day + (day === 0 ? -6 : 1)));
+                    endDate = new Date(new Date(startDate).setDate(startDate.getDate() + 6));
+                } else if (periodType === 'month') {
+                    startDate = new Date(base.getFullYear(), base.getMonth(), 1);
+                    endDate = new Date(base.getFullYear(), base.getMonth() + 1, 0);
+                } else { // 'all'
+                    const allDates = Object.keys(appData).sort();
+                    if (allDates.length === 0) return { data: {} };
+                    startDate = new Date(allDates[0] + 'T00:00:00');
+                    endDate = new Date(allDates[allDates.length - 1] + 'T00:00:00');
+                }
+
+                const data = {};
+                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                    const dateStr = d.toISOString().split('T')[0];
+                    if (appData[dateStr]) data[dateStr] = appData[dateStr];
+                }
+                const titles = { week: 'Wochenbericht', month: 'Monatsbericht', all: 'Gesamtbericht' };
+                return { data, firstDay: startDate.toISOString().split('T')[0], lastDay: endDate.toISOString().split('T')[0], reportTitle: titles[periodType] };
+            }
+
+            // --- App starten ---
             init();
         });
     </script>
 </body>
+
 </html>
