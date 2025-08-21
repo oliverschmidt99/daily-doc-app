@@ -1,19 +1,129 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
-
-{% block title %}To-Do Liste{% endblock %}
+{% block title %}Projekt- & Aufgaben-Dashboard{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-xl shadow-md max-w-2xl mx-auto">
-    <h2 class="text-2xl font-bold mb-4 text-gray-900">Meine Aufgaben</h2>
-    <div class="flex gap-2 mb-6">
-        <input type="text" id="new-todo-input" placeholder="Neue Aufgabe hinzufügen..."
-            class="flex-grow block w-full rounded-md border-gray-300 shadow-sm p-2">
-        <button id="add-todo-btn"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Hinzufügen</button>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">📂 Projekte verwalten</h2>
+            <ul id="project-list" class="space-y-2 mb-4"></ul>
+            <div class="space-y-2 border-t pt-4">
+                <input type="text" id="new-project-name" placeholder="Neues Projekt..."
+                    class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                <button id="add-project-btn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Projekt
+                    erstellen</button>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">📝 Neue Aufgabe</h2>
+            <div class="space-y-4">
+                <div><label for="new-todo-text" class="block text-sm font-medium text-gray-700">Aufgabe</label><textarea
+                        id="new-todo-text" rows="3" placeholder="Was muss getan werden?"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></textarea></div>
+                <div><label for="new-todo-project"
+                        class="block text-sm font-medium text-gray-700">Projekt</label><select id="new-todo-project"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></select></div>
+                <div><label for="new-todo-priority"
+                        class="block text-sm font-medium text-gray-700">Priorität</label><select id="new-todo-priority"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <option value="3">🔥 Dringend</option>
+                        <option value="2" selected>✅ Wichtig</option>
+                        <option value="1">💡 Optional</option>
+                    </select></div>
+                <div><label for="new-todo-duedate" class="block text-sm font-medium text-gray-700">Frist
+                        (optional)</label><input type="date" id="new-todo-duedate"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></div>
+                <div><label class="block text-sm font-medium text-gray-700">Tags (optional)</label>
+                    <div class="relative">
+                        <div id="new-todo-tags-container"
+                            class="flex flex-wrap gap-1 mt-1 p-2 border rounded-md min-h-[40px]"></div><input
+                            type="text" id="new-todo-tag-search" placeholder="+ Tag hinzufügen..."
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <div id="new-todo-tag-suggestions"
+                            class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 mt-1"></div>
+                    </div>
+                </div>
+                <button id="add-todo-btn"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg text-lg">Aufgabe
+                    hinzufügen</button>
+            </div>
+        </div>
     </div>
-    <ul id="todo-list" class="space-y-3">
-    </ul>
+
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold mb-4 border-b pb-2">🔝 Aufgaben nach Priorität</h2>
+            <div id="prio-3" class="mb-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-2">🔥 Dringend</h3>
+                <ul class="todo-list space-y-2"></ul>
+            </div>
+            <div id="prio-2" class="mb-6">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-2">✅ Wichtig</h3>
+                <ul class="todo-list space-y-2"></ul>
+            </div>
+            <div id="prio-1" class="mb-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-2">💡 Optional</h3>
+                <ul class="todo-list space-y-2"></ul>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <details id="completed-section" open>
+                <summary class="text-xl font-semibold cursor-pointer">✔️ Erledigte Aufgaben (<span
+                        id="completed-count">0</span>)</summary>
+                <div class="mt-4 border-t pt-4">
+                    <ul id="completed-list" class="space-y-2"></ul>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<div id="edit-todo-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-2xl leading-6 font-medium text-gray-900 border-b pb-3">Aufgabe bearbeiten</h3>
+            <div class="mt-4 space-y-4">
+                <input type="hidden" id="edit-todo-id">
+                <div><label for="edit-todo-text"
+                        class="block text-sm font-medium text-gray-700">Aufgabe</label><textarea id="edit-todo-text"
+                        rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></textarea></div>
+                <div><label for="edit-todo-project"
+                        class="block text-sm font-medium text-gray-700">Projekt</label><select id="edit-todo-project"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></select></div>
+                <div><label for="edit-todo-priority"
+                        class="block text-sm font-medium text-gray-700">Priorität</label><select id="edit-todo-priority"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <option value="3">🔥 Dringend</option>
+                        <option value="2">✅ Wichtig</option>
+                        <option value="1">💡 Optional</option>
+                    </select></div>
+                <div><label for="edit-todo-duedate" class="block text-sm font-medium text-gray-700">Frist</label><input
+                        type="date" id="edit-todo-duedate"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"></div>
+                <div><label class="block text-sm font-medium text-gray-700">Tags</label>
+                    <div class="relative">
+                        <div id="edit-todo-tags-container"
+                            class="flex flex-wrap gap-1 mt-1 p-2 border rounded-md min-h-[40px]"></div><input
+                            type="text" id="edit-todo-tag-search" placeholder="+ Tag hinzufügen..."
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <div id="edit-todo-tag-suggestions"
+                            class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 mt-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="items-center px-4 py-3 mt-4 border-t gap-4 flex justify-end">
+                <button id="cancel-edit-btn"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
+                <button id="save-edit-btn"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Änderungen
+                    speichern</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

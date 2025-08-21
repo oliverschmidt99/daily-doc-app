@@ -1,106 +1,408 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const newTodoInput = document.getElementById("new-todo-input");
-  const addTodoBtn = document.getElementById("add-todo-btn");
-  const todoList = document.getElementById("todo-list");
+document.addEventListener("DOMContentLoaded", async () => {
+  // --- Globale Daten ---
+  let allData = { projects: [], todos: [], tagCategoryMap: {} };
+  let currentTodoTags = [];
+  let currentEditTodoTags = [];
 
-  let todos = [];
+  // --- DOM-Elemente ---
+  const dom = {
+    projectList: document.getElementById("project-list"),
+    newProjectName: document.getElementById("new-project-name"),
+    addProjectBtn: document.getElementById("add-project-btn"),
+    newTodoText: document.getElementById("new-todo-text"),
+    newTodoProject: document.getElementById("new-todo-project"),
+    newTodoPriority: document.getElementById("new-todo-priority"),
+    newTodoDueDate: document.getElementById("new-todo-duedate"),
+    newTodoTagsContainer: document.getElementById("new-todo-tags-container"),
+    newTodoTagSearch: document.getElementById("new-todo-tag-search"),
+    newTodoTagSuggestions: document.getElementById("new-todo-tag-suggestions"),
+    addTodoBtn: document.getElementById("add-todo-btn"),
+    prioLists: {
+      3: document.querySelector("#prio-3 .todo-list"),
+      2: document.querySelector("#prio-2 .todo-list"),
+      1: document.querySelector("#prio-1 .todo-list"),
+    },
+    completedList: document.getElementById("completed-list"),
+    completedCount: document.getElementById("completed-count"),
+    // Edit Modal Elements
+    editModal: document.getElementById("edit-todo-modal"),
+    editTodoId: document.getElementById("edit-todo-id"),
+    editTodoText: document.getElementById("edit-todo-text"),
+    editTodoProject: document.getElementById("edit-todo-project"),
+    editTodoPriority: document.getElementById("edit-todo-priority"),
+    editTodoDueDate: document.getElementById("edit-todo-duedate"),
+    editTodoTagsContainer: document.getElementById("edit-todo-tags-container"),
+    editTodoTagSearch: document.getElementById("edit-todo-tag-search"),
+    editTodoTagSuggestions: document.getElementById(
+      "edit-todo-tag-suggestions"
+    ),
+    saveEditBtn: document.getElementById("save-edit-btn"),
+    cancelEditBtn: document.getElementById("cancel-edit-btn"),
+  };
 
-  function loadTodos() {
-    const storedTodos = localStorage.getItem("todos");
-    todos = storedTodos ? JSON.parse(storedTodos) : [];
+  const CATEGORY_CHART_COLORS = {
+    Technik: "rgba(239, 68, 68, 0.8)",
+    Analyse: "rgba(59, 130, 246, 0.8)",
+    Dokumentation: "rgba(245, 158, 11, 0.8)",
+    Organisation: "rgba(16, 185, 129, 0.8)",
+    Soziales: "rgba(139, 92, 246, 0.8)",
+    Sonstiges: "rgba(107, 114, 128, 0.8)",
+  };
+  const generateId = () => "_" + Math.random().toString(36).substr(2, 9);
+  const getProjectById = (id) =>
+    allData.projects.find((p) => p.id === id) || {
+      name: "Kein Projekt",
+      status: "active",
+    };
+
+  async function loadAllData() {
+    const response = await fetch("/load");
+    allData = await response.json();
   }
-
-  function saveTodos() {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }
-
-  function renderTodoList() {
-    todoList.innerHTML = "";
-    todos.forEach((todo, index) => {
-      const li = document.createElement("li");
-      li.className = `flex items-center justify-between p-3 rounded-lg border border-accent ${
-        todo.completed
-          ? "bg-secondary text-text-secondary line-through"
-          : "bg-primary"
-      }`;
-      li.innerHTML = `
-                <div class="flex items-center">
-                    <input type="checkbox" data-index="${index}" class="h-5 w-5 rounded border-gray-300 text-cyan-glow focus:ring-cyan-glow bg-primary" ${
-        todo.completed ? "checked" : ""
-      }>
-                    <label class="ml-3">${todo.text}</label>
-                </div>
-                <div>
-                    ${
-                      todo.completed
-                        ? `<button data-text="${todo.text}" class="add-to-doku-btn bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-1 px-2 rounded">Zur Doku +</button>`
-                        : ""
-                    }
-                    <button data-index="${index}" class="remove-todo-btn text-red-500 hover:text-red-700 font-bold ml-2 text-lg">×</button>
-                </div>
-            `;
-      todoList.appendChild(li);
+  async function saveData() {
+    await fetch("/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(allData),
     });
-
-    addEventListeners();
   }
 
-  function addTodoToDoku(text) {
-    const todo = { text };
-    localStorage.setItem("pendingTodo", JSON.stringify(todo));
-    window.location.href = "/"; // Leitet zur Doku-Seite weiter
+  function render() {
+    renderProjects();
+    renderTodos();
   }
 
-  function addEventListeners() {
-    document
-      .querySelectorAll(".remove-todo-btn")
-      .forEach((btn) =>
-        btn.addEventListener("click", (e) => removeTodo(e.target.dataset.index))
+  function renderProjects() {
+    dom.projectList.innerHTML = "";
+    const projectOptions = allData.projects
+      .map(
+        (p) =>
+          `<option value="${p.id}" ${
+            p.status === "completed" ? "disabled" : ""
+          }>${p.name}</option>`
+      )
+      .join("");
+    dom.newTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
+    dom.editTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
+
+    allData.projects.forEach((proj) => {
+      const li = document.createElement("li");
+      li.className = `flex justify-between items-center p-2 rounded ${
+        proj.status === "completed" ? "bg-gray-200 text-gray-500" : "bg-gray-50"
+      }`;
+      li.innerHTML = `<span class="font-semibold cursor-pointer ${
+        proj.status === "completed" ? "line-through" : ""
+      }">${
+        proj.name
+      }</span><div class="flex gap-2"><button class="toggle-proj-btn text-sm">${
+        proj.status === "completed" ? " reopening" : "✓"
+      }</button><button class="delete-proj-btn text-red-500 font-bold">&times;</button></div>`;
+      li.querySelector("span").addEventListener("click", (e) =>
+        editProjectName(e.target, proj.id)
       );
-    document
-      .querySelectorAll('input[type="checkbox"]')
-      .forEach((box) =>
-        box.addEventListener("change", (e) =>
-          toggleTodo(e.target.dataset.index)
-        )
+      li.querySelector(".toggle-proj-btn").addEventListener("click", () =>
+        toggleProjectStatus(proj.id)
       );
-    document
-      .querySelectorAll(".add-to-doku-btn")
-      .forEach((btn) =>
-        btn.addEventListener("click", (e) =>
-          addTodoToDoku(e.target.dataset.text)
-        )
+      li.querySelector(".delete-proj-btn").addEventListener("click", () =>
+        deleteProject(proj.id)
       );
+      dom.projectList.appendChild(li);
+    });
   }
 
-  function addTodo() {
-    const text = newTodoInput.value.trim();
-    if (text) {
-      todos.push({ text, completed: false });
-      newTodoInput.value = "";
-      saveTodos();
-      renderTodoList();
+  function renderTodos() {
+    Object.values(dom.prioLists).forEach((list) => (list.innerHTML = ""));
+    dom.completedList.innerHTML = "";
+    const activeTodos = allData.todos
+      .filter((t) => !t.completed)
+      .sort((a, b) => b.priority - a.priority);
+    const completedTodos = allData.todos.filter((t) => t.completed);
+    activeTodos.forEach((todo) => {
+      const list = dom.prioLists[todo.priority];
+      if (list) list.appendChild(createTodoElement(todo));
+    });
+    completedTodos.forEach((todo) =>
+      dom.completedList.appendChild(createTodoElement(todo))
+    );
+    dom.completedCount.textContent = completedTodos.length;
+  }
+
+  function createTodoElement(todo) {
+    const li = document.createElement("li");
+    const project = getProjectById(todo.projectId);
+    const isProjectDone = project.status === "completed";
+    li.className = `p-3 border rounded-md ${
+      todo.completed ? "bg-gray-100 text-gray-500" : "bg-white"
+    } ${isProjectDone ? "opacity-60" : ""}`;
+    const dueDate = todo.dueDate ? new Date(todo.dueDate + "T00:00:00") : null;
+    const isOverdue = dueDate && !todo.completed && dueDate < new Date();
+    const dueDateString = dueDate
+      ? dueDate.toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+        })
+      : "";
+    li.innerHTML = `<div class="flex items-start"><input type="checkbox" class="h-5 w-5 mt-1 rounded border-gray-300 text-indigo-600" ${
+      todo.completed ? "checked" : ""
+    }><div class="ml-3 flex-grow"><p class="${
+      todo.completed ? "line-through" : ""
+    }">${
+      todo.text
+    }</p><div class="flex flex-wrap items-center gap-x-3 text-xs text-gray-500 mt-1"><span class="font-semibold">${
+      project.name
+    }</span>${
+      dueDate
+        ? `<span class="${
+            isOverdue ? "text-red-500 font-bold" : ""
+          }">Frist: ${dueDateString}</span>`
+        : ""
+    }<div class="todo-tags-container flex flex-wrap gap-1"></div></div></div><div class="flex flex-col items-end gap-2">${
+      !todo.completed
+        ? `<button class="edit-todo-btn text-blue-500 text-xs">Bearbeiten</button><button class="add-to-doku-btn bg-green-500 text-white text-xs font-bold py-1 px-2 rounded-full">Doku +</button>`
+        : ""
+    }<button class="delete-todo-btn text-red-400 hover:text-red-600 text-xs">Löschen</button></div></div>`;
+    const tagsContainer = li.querySelector(".todo-tags-container");
+    (todo.tags || []).forEach((tag) => {
+      const badge = createTagBadge(tag, false);
+      tagsContainer.appendChild(badge);
+    });
+    li.querySelector('input[type="checkbox"]').addEventListener("change", () =>
+      toggleTodoStatus(todo.id)
+    );
+    li.querySelector(".delete-todo-btn").addEventListener("click", () =>
+      deleteTodo(todo.id)
+    );
+    const editBtn = li.querySelector(".edit-todo-btn");
+    if (editBtn)
+      editBtn.addEventListener("click", () => openEditModal(todo.id));
+    const dokuBtn = li.querySelector(".add-to-doku-btn");
+    if (dokuBtn) {
+      dokuBtn.addEventListener("click", () => addTodoToDoku(todo.text));
+    }
+    return li;
+  }
+
+  function addProject() {
+    const name = dom.newProjectName.value.trim();
+    if (name && !allData.projects.some((p) => p.name === name)) {
+      allData.projects.push({ id: generateId(), name, status: "active" });
+      dom.newProjectName.value = "";
+      render();
+      saveData();
+    }
+  }
+  function editProjectName(spanElement, id) {
+    const currentName = spanElement.textContent;
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = currentName;
+    input.className = "font-semibold form-input p-0 border-blue-500";
+    spanElement.replaceWith(input);
+    input.focus();
+    input.addEventListener("blur", () => saveName());
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") saveName();
+      if (e.key === "Escape") cancelEdit();
+    });
+    function saveName() {
+      const newName = input.value.trim();
+      if (newName) {
+        const proj = allData.projects.find((p) => p.id === id);
+        if (proj) proj.name = newName;
+      }
+      render();
+      saveData();
+    }
+    function cancelEdit() {
+      render();
+    }
+  }
+  function toggleProjectStatus(id) {
+    const proj = allData.projects.find((p) => p.id === id);
+    if (proj) {
+      proj.status = proj.status === "active" ? "completed" : "active";
+      render();
+      saveData();
+    }
+  }
+  function deleteProject(id) {
+    if (
+      confirm(
+        "Sollen dieses Projekt und alle zugehörigen Aufgaben wirklich gelöscht werden?"
+      )
+    ) {
+      allData.projects = allData.projects.filter((p) => p.id !== id);
+      allData.todos = allData.todos.filter((t) => t.projectId !== id);
+      render();
+      saveData();
     }
   }
 
-  function removeTodo(index) {
-    todos.splice(index, 1);
-    saveTodos();
-    renderTodoList();
+  function addTodo() {
+    const text = dom.newTodoText.value.trim();
+    if (!text) {
+      showNotification("Aufgabentext darf nicht leer sein.", true);
+      return;
+    }
+    allData.todos.push({
+      id: generateId(),
+      text,
+      projectId: dom.newTodoProject.value,
+      priority: dom.newTodoPriority.value,
+      dueDate: dom.newTodoDueDate.value,
+      tags: currentTodoTags,
+      completed: false,
+    });
+    dom.newTodoText.value = "";
+    dom.newTodoDueDate.value = "";
+    dom.newTodoTagsContainer.innerHTML = "";
+    currentTodoTags = [];
+    render();
+    saveData();
   }
 
-  function toggleTodo(index) {
-    todos[index].completed = !todos[index].completed;
-    saveTodos();
-    renderTodoList();
+  function toggleTodoStatus(id) {
+    const todo = allData.todos.find((t) => t.id === id);
+    if (todo) {
+      todo.completed = !todo.completed;
+      render();
+      saveData();
+    }
+  }
+  function deleteTodo(id) {
+    allData.todos = allData.todos.filter((t) => t.id !== id);
+    render();
+    saveData();
+  }
+  function addTodoToDoku(text) {
+    localStorage.setItem(
+      "pendingTodo",
+      JSON.stringify({ text: text.replace(/^-\s*/, "") })
+    );
+    window.location.href = "/";
   }
 
-  addTodoBtn.addEventListener("click", addTodo);
-  newTodoInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") addTodo();
-  });
+  function openEditModal(id) {
+    const todo = allData.todos.find((t) => t.id === id);
+    if (!todo) return;
+    dom.editTodoId.value = id;
+    dom.editTodoText.value = todo.text;
+    dom.editTodoProject.value = todo.projectId;
+    dom.editTodoPriority.value = todo.priority;
+    dom.editTodoDueDate.value = todo.dueDate;
+    currentEditTodoTags = [...(todo.tags || [])];
+    renderEditTodoTags();
+    dom.editModal.classList.remove("hidden");
+  }
 
-  // Initial load
-  loadTodos();
-  renderTodoList();
+  function closeEditModal() {
+    dom.editModal.classList.add("hidden");
+  }
+
+  function saveTodoChanges() {
+    const id = dom.editTodoId.value;
+    const todo = allData.todos.find((t) => t.id === id);
+    if (!todo) return;
+    todo.text = dom.editTodoText.value.trim();
+    todo.projectId = dom.editTodoProject.value;
+    todo.priority = dom.editTodoPriority.value;
+    todo.dueDate = dom.editTodoDueDate.value;
+    todo.tags = currentEditTodoTags;
+    render();
+    saveData();
+    closeEditModal();
+  }
+
+  function setupTagSearch(input, suggestions, tagsArray, renderFn) {
+    input.addEventListener("input", () => {
+      suggestions.innerHTML = "";
+      const query = input.value.toLowerCase();
+      if (!query) return;
+      Object.keys(allData.tagCategoryMap)
+        .filter(
+          (tag) => tag.toLowerCase().includes(query) && !tagsArray.includes(tag)
+        )
+        .slice(0, 5)
+        .forEach((tag) => {
+          const item = document.createElement("a");
+          item.href = "#";
+          item.className = "block p-2 hover:bg-gray-100 text-sm";
+          item.textContent = tag;
+          item.onclick = (e) => {
+            e.preventDefault();
+            tagsArray.push(tag);
+            renderFn();
+            input.value = "";
+            suggestions.innerHTML = "";
+          };
+          suggestions.appendChild(item);
+        });
+    });
+  }
+
+  function renderTagContainer(container, tagsArray, renderFn) {
+    container.innerHTML = "";
+    tagsArray.forEach((tag) => {
+      const badge = createTagBadge(tag, true);
+      badge.querySelector(".tag-badge-remove").onclick = () => {
+        const index = tagsArray.indexOf(tag);
+        if (index > -1) {
+          tagsArray.splice(index, 1);
+        }
+        renderFn();
+      };
+      container.appendChild(badge);
+    });
+  }
+
+  const renderCurrentTodoTags = () =>
+    renderTagContainer(
+      dom.newTodoTagsContainer,
+      currentTodoTags,
+      renderCurrentTodoTags
+    );
+  const renderEditTodoTags = () =>
+    renderTagContainer(
+      dom.editTodoTagsContainer,
+      currentEditTodoTags,
+      renderEditTodoTags
+    );
+
+  function createTagBadge(tagName, isEditable) {
+    const b = document.createElement("span");
+    b.className = "tag-badge text-xs";
+    b.textContent = tagName;
+    b.style.backgroundColor = allData.tagCategoryMap[tagName]
+      ? CATEGORY_CHART_COLORS[allData.tagCategoryMap[tagName]]
+      : "#6c757d";
+    if (isEditable) {
+      const r = document.createElement("span");
+      r.className = "tag-badge-remove";
+      r.innerHTML = "&times;";
+      b.appendChild(r);
+    }
+    return b;
+  }
+
+  async function run() {
+    await loadAllData();
+    setupTagSearch(
+      dom.newTodoTagSearch,
+      dom.newTodoTagSuggestions,
+      currentTodoTags,
+      renderCurrentTodoTags
+    );
+    setupTagSearch(
+      dom.editTodoTagSearch,
+      dom.editTodoTagSuggestions,
+      currentEditTodoTags,
+      renderEditTodoTags
+    );
+    dom.addProjectBtn.addEventListener("click", addProject);
+    dom.addTodoBtn.addEventListener("click", addTodo);
+    dom.saveEditBtn.addEventListener("click", saveTodoChanges);
+    dom.cancelEditBtn.addEventListener("click", closeEditModal);
+    render();
+  }
+  run();
 });

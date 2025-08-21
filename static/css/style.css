@@ -1,82 +1,22 @@
 body {
-    background-color: #0D1B2A;
-    color: #E0E1DD;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
 }
-
-.card {
-    background-color: #1B263B;
-    border: 1px solid #415A77;
-    border-radius: 12px;
-    padding: 24px;
-    transition: all 0.3s ease;
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+.chart-container { position: relative; height: 40vh; width: 100%; }
+#notification { transition: opacity 0.5s, transform 0.5s; }
+.nav-arrow { cursor: pointer; transition: transform 0.1s; }
+.nav-arrow:hover { transform: scale(1.2); }
+#main-content-panel { transition: background-color 0.5s ease; }
+.tag-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 0.875rem; color: white; margin-right: 4px; margin-bottom: 4px; }
+.tag-badge-remove { margin-left: 6px; cursor: pointer; font-weight: bold; }
+.todo-list .ml-6 {
+    margin-left: 1.5rem; /* Stellt sicher, dass die Einrückung konsistent ist */
 }
-
-.card:hover {
-    box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
-    border-color: #00BFFF;
-}
-
-.nav-link {
-    padding: 10px 20px;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.nav-link.active {
-    border-bottom: 3px solid #00BFFF;
-    color: #00BFFF;
-}
-
-input, select, textarea {
-    background-color: #0D1B2A;
-    border: 1px solid #415A77;
-    color: #E0E1DD;
-    border-radius: 8px;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #00BFFF;
-    box-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
-}
-
-.btn {
-    background-color: #415A77;
-    color: #E0E1DD;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.btn:hover {
-    background-color: #778DA9;
-    box-shadow: 0 0 10px rgba(119, 141, 169, 0.5);
-}
-
-.btn-primary {
-    background-color: #0077B6;
-}
-.btn-primary:hover {
-    background-color: #0096C7;
-}
-
-.chart-container {
-    position: relative;
-    height: 40vh;
-    width: 100%;
-}
-
-/* To-Do List Specific Styles */
-#todo-list li {
-    background-color: #0D1B2A;
-    border: 1px solid #415A77;
-}
-
-#todo-list li.completed {
-    text-decoration: line-through;
-    color: #778DA9;
-    background-color: #1B263B;
-}
+.autocomplete-suggestions a { font-size: 0.9em; }
+.todo-list .ml-6 { margin-left: 1.5rem; }
+.edit-todo-btn, .toggle-proj-btn, .delete-proj-btn { opacity: 0.2; transition: opacity 0.2s; }
+li:hover .edit-todo-btn, li:hover .toggle-proj-btn, li:hover .delete-proj-btn { opacity: 1; }

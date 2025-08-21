@@ -307,27 +307,34 @@
             "workHours": 8.97
         },
         "2025-08-21": {
-            "status": "dokumentiert",
-            "workHours": 8.95,
             "entries": [
                 {
+                    "note": "Bauteileditor wurde hinzugefügt. Es ist möglich Bauteile einzubauen",
                     "tagNames": [
                         "Programmieren",
                         "Simuliert"
                     ],
-                    "time": 5.95,
-                    "note": "Bauteileditor wurde hinzugefügt. Es ist möglich Bauteile einzubauen"
+                    "time": 5.95
                 },
                 {
+                    "note": "Musst tabelle mit Internen Bestellnummern ausfüllen",
                     "tagNames": [
                         "Tabellen ausfüllen"
                     ],
-                    "time": 3,
-                    "note": "Musst tabelle mit Internen Bestellnummern ausfüllen"
+                    "time": 3
                 }
-            ]
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.95
         }
     },
+    "projects": [
+        {
+            "id": "_a4weped20",
+            "name": "Wandler",
+            "status": "active"
+        }
+    ],
     "tagCategoryMap": {
         "Analysieren": "Analyse",
         "Bachelorarbeit schreiben": "Dokumentation",
@@ -343,6 +350,18 @@
         "Simuliert": "Analyse",
         "Soziales": "Soziales",
         "System einrichten": "Organisation",
-        "Tabellen ausfüllen": "Dokumentation"
-    }
+        "Tabellen ausfüllen": "Dokumentation",
+        "Test": "Sonstiges"
+    },
+    "todos": [
+        {
+            "completed": false,
+            "dueDate": "2025-08-21",
+            "id": "_hj6hly5g2",
+            "priority": "3",
+            "projectId": "_a4weped20",
+            "tags": [],
+            "text": "Test"
+        }
+    ]
 }

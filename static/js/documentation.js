@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   // --- Globale Variablen & Konstanten ---
-  let appData = {};
-  let tagCategoryMap = {};
+  let appData = {},
+    tagCategoryMap = {};
   let barChart, radarChart;
   const CATEGORIES = [
     "Technik",
@@ -18,14 +18,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     "Organisation",
     "Soziales",
   ];
-  const CATEGORY_BACKGROUND_COLORS = {
-    Technik: "rgba(239, 68, 68, 0.1)",
-    Analyse: "rgba(59, 130, 246, 0.1)",
-    Dokumentation: "rgba(245, 158, 11, 0.1)",
-    Organisation: "rgba(16, 185, 129, 0.1)",
-    Soziales: "rgba(139, 92, 246, 0.1)",
-    Sonstiges: "rgba(107, 114, 128, 0.1)",
-  };
   const CATEGORY_CHART_COLORS = {
     Technik: "rgba(239, 68, 68, 0.8)",
     Analyse: "rgba(59, 130, 246, 0.8)",
@@ -44,7 +36,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     0: 0,
   };
 
-  // --- DOM-Elemente ---
   const dom = {
     datePicker: document.getElementById("date-picker"),
     currentDateDisplay: document.getElementById("current-date-display"),
@@ -54,45 +45,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     totalHoursEl: document.getElementById("total-hours"),
     saveDayBtn: document.getElementById("save-day-btn"),
     tagLibrary: document.getElementById("tag-library"),
+    newTagInput: document.getElementById("new-tag-input"),
+    newTagCategorySelect: document.getElementById("new-tag-category"),
+    addNewTagBtn: document.getElementById("add-new-tag-btn"),
     notificationEl: document.getElementById("notification"),
     mainContentPanel: document.getElementById("main-content-panel"),
-    tagLibraryContainer: document.getElementById("tag-library-container"),
+    addEntryBtn: document.getElementById("add-entry-btn"),
     prevDayBtn: document.getElementById("prev-day-btn"),
     nextDayBtn: document.getElementById("next-day-btn"),
-    addEntryBtn: document.getElementById("add-entry-btn"),
+    diagramViewRadios: document.querySelectorAll('input[name="diagram-view"]'),
+    weekViewControls: document.getElementById("week-view-controls"),
+    dayViewControls: document.getElementById("day-view-controls"),
+    diagramWeekPicker: document.getElementById("diagram-week-picker"),
+    diagramDayPicker: document.getElementById("diagram-day-picker"),
+    barChartTitle: document.getElementById("bar-chart-title"),
+    radarChartTitle: document.getElementById("radar-chart-title"),
   };
 
-  // --- Initialisierung ---
+  function decimalToHHMM(decimalHours) {
+    if (isNaN(decimalHours) || decimalHours < 0) return "00:00";
+    const h = Math.floor(decimalHours);
+    const m = Math.round((decimalHours - h) * 60);
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+  }
+  function hhmmToDecimal(timeString) {
+    if (typeof timeString !== "string" || !timeString.includes(":")) return 0;
+    const [h, m] = timeString.split(":").map(Number);
+    return isNaN(h) || isNaN(m) ? 0 : h + m / 60;
+  }
+
   async function init() {
     await loadDataFromServer();
     initializeDefaultTags();
+    populateCategorySelect();
     renderTagLibrary();
     setupEventListeners();
     const today = new Date().toISOString().split("T")[0];
     initCharts();
+    setInitialDiagramDates();
     loadDay(today);
     checkPendingTodos();
   }
 
   function setupEventListeners() {
-    if (!dom.datePicker) return; // Sicherheits-Abbruch, falls HTML nicht stimmt
     dom.datePicker.addEventListener("change", () =>
       loadDay(dom.datePicker.value)
     );
     dom.statusSelect.addEventListener("change", handleStatusChange);
     dom.saveDayBtn.addEventListener("click", saveCurrentDay);
+    dom.addEntryBtn.addEventListener("click", () => renderDailyEntry());
+    dom.addNewTagBtn.addEventListener("click", addNewTag);
+    dom.newTagInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") addNewTag();
+    });
     dom.prevDayBtn.addEventListener("click", () => changeDay(-1));
     dom.nextDayBtn.addEventListener("click", () => changeDay(1));
-    dom.addEntryBtn.addEventListener("click", () => renderDailyEntry());
-    document
-      .getElementById("generate-week-report")
-      .addEventListener("click", () => handleGenerateReport("week"));
-    document
-      .getElementById("generate-month-report")
-      .addEventListener("click", () => handleGenerateReport("month"));
-    document
-      .getElementById("generate-all-report")
-      .addEventListener("click", () => handleGenerateReport("all"));
+    dom.diagramViewRadios.forEach((radio) =>
+      radio.addEventListener("change", handleDiagramViewChange)
+    );
+    dom.diagramWeekPicker.addEventListener("change", updateCharts);
+    dom.diagramDayPicker.addEventListener("change", updateCharts);
   }
 
   function showNotification(message, isError = false) {
@@ -104,15 +116,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       dom.notificationEl.classList.add("opacity-0", "translate-x-full");
     }, 3000);
   }
-
   async function loadDataFromServer() {
     try {
       const response = await fetch("/load");
       const data = await response.json();
+      // Stellt sicher, dass die benötigten Schlüssel immer vorhanden sind
       appData = data.appData || {};
       tagCategoryMap = data.tagCategoryMap || {};
     } catch (e) {
       showNotification("Keine Verbindung zum Server.", true);
+      appData = {};
+      tagCategoryMap = {};
     }
   }
 
@@ -128,9 +142,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       showNotification("Speichern fehlgeschlagen.", true);
     }
   }
-
   function initializeDefaultTags() {
-    const defaultTags = {
+    const defaults = {
       Messen: "Technik",
       Programmieren: "Technik",
       Simuliert: "Analyse",
@@ -147,51 +160,52 @@ document.addEventListener("DOMContentLoaded", async () => {
       Soziales: "Soziales",
       "Mitarbeiter gespräch": "Soziales",
     };
-    for (const [tag, category] of Object.entries(defaultTags)) {
-      if (!tagCategoryMap[tag]) tagCategoryMap[tag] = category;
+    for (const [tag, cat] of Object.entries(defaults)) {
+      if (!tagCategoryMap[tag]) tagCategoryMap[tag] = cat;
     }
+  }
+  function populateCategorySelect() {
+    if (!dom.newTagCategorySelect) return;
+    dom.newTagCategorySelect.innerHTML = CATEGORIES.map(
+      (c) => `<option value="${c}">${c}</option>`
+    ).join("");
   }
 
   function changeDay(offset) {
-    const currentDate = new Date(dom.datePicker.value + "T00:00:00");
-    currentDate.setDate(currentDate.getDate() + offset);
+    const currentDate = new Date(dom.datePicker.value);
+    currentDate.setUTCDate(currentDate.getUTCDate() + offset);
     loadDay(currentDate.toISOString().split("T")[0]);
   }
 
   function loadDay(dateString) {
     dom.datePicker.value = dateString;
+    dom.diagramDayPicker.value = dateString;
     dom.currentDateDisplay.textContent = new Date(
       dateString + "T00:00:00"
-    ).toLocaleDateString("de-DE", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-    });
+    ).toLocaleDateString("de-DE", { day: "numeric", month: "long" });
     dom.dailyEntriesContainer.innerHTML = "";
-    const dayOfWeek = new Date(dateString + "T00:00:00").getDay();
-    const defaultWorkHours = DAILY_WORK_HOURS[dayOfWeek] ?? 8;
+    const d = new Date(dateString + "T00:00:00");
     const dayData = appData[dateString] || {
       status: "dokumentiert",
-      workHours: defaultWorkHours,
+      workHours: DAILY_WORK_HOURS[d.getDay()] ?? 8,
       entries: [],
     };
-
     if (dayData.tags && !dayData.entries) {
-      dayData.entries = dayData.tags.map((tag) => ({
-        tagNames: [tag.name],
-        time: tag.time,
-        note: tag.note,
+      dayData.entries = dayData.tags.map((t) => ({
+        tagNames: [t.name],
+        time: t.time,
+        note: t.note,
       }));
       delete dayData.tags;
     }
-
     appData[dateString] = dayData;
     dom.statusSelect.value = dayData.status;
     dom.workHoursInput.value = dayData.workHours;
-    (dayData.entries || []).forEach((entry) => renderDailyEntry(entry));
+    (dayData.entries || []).forEach((e) => renderDailyEntry(e));
     if ((dayData.entries || []).length === 0) renderDailyEntry();
     updateTotals();
     handleStatusChange();
+    updateCharts();
   }
 
   function saveCurrentDay() {
@@ -201,13 +215,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       .querySelectorAll(".daily-entry-item")
       .forEach((item) => {
         const tagNames = Array.from(item.querySelectorAll(".tag-badge")).map(
-          (badge) => badge.dataset.tagName
+          (b) => b.dataset.tagName
         );
-        const time =
-          parseFloat(item.querySelector(".entry-time-input").value) || 0;
+        const time = hhmmToDecimal(
+          item.querySelector(".entry-time-input").value
+        );
         const note = item.querySelector(".entry-note-input").value.trim();
-        if (tagNames.length > 0 || note)
+        if ((tagNames.length > 0 || note) && time > 0) {
           dailyEntries.push({ tagNames, time, note });
+        }
       });
     appData[dateString] = {
       status: dom.statusSelect.value,
@@ -215,154 +231,149 @@ document.addEventListener("DOMContentLoaded", async () => {
       entries: dailyEntries,
     };
     saveDataToServer();
+    updateCharts();
   }
 
   function renderDailyEntry(entry = { tagNames: [], time: 0, note: "" }) {
-    const entryEl = document.createElement("div");
-    entryEl.className =
+    const el = document.createElement("div");
+    el.className =
       "daily-entry-item p-3 rounded-lg bg-gray-50 border border-gray-200";
-    entryEl.innerHTML = `<div class="flex items-start gap-3"><div class="flex-grow"><div class="selected-tags-container flex flex-wrap items-center"></div><div class="relative mt-2"><input type="text" class="tag-search-input w-full rounded-md border-gray-300 shadow-sm p-1.5" placeholder="+ Tag hinzufügen..."><div class="autocomplete-suggestions hidden"></div></div></div><div class="flex items-center"><input type="number" value="${
+    el.innerHTML = `<div class="flex items-start gap-3"><div class="flex-grow"><div class="selected-tags-container flex flex-wrap mb-2"></div><div class="relative"><input type="text" class="tag-search-input w-full rounded-md border-gray-300 shadow-sm p-1.5" placeholder="+ Tag hinzufügen..."><div class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10"></div></div></div><div class="flex items-center"><input type="text" value="${decimalToHHMM(
       entry.time || 0
-    }" min="0" step="0.25" class="entry-time-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1"><span class="text-gray-500 ml-1">h</span><button type="button" class="remove-entry-btn text-red-500 hover:text-red-700 font-bold text-xl ml-2">&times;</button></div></div><div class="mt-2"><input type="text" class="entry-note-input block w-full rounded-md border-gray-200 shadow-sm p-1.5" placeholder="Notiz für diesen Eintrag..." value="${
+    )}" class="entry-time-input w-20 text-center rounded-md border-gray-300 shadow-sm p-1" placeholder="hh:mm"><span class="text-gray-500 ml-1">h</span><button type="button" class="remove-entry-btn text-red-500 hover:text-red-700 font-bold text-xl ml-2">&times;</button></div></div><div class="mt-2"><input type="text" class="entry-note-input block w-full rounded-md border-gray-200 shadow-sm p-1.5" placeholder="Notiz..." value="${
       entry.note || ""
     }"></div>`;
-    const tagsContainer = entryEl.querySelector(".selected-tags-container");
-    (entry.tagNames || []).forEach((tagName) => {
-      tagsContainer.appendChild(createTagBadge(tagName));
-    });
-    setupEntryEventListeners(entryEl);
-    dom.dailyEntriesContainer.appendChild(entryEl);
+    el.querySelector(".selected-tags-container").append(
+      ...(entry.tagNames || []).map(createTagBadge)
+    );
+    setupEntryEventListeners(el);
+    dom.dailyEntriesContainer.appendChild(el);
   }
 
-  function setupEntryEventListeners(entryEl) {
-    entryEl
-      .querySelector(".entry-time-input")
-      .addEventListener("input", updateTotals);
-    entryEl.querySelector(".remove-entry-btn").addEventListener("click", () => {
+  function setupEntryEventListeners(el) {
+    el.querySelector(".entry-time-input").addEventListener(
+      "input",
+      updateTotals
+    );
+    el.querySelector(".remove-entry-btn").addEventListener("click", () => {
       if (dom.dailyEntriesContainer.children.length > 1) {
-        entryEl.remove();
+        el.remove();
         updateTotals();
       } else {
         showNotification("Letzter Eintrag kann nicht gelöscht werden.", true);
       }
     });
+    const searchInput = el.querySelector(".tag-search-input");
+    const suggestionsContainer = el.querySelector(".autocomplete-suggestions");
+    searchInput.addEventListener("input", () =>
+      handleTagAutocomplete(searchInput, suggestionsContainer, el)
+    );
+    document.addEventListener("click", (e) => {
+      if (!el.contains(e.target)) suggestionsContainer.innerHTML = "";
+    });
   }
 
+  function handleTagAutocomplete(input, suggestions, entryEl) {
+    const q = input.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if (!q) return;
+    const existing = Array.from(entryEl.querySelectorAll(".tag-badge")).map(
+      (b) => b.dataset.tagName
+    );
+    Object.keys(tagCategoryMap)
+      .filter((t) => t.toLowerCase().includes(q) && !existing.includes(t))
+      .slice(0, 5)
+      .forEach((tag) => {
+        const item = document.createElement("a");
+        item.href = "#";
+        item.className = "block p-2 hover:bg-gray-100";
+        item.textContent = tag;
+        item.onclick = (e) => {
+          e.preventDefault();
+          addTagToEntry(tag, entryEl);
+          input.value = "";
+          suggestions.innerHTML = "";
+        };
+        suggestions.appendChild(item);
+      });
+  }
+
+  function addTagToEntry(tagName, entryEl) {
+    entryEl
+      .querySelector(".selected-tags-container")
+      .appendChild(createTagBadge(tagName));
+  }
   function createTagBadge(tagName) {
-    const badge = document.createElement("div");
-    badge.className = "tag-badge";
-    badge.textContent = tagName;
-    badge.dataset.tagName = tagName;
-    badge.style.backgroundColor =
-      CATEGORY_CHART_COLORS[tagCategoryMap[tagName]] || "#6B7280";
-    const removeBtn = document.createElement("span");
-    removeBtn.className = "tag-badge-remove";
-    removeBtn.innerHTML = "&times;";
-    removeBtn.onclick = () => {
-      badge.remove();
+    const b = document.createElement("span");
+    b.className = "tag-badge";
+    b.textContent = tagName;
+    b.dataset.tagName = tagName;
+    b.style.backgroundColor =
+      CATEGORY_CHART_COLORS[tagCategoryMap[tagName]] || "#6c757d";
+    const r = document.createElement("span");
+    r.className = "tag-badge-remove";
+    r.innerHTML = "&times;";
+    r.onclick = () => {
+      b.remove();
       updateTotals();
     };
-    badge.appendChild(removeBtn);
-    return badge;
+    b.appendChild(r);
+    return b;
   }
-
+  function addNewTag() {
+    const tagName = dom.newTagInput.value.trim();
+    if (tagName && !tagCategoryMap[tagName]) {
+      tagCategoryMap[tagName] = dom.newTagCategorySelect.value;
+      renderTagLibrary();
+      saveDataToServer();
+      showNotification(`Tag "${tagName}" hinzugefügt.`);
+      dom.newTagInput.value = "";
+    } else if (tagName) {
+      showNotification(`Tag "${tagName}" existiert bereits.`, true);
+    }
+  }
   function renderTagLibrary() {
     if (!dom.tagLibrary) return;
     dom.tagLibrary.innerHTML = "";
     Object.keys(tagCategoryMap)
       .sort()
-      .forEach((tag) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = tag;
-        button.style.backgroundColor =
-          CATEGORY_CHART_COLORS[tagCategoryMap[tag]] || "#6B7280";
-        button.className =
-          "tag-button text-sm font-medium py-1 px-3 rounded-full";
-        dom.tagLibrary.appendChild(button);
-      });
+      .forEach((tag) => dom.tagLibrary.appendChild(createTagBadge(tag)));
   }
-
   function handleStatusChange() {
-    const isDocumented = dom.statusSelect.value === "dokumentiert";
-    dom.mainContentPanel.style.opacity = isDocumented ? "1" : "0.5";
+    const isDoc = dom.statusSelect.value === "dokumentiert";
+    dom.mainContentPanel.style.opacity = isDoc ? "1" : "0.6";
     dom.mainContentPanel
-      .querySelectorAll("input, textarea, button, select")
-      .forEach((el) => (el.disabled = !isDocumented));
+      .querySelectorAll("input, button, select")
+      .forEach((el) => (el.disabled = !isDoc));
     dom.saveDayBtn.disabled = false;
-    dom.tagLibraryContainer.style.opacity = isDocumented ? "1" : "0.5";
-    updateBackgroundColor();
   }
-
   function updateTotals() {
     const total = Array.from(
       dom.dailyEntriesContainer.querySelectorAll(".entry-time-input")
-    ).reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
-    dom.totalHoursEl.textContent = total.toFixed(2);
-    updateBackgroundColor();
+    ).reduce((sum, el) => sum + hhmmToDecimal(el.value), 0);
+    dom.totalHoursEl.textContent = decimalToHHMM(total);
   }
-
-  function updateBackgroundColor() {
-    const categoryHours = CATEGORIES.reduce(
-      (acc, cat) => ({ ...acc, [cat]: 0 }),
-      {}
-    );
-    dom.dailyEntriesContainer
-      .querySelectorAll(".daily-entry-item")
-      .forEach((item) => {
-        const time =
-          parseFloat(item.querySelector(".entry-time-input").value) || 0;
-        const tags = item.querySelectorAll(".tag-badge");
-        if (tags.length > 0) {
-          const timePerTag = time / tags.length;
-          tags.forEach((badge) => {
-            const category = tagCategoryMap[badge.dataset.tagName];
-            if (category) categoryHours[category] += timePerTag;
-          });
-        }
-      });
-    let dominantCategory = null;
-    let maxHours = 0;
-    for (const [cat, hours] of Object.entries(categoryHours)) {
-      if (hours > maxHours) {
-        maxHours = hours;
-        dominantCategory = cat;
-      }
-    }
-    if (dominantCategory && dom.statusSelect.value === "dokumentiert") {
-      dom.mainContentPanel.style.backgroundColor =
-        CATEGORY_BACKGROUND_COLORS[dominantCategory];
-    } else {
-      dom.mainContentPanel.style.backgroundColor = "#ffffff";
-    }
-  }
-
   function checkPendingTodos() {
-    const pendingTodo = localStorage.getItem("pendingTodo");
-    if (pendingTodo) {
-      const todo = JSON.parse(pendingTodo);
-      if (!tagCategoryMap[todo.text]) {
-        tagCategoryMap[todo.text] = "Sonstiges";
+    const todo = localStorage.getItem("pendingTodo");
+    if (todo) {
+      const { text } = JSON.parse(todo);
+      if (!tagCategoryMap[text]) {
+        tagCategoryMap[text] = "Sonstiges";
         renderTagLibrary();
         saveDataToServer();
       }
       renderDailyEntry({
-        tagNames: [todo.text],
+        tagNames: [text],
         time: 0.25,
-        note: "Aus To-do-Liste übernommen",
+        note: "Aus To-do-Liste",
       });
       updateTotals();
-      showNotification(`"${todo.text}" zur Doku hinzugefügt.`, false);
+      showNotification(`"${text}" zur Doku hinzugefügt.`);
       localStorage.removeItem("pendingTodo");
     }
   }
 
   function initCharts() {
-    if (
-      !document.getElementById("bar-chart") ||
-      !document.getElementById("radar-chart")
-    )
-      return;
     const barCtx = document.getElementById("bar-chart").getContext("2d");
     barChart = new Chart(barCtx, {
       type: "bar",
@@ -373,13 +384,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           x: { stacked: true },
           y: { stacked: true, beginAtZero: true },
         },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: (c) => `${c.dataset.label}: ${c.formattedValue}h`,
-            },
-          },
-        },
+        plugins: { legend: { display: false } },
       },
     });
     const radarCtx = document.getElementById("radar-chart").getContext("2d");
@@ -394,10 +399,171 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  function handleGenerateReport(periodType) {
-    showNotification("Berichtsfunktion ist in Arbeit.", false);
+  function handleDiagramViewChange() {
+    const isWeek =
+      document.querySelector('input[name="diagram-view"]:checked').value ===
+      "week";
+    dom.weekViewControls.classList.toggle("hidden", !isWeek);
+    dom.dayViewControls.classList.toggle("hidden", isWeek);
+    updateCharts();
   }
 
-  // --- App starten ---
+  function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return [d.getUTCFullYear(), Math.ceil(((d - yStart) / 86400000 + 1) / 7)];
+  }
+
+  function setInitialDiagramDates() {
+    const today = new Date();
+    const [year, week] = getWeekNumber(today);
+    dom.diagramWeekPicker.value = `${year}-W${String(week).padStart(2, "0")}`;
+    dom.diagramDayPicker.value = today.toISOString().split("T")[0];
+  }
+
+  function getPeriodDataForCharts() {
+    const data = {};
+    const isWeek =
+      document.querySelector('input[name="diagram-view"]:checked').value ===
+      "week";
+    if (isWeek) {
+      if (!dom.diagramWeekPicker.value) return {};
+      const [year, week] = dom.diagramWeekPicker.value.split("-W").map(Number);
+      const d = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
+      const day = d.getUTCDay();
+      const diff = d.getUTCDate() - day + (day === 0 ? -6 : 1);
+      const start = new Date(d.setUTCDate(diff));
+      for (let i = 0; i < 7; i++) {
+        const current = new Date(start);
+        current.setUTCDate(start.getUTCDate() + i);
+        const dateStr = current.toISOString().split("T")[0];
+        if (appData[dateStr]) data[dateStr] = appData[dateStr];
+      }
+    } else {
+      if (dom.diagramDayPicker.value) {
+        const dateStr = dom.diagramDayPicker.value;
+        if (appData[dateStr]) data[dateStr] = appData[dateStr];
+      }
+    }
+    return data;
+  }
+
+  function updateCharts() {
+    if (!barChart || !radarChart) return;
+    const periodData = getPeriodDataForCharts();
+    const isWeek =
+      document.querySelector('input[name="diagram-view"]:checked').value ===
+      "week";
+    updateBarChart(periodData, isWeek);
+    updateRadarChart(periodData, isWeek);
+  }
+
+  function updateBarChart(periodData, isWeek) {
+    const newType = isWeek ? "bar" : "pie";
+    if (barChart.config.type !== newType) {
+      barChart.destroy();
+      barChart = new Chart(
+        document.getElementById("bar-chart").getContext("2d"),
+        {
+          type: newType,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: newType === "pie" } },
+          },
+        }
+      );
+    }
+    dom.barChartTitle.textContent = isWeek
+      ? "Tätigkeiten pro Tag"
+      : "Tagesverteilung";
+    if (isWeek) {
+      const allTags = [
+        ...new Set(
+          Object.values(periodData).flatMap(
+            (d) => d?.entries?.flatMap((e) => e.tagNames) || []
+          )
+        ),
+      ];
+      barChart.data.labels = Object.keys(periodData).map((d) =>
+        new Date(d + "T00:00:00").toLocaleDateString("de-DE", {
+          weekday: "short",
+        })
+      );
+      barChart.options.scales = {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true },
+      };
+      barChart.data.datasets = allTags.map((tag) => ({
+        label: tag,
+        data: Object.keys(periodData).map(
+          (date) =>
+            periodData[date]?.entries?.reduce(
+              (sum, entry) =>
+                sum +
+                (entry.tagNames.includes(tag)
+                  ? entry.time / entry.tagNames.length
+                  : 0),
+              0
+            ) || 0
+        ),
+        backgroundColor: CATEGORY_CHART_COLORS[tagCategoryMap[tag]],
+      }));
+    } else {
+      const day = Object.values(periodData)[0];
+      const tagTotals = {};
+      day?.entries?.forEach((entry) => {
+        const timePerTag =
+          entry.tagNames.length > 0 ? entry.time / entry.tagNames.length : 0;
+        entry.tagNames.forEach((tn) => {
+          tagTotals[tn] = (tagTotals[tn] || 0) + timePerTag;
+        });
+      });
+      barChart.data.labels = Object.keys(tagTotals);
+      barChart.options.scales = {};
+      barChart.data.datasets = [
+        {
+          data: Object.values(tagTotals),
+          backgroundColor: Object.keys(tagTotals).map(
+            (tag) => CATEGORY_CHART_COLORS[tagCategoryMap[tag]]
+          ),
+        },
+      ];
+    }
+    barChart.update();
+  }
+
+  function updateRadarChart(periodData, isWeek) {
+    dom.radarChartTitle.textContent = isWeek
+      ? "Kategorien-Fokus (Woche)"
+      : "Kategorien-Fokus (Tag)";
+    const categoryTotals = RADAR_CATEGORIES.reduce(
+      (acc, cat) => ({ ...acc, [cat]: 0 }),
+      {}
+    );
+    Object.values(periodData).forEach((day) => {
+      day?.entries?.forEach((entry) => {
+        entry.tagNames.forEach((tn) => {
+          const category = tagCategoryMap[tn];
+          if (category in categoryTotals) {
+            categoryTotals[category] += entry.time / entry.tagNames.length;
+          }
+        });
+      });
+    });
+    radarChart.data.datasets = [
+      {
+        label: "Stunden",
+        data: Object.values(categoryTotals),
+        fill: true,
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgb(54, 162, 235)",
+      },
+    ];
+    radarChart.update();
+  }
+
   init();
 });
+loadDataFromServer;
