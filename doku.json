@@ -326,15 +326,53 @@
             ],
             "status": "dokumentiert",
             "workHours": 8.95
+        },
+        "2025-09-01": {
+            "entries": [],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-02": {
+            "entries": [],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-03": {
+            "entries": [],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-04": {
+            "entries": [],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-05": {
+            "entries": [],
+            "status": "dokumentiert",
+            "workHours": 7
+        },
+        "2025-09-08": {
+            "entries": [
+                {
+                    "note": "Simulationssoftware fehler behoben.",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 6
+                },
+                {
+                    "note": "Einlesen in die Messgerät für die Messungen. Ozilloskop und Strommesszange",
+                    "tagNames": [
+                        "Lesen von Dokumenten"
+                    ],
+                    "time": 2.25
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
         }
     },
-    "projects": [
-        {
-            "id": "_py7u6gba0",
-            "name": "Wandler",
-            "status": "active"
-        }
-    ],
     "tagCategoryMap": {
         "Analysieren": "Analyse",
         "Bachelorarbeit schreiben": "Dokumentation",
@@ -351,17 +389,7 @@
         "Soziales": "Soziales",
         "System einrichten": "Organisation",
         "Tabellen ausfüllen": "Dokumentation",
-        "Test": "Sonstiges"
-    },
-    "todos": [
-        {
-            "completed": false,
-            "dueDate": "2025-09-12",
-            "id": "_9nszzpx5z",
-            "priority": "3",
-            "projectId": "_py7u6gba0",
-            "tags": [],
-            "text": "Tabelle"
-        }
-    ]
+        "Test": "Sonstiges",
+        "Messreihen vom Ozilloskop auf den PC bekommen": "Sonstiges"
+    }
 }
