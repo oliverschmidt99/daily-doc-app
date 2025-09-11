@@ -32,6 +32,46 @@
                 <input type="number" id="work-hours" value="8" min="0" max="24" step="0.25"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
             </div>
+
+            <div class="border-t pt-4 mt-4 col-span-1 md:col-span-3">
+                <h3 class="text-md font-semibold text-gray-800 mb-2">Zeiterfassung</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="start-time-h" class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="number" id="start-time-h" placeholder="hh" min="0" max="23"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <span>:</span>
+                            <input type="number" id="start-time-m" placeholder="mm" min="0" max="59"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <button type="button" id="set-start-now-btn"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="end-time-h" class="block text-sm font-medium text-gray-700">Arbeitsende</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="number" id="end-time-h" placeholder="hh" min="0" max="23"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <span>:</span>
+                            <input type="number" id="end-time-m" placeholder="mm" min="0" max="59"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <button type="button" id="set-end-now-btn"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="break-time-h" class="block text-sm font-medium text-gray-700">Pause</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="number" id="break-time-h" placeholder="hh" min="0" max="23"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <span>:</span>
+                            <input type="number" id="break-time-m" placeholder="mm" min="0" max="59"
+                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -48,13 +88,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </div>
-            <p class="text-lg font-semibold">Gesamt: <span id="total-hours">00:00</span>h</p>
+            <div class="text-right">
+                <p class="text-lg font-semibold">Gesamt Doku: <span id="total-hours">00:00</span>h</p>
+                <p class="text-sm font-medium">Arbeitszeit: <span id="overtime-display">--:--</span>h</p>
+            </div>
         </div>
         <div id="daily-entries-container" class="space-y-4 mb-4"></div>
         <div class="mt-6 flex justify-between items-center">
-            <button id="add-entry-btn"
+            <button type="button" id="add-entry-btn"
                 class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">+ Eintrag</button>
-            <button id="save-day-btn"
+            <button type="button" id="save-day-btn"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Tag
                 speichern</button>
         </div>
@@ -78,7 +121,7 @@
 </div>
 
 <div class="mt-8 bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-2xl font-bold mb-4 border-b pb-3">Analyse & Berichte</h2>
+    <h2 class="text-2xl font-bold mb-4 border-b pb-3">Analyse &amp; Berichte</h2>
 
     <div class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
         <div class="flex items-center gap-2"><input type="radio" id="view-day" name="diagram-view" value="day"
@@ -94,20 +137,20 @@
     <div class="mb-6 border-t pt-4">
         <h3 class="text-lg font-semibold mb-2">Berichte exportieren:</h3>
         <div class="flex gap-4">
-            <button id="generate-week-report"
+            <button type="button" id="generate-week-report"
                 class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">Wochenbericht</button>
-            <button id="generate-month-report"
+            <button type="button" id="generate-month-report"
                 class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">Monatsbericht</button>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-6">
         <div>
-            <h3 id="bar-chart-title" class="text-xl font-bold mb-4 text-center"></h3>
+            <h3 id="bar-chart-title" class="text-xl font-bold mb-4 text-center">&nbsp;</h3>
             <div class="chart-container"><canvas id="bar-chart"></canvas></div>
         </div>
         <div>
-            <h3 id="radar-chart-title" class="text-xl font-bold mb-4 text-center"></h3>
+            <h3 id="radar-chart-title" class="text-xl font-bold mb-4 text-center">&nbsp;</h3>
             <div class="chart-container"><canvas id="radar-chart"></canvas></div>
         </div>
     </div>

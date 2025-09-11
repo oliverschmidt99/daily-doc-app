@@ -61,6 +61,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     diagramDayPicker: document.getElementById("diagram-day-picker"),
     barChartTitle: document.getElementById("bar-chart-title"),
     radarChartTitle: document.getElementById("radar-chart-title"),
+    startTimeH: document.getElementById("start-time-h"),
+    startTimeM: document.getElementById("start-time-m"),
+    endTimeH: document.getElementById("end-time-h"),
+    endTimeM: document.getElementById("end-time-m"),
+    breakTimeH: document.getElementById("break-time-h"),
+    breakTimeM: document.getElementById("break-time-m"),
+    overtimeDisplay: document.getElementById("overtime-display"),
+    setStartNowBtn: document.getElementById("set-start-now-btn"),
+    setEndNowBtn: document.getElementById("set-end-now-btn"),
   };
 
   function decimalToHHMM(decimalHours) {
@@ -106,6 +115,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     dom.diagramWeekPicker.addEventListener("change", updateCharts);
     dom.diagramDayPicker.addEventListener("change", updateCharts);
+
+    const timeInputs = [
+      dom.startTimeH,
+      dom.startTimeM,
+      dom.endTimeH,
+      dom.endTimeM,
+      dom.breakTimeH,
+      dom.breakTimeM,
+      dom.workHoursInput,
+    ];
+    timeInputs.forEach((input) => {
+      if (input) input.addEventListener("input", calculateAndDisplayOvertime);
+    });
+
+    dom.setStartNowBtn.addEventListener("click", () => setCurrentTime("start"));
+    dom.setEndNowBtn.addEventListener("click", () => setCurrentTime("end"));
+  }
+
+  function setCurrentTime(type) {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    if (type === "start") {
+      dom.startTimeH.value = hours;
+      dom.startTimeM.value = minutes;
+    } else if (type === "end") {
+      dom.endTimeH.value = hours;
+      dom.endTimeM.value = minutes;
+    }
+    calculateAndDisplayOvertime();
   }
 
   function showNotification(message, isError = false) {
@@ -206,11 +246,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     appData[dateString] = dayData;
     dom.statusSelect.value = dayData.status;
     dom.workHoursInput.value = dayData.workHours;
+
+    dom.startTimeH.value = dayData.startTime?.h || "";
+    dom.startTimeM.value = dayData.startTime?.m || "";
+    dom.endTimeH.value = dayData.endTime?.h || "";
+    dom.endTimeM.value = dayData.endTime?.m || "";
+    dom.breakTimeH.value = dayData.breakTime?.h || "";
+    dom.breakTimeM.value = dayData.breakTime?.m || "";
+
     (dayData.entries || []).forEach((e) => renderDailyEntry(e));
     if ((dayData.entries || []).length === 0) renderDailyEntry();
     updateTotals();
     handleStatusChange();
     updateCharts();
+    calculateAndDisplayOvertime();
   }
 
   function saveCurrentDay() {
@@ -234,9 +283,56 @@ document.addEventListener("DOMContentLoaded", async () => {
       status: dom.statusSelect.value,
       workHours: parseFloat(dom.workHoursInput.value) || 8,
       entries: dailyEntries,
+      startTime: {
+        h: parseInt(dom.startTimeH.value) || null,
+        m: parseInt(dom.startTimeM.value) || null,
+      },
+      endTime: {
+        h: parseInt(dom.endTimeH.value) || null,
+        m: parseInt(dom.endTimeM.value) || null,
+      },
+      breakTime: {
+        h: parseInt(dom.breakTimeH.value) || null,
+        m: parseInt(dom.breakTimeM.value) || null,
+      },
     };
     saveDataToServer();
     updateCharts();
+  }
+
+  function calculateAndDisplayOvertime() {
+    const getMinutes = (h, m) =>
+      (parseInt(h.value) || 0) * 60 + (parseInt(m.value) || 0);
+
+    const startMins = getMinutes(dom.startTimeH, dom.startTimeM);
+    const endMins = getMinutes(dom.endTimeH, dom.endTimeM);
+    const breakMins = getMinutes(dom.breakTimeH, dom.breakTimeM);
+    const targetHours = parseFloat(dom.workHoursInput.value) || 0;
+    const targetMins = targetHours * 60;
+
+    if (endMins <= startMins || targetMins === 0) {
+      dom.overtimeDisplay.textContent = "--:--";
+      dom.overtimeDisplay.className = "text-gray-600";
+      return;
+    }
+
+    const workedMins = endMins - startMins - breakMins;
+    const overtimeMins = workedMins - targetMins;
+
+    const overtimeH = Math.floor(Math.abs(overtimeMins) / 60);
+    const overtimeRemainingM = Math.round(Math.abs(overtimeMins) % 60);
+
+    const formattedOvertime = `${String(overtimeH).padStart(2, "0")}:${String(
+      overtimeRemainingM
+    ).padStart(2, "0")}`;
+
+    if (overtimeMins >= 0) {
+      dom.overtimeDisplay.textContent = `+${formattedOvertime}`;
+      dom.overtimeDisplay.className = "font-semibold text-green-600";
+    } else {
+      dom.overtimeDisplay.textContent = `-${formattedOvertime}`;
+      dom.overtimeDisplay.className = "font-semibold text-red-600";
+    }
   }
 
   function renderDailyEntry(entry = { tagNames: [], time: 0, note: "" }) {

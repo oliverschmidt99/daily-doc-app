@@ -418,7 +418,19 @@
                     "time": 0.25,
                     "note": "testen"
                 }
-            ]
+            ],
+            "startTime": {
+                "h": 7,
+                "m": 45
+            },
+            "endTime": {
+                "h": 16,
+                "m": null
+            },
+            "breakTime": {
+                "h": null,
+                "m": 45
+            }
         }
     },
     "projects": [
