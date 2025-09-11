@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   // --- Globale Variablen & Konstanten ---
+  let allData = {};
   let appData = {},
     tagCategoryMap = {};
   let barChart, radarChart;
@@ -120,6 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch("/load");
       const data = await response.json();
+      allData = data; // Store the whole data
       // Stellt sicher, dass die benötigten Schlüssel immer vorhanden sind
       appData = data.appData || {};
       tagCategoryMap = data.tagCategoryMap || {};
@@ -132,10 +134,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function saveDataToServer() {
     try {
+      // We need to update the allData object before saving.
+      allData.appData = appData;
+      allData.tagCategoryMap = tagCategoryMap;
       await fetch("/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ appData, tagCategoryMap }),
+        body: JSON.stringify(allData), // Save the whole object
       });
       showNotification("Daten gespeichert!", false);
     } catch (e) {
@@ -354,21 +359,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.totalHoursEl.textContent = decimalToHHMM(total);
   }
   function checkPendingTodos() {
-    const todo = localStorage.getItem("pendingTodo");
-    if (todo) {
-      const { text } = JSON.parse(todo);
-      if (!tagCategoryMap[text]) {
-        tagCategoryMap[text] = "Sonstiges";
-        renderTagLibrary();
-        saveDataToServer();
-      }
-      renderDailyEntry({
-        tagNames: [text],
+    const todoJSON = localStorage.getItem("pendingTodo");
+    if (todoJSON) {
+      const todo = JSON.parse(todoJSON);
+      const newEntry = {
+        tagNames: todo.tags || [],
         time: 0.25,
-        note: "Aus To-do-Liste",
-      });
+        note: todo.text,
+      };
+
+      // Make sure all tags exist in the tagCategoryMap
+      if (todo.tags) {
+        let newTagAdded = false;
+        todo.tags.forEach((tag) => {
+          if (!tagCategoryMap[tag]) {
+            tagCategoryMap[tag] = "Sonstiges"; // Default category
+            newTagAdded = true;
+          }
+        });
+        if (newTagAdded) {
+          renderTagLibrary();
+          saveDataToServer();
+        }
+      }
+
+      renderDailyEntry(newEntry);
       updateTotals();
-      showNotification(`"${text}" zur Doku hinzugefügt.`);
+      showNotification(`"${todo.text}" zur Doku hinzugefügt.`);
       localStorage.removeItem("pendingTodo");
     }
   }
@@ -566,4 +583,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   init();
 });
-loadDataFromServer;

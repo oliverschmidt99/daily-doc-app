@@ -372,41 +372,62 @@
             "status": "dokumentiert",
             "workHours": 8.25
         },
-        "2025-09-10": {
-            "status": "dokumentiert",
-            "workHours": 8.25,
-            "entries": [
-                {
-                    "tagNames": [
-                        "Programmieren"
-                    ],
-                    "time": 6,
-                    "note": "Frontend Programmiert."
-                },
-                {
-                    "tagNames": [
-                        "Programmieren"
-                    ],
-                    "time": 2.4166666666666665,
-                    "note": "Backend an die neue Json angepasst"
-                }
-            ]
-        },
         "2025-09-09": {
-            "status": "dokumentiert",
-            "workHours": 8.25,
             "entries": [
                 {
+                    "note": "Simulationssoftware die Weboberfläche verbessert",
                     "tagNames": [
                         "Programmieren",
                         "Simuliert"
                     ],
-                    "time": 6,
-                    "note": "Simulationssoftware die Weboberfläche verbessert"
+                    "time": 6
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-10": {
+            "entries": [
+                {
+                    "note": "Frontend Programmiert.",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 6
+                },
+                {
+                    "note": "Backend an die neue Json angepasst",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 2.4166666666666665
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-11": {
+            "status": "dokumentiert",
+            "workHours": 8.25,
+            "entries": [
+                {
+                    "tagNames": [
+                        "Test",
+                        "Programmieren"
+                    ],
+                    "time": 0.25,
+                    "note": "testen"
                 }
             ]
         }
     },
+    "projects": [
+        {
+            "id": "_r7pz4gpfq",
+            "name": "Test",
+            "status": "active"
+        }
+    ],
     "tagCategoryMap": {
         "Analysieren": "Analyse",
         "Bachelorarbeit schreiben": "Dokumentation",
@@ -425,5 +446,19 @@
         "System einrichten": "Organisation",
         "Tabellen ausfüllen": "Dokumentation",
         "Test": "Sonstiges"
-    }
+    },
+    "todos": [
+        {
+            "completed": false,
+            "dueDate": "2025-10-11",
+            "id": "_5e1d10yni",
+            "priority": "3",
+            "projectId": "_r7pz4gpfq",
+            "tags": [
+                "Test",
+                "Programmieren"
+            ],
+            "text": "testen"
+        }
+    ]
 }

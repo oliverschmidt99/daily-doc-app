@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       editBtn.addEventListener("click", () => openEditModal(todo.id));
     const dokuBtn = li.querySelector(".add-to-doku-btn");
     if (dokuBtn) {
-      dokuBtn.addEventListener("click", () => addTodoToDoku(todo.text));
+      dokuBtn.addEventListener("click", () => addTodoToDoku(todo));
     }
     return li;
   }
@@ -274,10 +274,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     render();
     saveData();
   }
-  function addTodoToDoku(text) {
+  function addTodoToDoku(todo) {
     localStorage.setItem(
       "pendingTodo",
-      JSON.stringify({ text: text.replace(/^-\s*/, "") })
+      JSON.stringify({ text: todo.text, tags: todo.tags || [] })
     );
     window.location.href = "/";
   }
