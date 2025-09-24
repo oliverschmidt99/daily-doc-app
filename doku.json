@@ -1,2300 +1,4118 @@
 {
-  "appData": {
-    "2025-07-31": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 7
-    },
-    "2025-08-01": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Meetings",
-          "note": "Sicherheitsunterweisung",
-          "time": 2
+    "appData": {
+        "2024-12-31": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
         },
-        {
-          "name": "Soziales",
-          "note": "Miarbeiter kennengelernt",
-          "time": 3
+        "2025-01-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
         },
-        {
-          "name": "System einrichten",
-          "note": "Sein Arbeitsplatz eingerichtet und sich etwas eingelbt",
-          "time": 1
+        "2025-01-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-01-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-07": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-01-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-14": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-19": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-01-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-21": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-22": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-01-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-28": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-01-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-02-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-02-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-11": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-02-17": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-18": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-19": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-02-24": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-25": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-02-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-03-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-03-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-11": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-03-17": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-18": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-19": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-03-24": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-25": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-03-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-03-31": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-04-07": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-04-14": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-17": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-04-21": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-22": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-24": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-04-28": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-04-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-05-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-07": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-11": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-05-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-14": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-18": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-05-19": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-21": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-22": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-25": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-05-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-28": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-05-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-06-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-06-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-11": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-06-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-17": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-18": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-19": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-22": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-06-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-24": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-25": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-06-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-06-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-06": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-07-07": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-13": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-07-14": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-16": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-17": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-20": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-07-21": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-22": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-23": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-24": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-07-28": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-07-31": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 8.25
+        },
+        "2025-08-01": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Meetings",
+                    "note": "Sicherheitsunterweisung",
+                    "time": 2
+                },
+                {
+                    "name": "Soziales",
+                    "note": "Miarbeiter kennengelernt",
+                    "time": 3
+                },
+                {
+                    "name": "System einrichten",
+                    "note": "Sein Arbeitsplatz eingerichtet und sich etwas eingelbt",
+                    "time": 1
+                }
+            ],
+            "workHours": 7
+        },
+        "2025-08-02": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 0
+        },
+        "2025-08-03": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 0
+        },
+        "2025-08-04": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Orga",
+                    "note": "Sich mit den System bekannt machen. Die Wiki kennen gelernt",
+                    "time": 5
+                },
+                {
+                    "name": "Mitarbeiter gespräch",
+                    "note": "Sich mit einem Kollegen unterhalten",
+                    "time": 1
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "Tabelle für die Wandler erstellt",
+                    "time": 2
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-05": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Lesen von Dokumenten",
+                    "note": "",
+                    "time": 4
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Mitarbeiter gespräch",
+                    "note": "",
+                    "time": 1
+                },
+                {
+                    "name": "Dokumentieren",
+                    "note": "",
+                    "time": 1
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-06": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Lesen von Dokumenten",
+                    "note": "Lesen von Die Genauigkeit von Stromwandlern unter dem Einfluss von Fremdfeldern nach R.A. Pfuntner",
+                    "time": 3
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Berechnen (Herleiten)",
+                    "note": "3",
+                    "time": 3
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-07": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Meetings",
+                    "note": "Praxisphase besprochen",
+                    "time": 0.5
+                },
+                {
+                    "name": "Berechnen (Herleiten)",
+                    "note": "Berechnung für B-Felder in der zweiten Dimension und überlagerungen berechnet.",
+                    "time": 5.75
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "Wandler eingetragen",
+                    "time": 2
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-08": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Berechnen (Herleiten)",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Programmieren",
+                    "note": "",
+                    "time": 3
+                },
+                {
+                    "name": "Lesen von Dokumenten",
+                    "note": "",
+                    "time": 2
+                }
+            ],
+            "workHours": 7
+        },
+        "2025-08-09": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 0
+        },
+        "2025-08-10": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 0
+        },
+        "2025-08-11": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Simuliert",
+                    "note": "Mit der Software FEM habe ich die erste simulation für die beeinflussung der Magnetische Einfluss auf L2.",
+                    "time": 5
+                },
+                {
+                    "name": "Mitarbeiter gespräch",
+                    "note": "Die Software mit den Simulationen gezeigt",
+                    "time": 0.75
+                },
+                {
+                    "name": "Soziales",
+                    "note": "Eine Mitarbeiterin gespräch geführt, ob man eine .msg Datei in einer .csv Datei inhalte kopieren kann",
+                    "time": 1.25
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "Tabelle für die Bestellung zuende gemacht",
+                    "time": 1.25
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-12": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Programmieren",
+                    "note": "Für die Simulationssoftware ein Code geschrieben, damit man verschiedene Messsenarien Simulieren kann",
+                    "time": 6
+                },
+                {
+                    "name": "Soziales",
+                    "note": "",
+                    "time": 1.5
+                },
+                {
+                    "name": "Orga",
+                    "note": "Ordner Struktur aufgeräumt",
+                    "time": 1
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-13": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Meetings",
+                    "note": "Tabelle besprochen",
+                    "time": 0.5
+                },
+                {
+                    "name": "Programmieren",
+                    "note": "Die Simulation weiter Programmiert",
+                    "time": 5
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "Es mussten Wandler mit einer Messauflösung von 1 A herrausgesucht werden.",
+                    "time": 3
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-14": {
+            "status": "dokumentiert",
+            "tags": [
+                {
+                    "name": "Programmieren",
+                    "note": "",
+                    "time": 6
+                },
+                {
+                    "name": "Simuliert",
+                    "note": "",
+                    "time": 2
+                },
+                {
+                    "name": "Tabellen ausfüllen",
+                    "note": "",
+                    "time": 0.5
+                }
+            ],
+            "workHours": 8.25
+        },
+        "2025-08-15": {
+            "status": "dokumentiert",
+            "tags": [],
+            "workHours": 7
+        },
+        "2025-08-18": {
+            "entries": [
+                {
+                    "note": "Die Simulation weiter geführt. Matlab skript angepasst sodass man verschiedne Wanler und Schienen hinzufügen",
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 7.5
+                },
+                {
+                    "note": "Praxisphase besprochen",
+                    "tagNames": [
+                        "Meetings",
+                        "Soziales"
+                    ],
+                    "time": 2
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-19": {
+            "entries": [
+                {
+                    "note": "Eine Software Programmiert, damit man die Weihnachtspostkarten, automatisch sortiert und augeben bekommt.",
+                    "tagNames": [
+                        "Programmieren",
+                        "Soziales"
+                    ],
+                    "time": 4.58
+                },
+                {
+                    "note": "Simulationssoftware UI weiter Programmiert",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 4.58
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-20": {
+            "entries": [
+                {
+                    "note": "Simulationssoftware UI weiter programmiert",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 7.75
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-21": {
+            "entries": [
+                {
+                    "note": "Bauteileditor wurde hinzugefügt. Es ist möglich Bauteile einzubauen",
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 5.95
+                },
+                {
+                    "note": "Musst tabelle mit Internen Bestellnummern ausfüllen",
+                    "tagNames": [
+                        "Tabellen ausfüllen"
+                    ],
+                    "time": 3
+                }
+            ],
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-25": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-26": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-27": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-28": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-08-29": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 7
+        },
+        "2025-08-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-08-31": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 15,
+                "m": 0
+            },
+            "entries": [
+                {
+                    "note": "Lehrgang",
+                    "tagNames": [],
+                    "time": 8.25
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 0
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 15,
+                "m": 0
+            },
+            "entries": [
+                {
+                    "note": "00:45",
+                    "tagNames": [],
+                    "time": 8.25
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 0
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 15,
+                "m": 0
+            },
+            "entries": [
+                {
+                    "note": "Lehrgang",
+                    "tagNames": [],
+                    "time": 8.25
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 0
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 15,
+                "m": 0
+            },
+            "entries": [
+                {
+                    "note": "Lehrgang",
+                    "tagNames": [],
+                    "time": 8.25
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 0
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 13,
+                "m": 45
+            },
+            "entries": [
+                {
+                    "note": "Lehrgang",
+                    "tagNames": [],
+                    "time": 7
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 0
+            },
+            "status": "dokumentiert",
+            "workHours": 7
+        },
+        "2025-09-06": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0,
+            "startTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "breakTime": {
+                "h": null,
+                "m": null
+            }
+        },
+        "2025-09-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-08": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 17,
+                "m": 12
+            },
+            "entries": [
+                {
+                    "note": "Simulationssoftware fehler behoben.",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 6
+                },
+                {
+                    "note": "Einlesen in die Messgerät für die Messungen. Ozilloskop und Strommesszange",
+                    "tagNames": [
+                        "Lesen von Dokumenten"
+                    ],
+                    "time": 2.25
+                }
+            ],
+            "startTime": {
+                "h": 7,
+                "m": 56
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-09": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 16,
+                "m": 52
+            },
+            "entries": [
+                {
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 8.25,
+                    "note": "Simulationssoftware die Weboberfläche verbessert"
+                }
+            ],
+            "startTime": {
+                "h": 10,
+                "m": 19
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-10": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 16,
+                "m": 49
+            },
+            "entries": [
+                {
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 6,
+                    "note": "Frontend Programmiert."
+                },
+                {
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 2.25,
+                    "note": "Backend an die neue Json angepasst"
+                }
+            ],
+            "startTime": {
+                "h": 7,
+                "m": 41
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-11": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 17,
+                "m": 4
+            },
+            "entries": [
+                {
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 8.25,
+                    "note": "Die Geometrie der Wandler muss korrekt erstellt werden für die Simulation."
+                }
+            ],
+            "startTime": {
+                "h": 7,
+                "m": 35
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-12": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 16,
+                "m": 4
+            },
+            "entries": [
+                {
+                    "tagNames": [
+                        "Programmieren",
+                        "Simuliert"
+                    ],
+                    "time": 7,
+                    "note": "Simulationsoftware weiterentwickelt"
+                }
+            ],
+            "startTime": {
+                "h": 7,
+                "m": 40
+            },
+            "status": "dokumentiert",
+            "workHours": 7
+        },
+        "2025-09-13": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0,
+            "startTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "breakTime": {
+                "h": null,
+                "m": null
+            }
+        },
+        "2025-09-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0,
+            "startTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "breakTime": {
+                "h": null,
+                "m": null
+            }
+        },
+        "2025-09-15": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "endTime": {
+                "h": 17,
+                "m": 19
+            },
+            "entries": [],
+            "startTime": {
+                "h": 7,
+                "m": 49
+            },
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25,
+            "startTime": {
+                "h": 7,
+                "m": 54
+            },
+            "endTime": {
+                "h": 15,
+                "m": 16
+            },
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            }
+        },
+        "2025-09-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25,
+            "startTime": {
+                "h": 8,
+                "m": 11
+            },
+            "endTime": {
+                "h": 18,
+                "m": 47
+            },
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            }
+        },
+        "2025-09-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25,
+            "startTime": {
+                "h": 7,
+                "m": 53
+            },
+            "endTime": {
+                "h": 16,
+                "m": 22
+            },
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            }
+        },
+        "2025-09-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 7,
+            "startTime": {
+                "h": 8,
+                "m": 49
+            },
+            "endTime": {
+                "h": 15,
+                "m": 41
+            },
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            }
+        },
+        "2025-09-20": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-22": {
+            "breakTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": 16,
+                "m": 29
+            },
+            "entries": [
+                {
+                    "note": "Die Simulationssoftware leicht verbessert",
+                    "tagNames": [
+                        "Programmieren"
+                    ],
+                    "time": 8.416666666666666
+                }
+            ],
+            "startTime": {
+                "h": 6,
+                "m": 50
+            },
+            "status": "dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-23": {
+            "breakTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "entries": [
+                {
+                    "note": "",
+                    "tagNames": [],
+                    "time": 8.25
+                }
+            ],
+            "startTime": {
+                "h": null,
+                "m": null
+            },
+            "status": "urlaub",
+            "workHours": 8.25
+        },
+        "2025-09-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-25": {
+            "breakTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "entries": [],
+            "startTime": {
+                "h": 8,
+                "m": 0
+            },
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-26": {
+            "breakTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "entries": [],
+            "startTime": {
+                "h": 8,
+                "m": 0
+            },
+            "status": "nicht dokumentiert",
+            "workHours": 7
+        },
+        "2025-09-27": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-09-29": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-09-30": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-10-01": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-10-02": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 8.25
+        },
+        "2025-10-03": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 7
+        },
+        "2025-10-04": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-10-05": {
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "workHours": 0
+        },
+        "2025-01-03": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-01-04": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-01-10": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-01-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-01-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-01-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-01-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-01-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-01-31": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-02-01": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-02-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-02-08": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-02-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-02-15": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-02-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-02-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-02-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-03-01": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-03-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-03-08": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-03-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-03-15": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-03-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-03-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-03-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-03-29": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-04-04": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-04-05": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-04-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-04-12": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-04-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-04-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-04-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-04-26": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-05-02": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-05-03": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-05-09": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-05-10": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-05-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-05-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-05-23": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-05-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-05-30": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-05-31": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-06-06": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-06-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-06-13": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-06-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-06-20": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-06-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-06-27": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-06-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-07-04": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-07-05": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-07-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-07-12": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-07-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-07-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-07-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-07-26": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-08-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-08-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-08-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-08-23": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-08-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-06": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-08": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-09": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-10": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-10-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-12": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-13": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-15": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-10-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-20": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-23": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-10-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-26": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-10-27": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-29": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-30": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-10-31": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-11-01": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-02": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-03": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-04": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-05": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-06": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-11-08": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-09": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-10": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-12": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-13": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-11-15": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-20": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-11-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-23": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-26": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-27": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-11-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-11-29": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-11-30": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-01": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-02": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-03": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-04": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-05": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-12-06": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-07": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-08": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-09": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-10": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-11": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-12": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-12-13": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-14": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-15": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-16": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-17": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-18": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-19": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-12-20": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-21": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-22": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-23": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-24": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-25": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-26": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 7
+        },
+        "2025-12-27": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-28": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 0
+        },
+        "2025-12-29": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-30": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
+        },
+        "2025-12-31": {
+            "entries": [],
+            "status": "nicht dokumentiert",
+            "breakTime": {
+                "h": 0,
+                "m": 45
+            },
+            "startTime": null,
+            "endTime": null,
+            "workHours": 8.25
         }
-      ],
-      "workHours": 8
     },
-    "2025-08-02": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 8
-    },
-    "2025-08-03": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 8
-    },
-    "2025-08-04": {
-      "status": "dokumentiert",
-      "tags": [
+    "projects": [
         {
-          "name": "Orga",
-          "note": "Sich mit den System bekannt machen. Die Wiki kennen gelernt",
-          "time": 5
+            "id": "_h1qit75qq",
+            "name": "Bachlorarbeit",
+            "status": "active"
         },
         {
-          "name": "Mitarbeiter gespräch",
-          "note": "Sich mit einem Kollegen unterhalten",
-          "time": 1
+            "id": "_1x5r7eu6c",
+            "name": "Magnetfeldsimulation",
+            "status": "active"
         },
         {
-          "name": "Tabellen ausfüllen",
-          "note": "Tabelle für die Wandler erstellt",
-          "time": 2
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-05": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Lesen von Dokumenten",
-          "note": "",
-          "time": 4
+            "id": "_jk6e9x20z",
+            "name": "Meeting",
+            "status": "active"
         },
         {
-          "name": "Tabellen ausfüllen",
-          "note": "",
-          "time": 2
+            "id": "_e4d1axgsv",
+            "name": "Wandler",
+            "status": "active"
         },
         {
-          "name": "Mitarbeiter gespräch",
-          "note": "",
-          "time": 1
+            "id": "_wvy489jsm",
+            "name": "Praxisphasen Bericht",
+            "status": "active"
+        }
+    ],
+    "tagCategoryMap": {
+        "Analysieren": "Analyse",
+        "Bachelorarbeit schreiben": "Dokumentation",
+        "Berechnen (Herleiten)": "Analyse",
+        "Dokumentieren": "Dokumentation",
+        "Lesen von Dokumenten": "Analyse",
+        "Matlab": "Technik",
+        "Meetings": "Organisation",
+        "Messen": "Technik",
+        "Messreihen vom Ozilloskop auf den PC bekommen": "Sonstiges",
+        "Mitarbeiter gespräch": "Soziales",
+        "Orga": "Dokumentation",
+        "Planung": "Organisation",
+        "Programmieren": "Technik",
+        "Python": "Technik",
+        "Simuliert": "Analyse",
+        "Soziales": "Soziales",
+        "System einrichten": "Organisation",
+        "Tabellen ausfüllen": "Dokumentation",
+        "Test": "Sonstiges"
+    },
+    "todos": [
+        {
+            "completed": true,
+            "dueDate": "2025-09-16",
+            "id": "_nqjevrihh",
+            "priority": "2",
+            "projectId": "_h1qit75qq",
+            "tags": [
+                "Bachelorarbeit schreiben",
+                "Dokumentieren"
+            ],
+            "text": "Struktur der Bachelorarbeit muss erstellt werden."
         },
         {
-          "name": "Dokumentieren",
-          "note": "",
-          "time": 1
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-06": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Lesen von Dokumenten",
-          "note": "Lesen von Die Genauigkeit von Stromwandlern unter dem Einfluss von Fremdfeldern nach R.A. Pfuntner",
-          "time": 3
+            "completed": true,
+            "dueDate": "2025-09-16",
+            "id": "_tbw7o3d5d",
+            "priority": "2",
+            "projectId": "_1x5r7eu6c",
+            "tags": [],
+            "text": "Die Geometrie der Wandler muss korrekt erstellt werden für die Simulation."
         },
         {
-          "name": "Tabellen ausfüllen",
-          "note": "",
-          "time": 2
+            "completed": true,
+            "dueDate": "2025-09-11",
+            "id": "_h38r9g63u",
+            "priority": "3",
+            "projectId": "_e4d1axgsv",
+            "tags": [
+                "Tabellen ausfüllen",
+                "Dokumentieren"
+            ],
+            "text": "Prio-Liste erstellen für die Wandler von Celsa.\nGroß nach klein erstellen."
         },
         {
-          "name": "Berechnen (Herleiten)",
-          "note": "3",
-          "time": 3
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-07": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Meetings",
-          "note": "Praxisphase besprochen",
-          "time": 0.5
+            "completed": true,
+            "dueDate": "2025-09-15",
+            "id": "_yaseshpi9",
+            "priority": "2",
+            "projectId": "_e4d1axgsv",
+            "tags": [
+                "Berechnen (Herleiten)"
+            ],
+            "text": "Mathematische Herleitung für die Berechnung der Magnetfelder schreiben."
         },
         {
-          "name": "Berechnen (Herleiten)",
-          "note": "Berechnung für B-Felder in der zweiten Dimension und überlagerungen berechnet.",
-          "time": 5.75
+            "completed": true,
+            "dueDate": "2025-09-12",
+            "id": "_6gzpj2efh",
+            "priority": "3",
+            "projectId": "",
+            "tags": [],
+            "text": "Feuerwehrantrag auf Entgeltersatz."
         },
         {
-          "name": "Tabellen ausfüllen",
-          "note": "Wandler eingetragen",
-          "time": 2
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-08": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Berechnen (Herleiten)",
-          "note": "",
-          "time": 2
+            "completed": true,
+            "dueDate": "2025-09-24",
+            "id": "_kyg00dz4f",
+            "priority": "3",
+            "projectId": "_e4d1axgsv",
+            "tags": [
+                "Lesen von Dokumenten"
+            ],
+            "text": "Patenschreiben von Redur prüfen"
         },
         {
-          "name": "Programmieren",
-          "note": "",
-          "time": 3
-        },
-        {
-          "name": "Lesen von Dokumenten",
-          "note": "",
-          "time": 2
+            "completed": false,
+            "dueDate": "2025-09-26",
+            "id": "_e7wuzxwki",
+            "priority": "2",
+            "projectId": "_wvy489jsm",
+            "tags": [
+                "Dokumentieren"
+            ],
+            "text": "Dokument erstellen"
         }
-      ],
-      "workHours": 8
-    },
-    "2025-08-09": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 8
-    },
-    "2025-08-10": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 8
-    },
-    "2025-08-11": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Simuliert",
-          "note": "Mit der Software FEM habe ich die erste simulation für die beeinflussung der Magnetische Einfluss auf L2.",
-          "time": 5
-        },
-        {
-          "name": "Mitarbeiter gespräch",
-          "note": "Die Software mit den Simulationen gezeigt",
-          "time": 0.75
-        },
-        {
-          "name": "Soziales",
-          "note": "Eine Mitarbeiterin gespräch geführt, ob man eine .msg Datei in einer .csv Datei inhalte kopieren kann",
-          "time": 1.25
-        },
-        {
-          "name": "Tabellen ausfüllen",
-          "note": "Tabelle für die Bestellung zuende gemacht",
-          "time": 1.25
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-12": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Programmieren",
-          "note": "Für die Simulationssoftware ein Code geschrieben, damit man verschiedene Messsenarien Simulieren kann",
-          "time": 6
-        },
-        {
-          "name": "Soziales",
-          "note": "",
-          "time": 1.5
-        },
-        {
-          "name": "Orga",
-          "note": "Ordner Struktur aufgeräumt",
-          "time": 1
-        }
-      ],
-      "workHours": 8.25
-    },
-    "2025-08-13": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Meetings",
-          "note": "Tabelle besprochen",
-          "time": 0.5
-        },
-        {
-          "name": "Programmieren",
-          "note": "Die Simulation weiter Programmiert",
-          "time": 5
-        },
-        {
-          "name": "Tabellen ausfüllen",
-          "note": "Es mussten Wandler mit einer Messauflösung von 1 A herrausgesucht werden.",
-          "time": 3
-        }
-      ],
-      "workHours": 8
-    },
-    "2025-08-14": {
-      "status": "dokumentiert",
-      "tags": [
-        {
-          "name": "Programmieren",
-          "note": "",
-          "time": 6
-        },
-        {
-          "name": "Simuliert",
-          "note": "",
-          "time": 2
-        },
-        {
-          "name": "Tabellen ausfüllen",
-          "note": "",
-          "time": 0.5
-        }
-      ],
-      "workHours": 8.25
-    },
-    "2025-08-15": {
-      "status": "dokumentiert",
-      "tags": [],
-      "workHours": 7
-    },
-    "2025-08-18": {
-      "entries": [
-        {
-          "note": "Die Simulation weiter geführt. Matlab skript angepasst sodass man verschiedne Wanler und Schienen hinzufügen",
-          "tagNames": ["Programmieren", "Simuliert"],
-          "time": 7.5
-        },
-        {
-          "note": "Praxisphase besprochen",
-          "tagNames": ["Meetings", "Soziales"],
-          "time": 2
-        }
-      ],
-      "status": "dokumentiert",
-      "workHours": 9.5
-    },
-    "2025-08-19": {
-      "entries": [
-        {
-          "note": "Eine Software Programmiert, damit man die Weihnachtspostkarten, automatisch sortiert und augeben bekommt.",
-          "tagNames": ["Programmieren", "Soziales"],
-          "time": 4.58
-        },
-        {
-          "note": "Simulationssoftware UI weiter Programmiert",
-          "tagNames": ["Programmieren"],
-          "time": 4.58
-        }
-      ],
-      "status": "dokumentiert",
-      "workHours": 9.15
-    },
-    "2025-08-20": {
-      "entries": [
-        {
-          "note": "Simulationssoftware UI weiter programmiert",
-          "tagNames": ["Programmieren"],
-          "time": 7.75
-        }
-      ],
-      "status": "dokumentiert",
-      "workHours": 8.97
-    },
-    "2025-08-21": {
-      "entries": [
-        {
-          "note": "Bauteileditor wurde hinzugefügt. Es ist möglich Bauteile einzubauen",
-          "tagNames": ["Programmieren", "Simuliert"],
-          "time": 5.95
-        },
-        {
-          "note": "Musst tabelle mit Internen Bestellnummern ausfüllen",
-          "tagNames": ["Tabellen ausfüllen"],
-          "time": 3
-        }
-      ],
-      "status": "dokumentiert",
-      "workHours": 8.95
-    },
-    "2025-08-25": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-08-26": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-08-27": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-08-28": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-08-29": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-08-30": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-08-31": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-01": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 15,
-        "m": 0
-      },
-      "entries": [
-        {
-          "tagNames": [],
-          "time": 8.25,
-          "note": "Lehrgang"
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 0
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-02": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 15,
-        "m": 0
-      },
-      "entries": [
-        {
-          "note": "00:45",
-          "tagNames": [],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 0
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-03": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 15,
-        "m": 0
-      },
-      "entries": [
-        {
-          "note": "Lehrgang",
-          "tagNames": [],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 0
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-04": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 15,
-        "m": 0
-      },
-      "entries": [
-        {
-          "note": "Lehrgang",
-          "tagNames": [],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 0
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-05": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 13,
-        "m": 45
-      },
-      "entries": [
-        {
-          "note": "Lehrgang",
-          "tagNames": [],
-          "time": 7
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 0
-      },
-      "status": "dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-09-07": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-08": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 17,
-        "m": 12
-      },
-      "entries": [
-        {
-          "note": "Simulationssoftware fehler behoben.",
-          "tagNames": ["Programmieren"],
-          "time": 6
-        },
-        {
-          "note": "Einlesen in die Messgerät für die Messungen. Ozilloskop und Strommesszange",
-          "tagNames": ["Lesen von Dokumenten"],
-          "time": 2.25
-        }
-      ],
-      "startTime": {
-        "h": 7,
-        "m": 56
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-09": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 16,
-        "m": 52
-      },
-      "entries": [
-        {
-          "note": "Simulationssoftware die Weboberfläche verbessert",
-          "tagNames": ["Programmieren", "Simuliert"],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": 10,
-        "m": 19
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-10": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 16,
-        "m": 49
-      },
-      "entries": [
-        {
-          "note": "Frontend Programmiert.",
-          "tagNames": ["Programmieren"],
-          "time": 6
-        },
-        {
-          "note": "Backend an die neue Json angepasst",
-          "tagNames": ["Programmieren"],
-          "time": 2.25
-        }
-      ],
-      "startTime": {
-        "h": 7,
-        "m": 41
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-11": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 17,
-        "m": 4
-      },
-      "entries": [
-        {
-          "note": "Die Geometrie der Wandler muss korrekt erstellt werden für die Simulation.",
-          "tagNames": ["Programmieren"],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": 7,
-        "m": 35
-      },
-      "status": "dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-12": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "endTime": {
-        "h": 16,
-        "m": 4
-      },
-      "entries": [
-        {
-          "note": "Simulationsoftware weiterentwickelt",
-          "tagNames": ["Programmieren", "Simuliert"],
-          "time": 7
-        }
-      ],
-      "startTime": {
-        "h": 7,
-        "m": 40
-      },
-      "status": "dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-09-14": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-15": {
-      "breakTime": {
-        "h": null,
-        "m": null
-      },
-      "endTime": {
-        "h": null,
-        "m": null
-      },
-      "entries": [],
-      "startTime": {
-        "h": null,
-        "m": null
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-18": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-09-21": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-22": {
-      "breakTime": {
-        "h": null,
-        "m": null
-      },
-      "endTime": {
-        "h": 16,
-        "m": 29
-      },
-      "entries": [
-        {
-          "note": "Die Simulationssoftware leicht verbessert",
-          "tagNames": ["Programmieren"],
-          "time": 8.416666666666666
-        }
-      ],
-      "startTime": {
-        "h": 6,
-        "m": 50
-      },
-      "status": "dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-23": {
-      "breakTime": {
-        "h": null,
-        "m": null
-      },
-      "endTime": {
-        "h": null,
-        "m": null
-      },
-      "entries": [
-        {
-          "note": "",
-          "tagNames": [],
-          "time": 8.25
-        }
-      ],
-      "startTime": {
-        "h": null,
-        "m": null
-      },
-      "status": "urlaub",
-      "workHours": 8.25
-    },
-    "2025-09-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-25": {
-      "breakTime": {
-        "h": null,
-        "m": null
-      },
-      "endTime": {
-        "h": null,
-        "m": null
-      },
-      "entries": [],
-      "startTime": {
-        "h": 8,
-        "m": 0
-      },
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-26": {
-      "breakTime": {
-        "h": null,
-        "m": null
-      },
-      "endTime": {
-        "h": null,
-        "m": null
-      },
-      "entries": [],
-      "startTime": {
-        "h": 8,
-        "m": 0
-      },
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-09-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-09-28": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-09-30": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-10-01": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-10-02": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 8.25
-    },
-    "2025-10-03": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 7
-    },
-    "2025-10-04": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2025-10-05": {
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "workHours": 0
-    },
-    "2024-12-31": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-01": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-01-05": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-07": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-08": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-01-12": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-14": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-15": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-01-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-21": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-22": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-01-26": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-28": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-01-30": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-02-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-03": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-04": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-05": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-02-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-10": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-11": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-12": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-02-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-18": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-02-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-25": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-26": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-02-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-03-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-03": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-04": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-05": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-03-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-10": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-11": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-12": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-03-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-18": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-03-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-25": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-26": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-03-30": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-03-31": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-01": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-03": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-04-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-07": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-08": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-10": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-04-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-14": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-15": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-04-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-21": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-22": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-04-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-28": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-04-30": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-01": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-05-04": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-05": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-07": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-08": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-05-11": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-12": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-14": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-15": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-05-18": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-21": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-22": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-05-25": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-26": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-28": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-05-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-06-01": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-03": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-04": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-05": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-06-08": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-10": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-11": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-12": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-06-15": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-18": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-19": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-06-22": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-25": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-26": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-06-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-06-30": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-01": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-02": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-03": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-07-06": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-07": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-08": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-09": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-10": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-07-13": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-14": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-15": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-16": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-17": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-07-20": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-21": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-22": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-23": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-24": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 7
-    },
-    "2025-07-27": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-28": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-29": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    },
-    "2025-07-30": {
-      "entries": [],
-      "status": "nicht dokumentiert",
-      "breakTime": {
-        "h": 0,
-        "m": 45
-      },
-      "workHours": 8.25
-    }
-  },
-  "projects": [
-    {
-      "id": "_h1qit75qq",
-      "name": "Bachlorarbeit",
-      "status": "active"
-    },
-    {
-      "id": "_1x5r7eu6c",
-      "name": "Magnetfeldsimulation",
-      "status": "active"
-    },
-    {
-      "id": "_jk6e9x20z",
-      "name": "Meeting",
-      "status": "active"
-    },
-    {
-      "id": "_e4d1axgsv",
-      "name": "Wandler",
-      "status": "active"
-    }
-  ],
-  "tagCategoryMap": {
-    "Analysieren": "Analyse",
-    "Bachelorarbeit schreiben": "Dokumentation",
-    "Berechnen (Herleiten)": "Analyse",
-    "Dokumentieren": "Dokumentation",
-    "Lesen von Dokumenten": "Analyse",
-    "Matlab": "Technik",
-    "Meetings": "Organisation",
-    "Messen": "Technik",
-    "Messreihen vom Ozilloskop auf den PC bekommen": "Sonstiges",
-    "Mitarbeiter gespräch": "Soziales",
-    "Orga": "Dokumentation",
-    "Planung": "Organisation",
-    "Programmieren": "Technik",
-    "Python": "Technik",
-    "Simuliert": "Analyse",
-    "Soziales": "Soziales",
-    "System einrichten": "Organisation",
-    "Tabellen ausfüllen": "Dokumentation",
-    "Test": "Sonstiges"
-  },
-  "todos": [
-    {
-      "completed": true,
-      "dueDate": "2025-09-16",
-      "id": "_nqjevrihh",
-      "priority": "2",
-      "projectId": "_h1qit75qq",
-      "tags": ["Bachelorarbeit schreiben", "Dokumentieren"],
-      "text": "Struktur der Bachelorarbeit muss erstellt werden."
-    },
-    {
-      "completed": true,
-      "dueDate": "2025-09-16",
-      "id": "_tbw7o3d5d",
-      "priority": "2",
-      "projectId": "_1x5r7eu6c",
-      "tags": [],
-      "text": "Die Geometrie der Wandler muss korrekt erstellt werden für die Simulation."
-    },
-    {
-      "completed": true,
-      "dueDate": "2025-09-11",
-      "id": "_h38r9g63u",
-      "priority": "3",
-      "projectId": "_e4d1axgsv",
-      "tags": ["Tabellen ausfüllen", "Dokumentieren"],
-      "text": "Prio-Liste erstellen für die Wandler von Celsa.\nGroß nach klein erstellen."
-    },
-    {
-      "completed": true,
-      "dueDate": "2025-09-15",
-      "id": "_yaseshpi9",
-      "priority": "2",
-      "projectId": "_e4d1axgsv",
-      "tags": ["Berechnen (Herleiten)"],
-      "text": "Mathematische Herleitung für die Berechnung der Magnetfelder schreiben."
-    },
-    {
-      "completed": true,
-      "dueDate": "2025-09-12",
-      "id": "_6gzpj2efh",
-      "priority": "3",
-      "projectId": "",
-      "tags": [],
-      "text": "Feuerwehrantrag auf Entgeltersatz."
-    },
-    {
-      "completed": true,
-      "dueDate": "2025-09-24",
-      "id": "_kyg00dz4f",
-      "priority": "3",
-      "projectId": "_e4d1axgsv",
-      "tags": ["Lesen von Dokumenten"],
-      "text": "Patenschreiben von Redur prüfen"
-    }
-  ]
+    ]
 }

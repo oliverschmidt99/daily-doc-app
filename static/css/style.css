@@ -20,3 +20,18 @@ body {
 .todo-list .ml-6 { margin-left: 1.5rem; }
 .edit-todo-btn, .toggle-proj-btn, .delete-proj-btn { opacity: 0.2; transition: opacity 0.2s; }
 li:hover .edit-todo-btn, li:hover .toggle-proj-btn, li:hover .delete-proj-btn { opacity: 1; }
+/* Daily Accordion Colors */
+.day-bg-mon-light { background-color: #EFF6FF; } /* blue-50 */
+.day-bg-mon-dark  { background-color: #DBEAFE; } /* blue-100 */
+
+.day-bg-tue-light { background-color: #F0FDF4; } /* green-50 */
+.day-bg-tue-dark  { background-color: #DCFCE7; } /* green-100 */
+
+.day-bg-wed-light { background-color: #FFFBEB; } /* yellow-50 */
+.day-bg-wed-dark  { background-color: #FEF3C7; } /* yellow-100 */
+
+.day-bg-thu-light { background-color: #EEF2FF; } /* indigo-50 */
+.day-bg-thu-dark  { background-color: #E0E7FF; } /* indigo-100 */
+
+.day-bg-fri-light { background-color: #FFF1F2; } /* rose-50 */
+.day-bg-fri-dark  { background-color: #FFE4E6; } /* rose-100 */

@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const date = new Date(year, 0, 1 + (week - 1) * 7);
     date.setDate(date.getDate() + 7 * offset);
     const newYear = date.getFullYear();
-    const newWeek = getWeekNumber(date);
+    const newWeek = getWeekNumber(date, true);
     dom.weekPicker.value = `${newYear}-W${String(newWeek).padStart(2, "0")}`;
     renderOverview();
   }
@@ -196,17 +196,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     dom.monthPicker.value = `${year}-${month}`;
-    const week = getWeekNumber(today);
+    const week = getWeekNumber(today, true);
     dom.weekPicker.value = `${year}-W${String(week).padStart(2, "0")}`;
     dom.yearPicker.value = year;
     document.getElementById("view-month").checked = true;
   }
 
-  function getWeekNumber(d) {
+  function getWeekNumber(d, getWeekOnly = false) {
     const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+    const year = date.getUTCFullYear();
+    const yearStart = new Date(Date.UTC(year, 0, 1));
+    const weekNo = Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+    if (getWeekOnly) return weekNo;
+    return `${year}-W${weekNo}`;
   }
 
   function handleViewChange() {
@@ -226,6 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.accordionContainer.innerHTML = "";
 
     const allDateEntries = getAllDateEntries(selectedView);
+
     if (allDateEntries.length === 0) {
       updateSummary(0, 0);
       return;
@@ -235,50 +239,32 @@ document.addEventListener("DOMContentLoaded", async () => {
       totalActual = 0;
 
     if (selectedView === "month") {
+      allDateEntries.forEach((entry) => {
+        const { target, actual } = calculateDayHours(entry.dateString);
+        totalTarget += target;
+        totalActual += actual;
+      });
+
       const groupedByWeek = groupBy(allDateEntries, (entry) =>
         getWeekNumber(entry.date)
       );
-      const year = allDateEntries[0].date.getFullYear();
-      const firstDayOfMonth = new Date(
-        year,
-        allDateEntries[0].date.getMonth(),
-        1
-      );
-      const lastDayOfMonth = new Date(
-        year,
-        allDateEntries[0].date.getMonth() + 1,
-        0
-      );
 
-      let currentDay = new Date(firstDayOfMonth);
-      currentDay.setDate(
-        currentDay.getDate() - ((currentDay.getDay() + 6) % 7)
-      ); // Start on Monday of the first week
+      Object.keys(groupedByWeek)
+        .sort()
+        .forEach((weekKey) => {
+          const entriesInGroup = groupedByWeek[weekKey];
+          const { groupTarget, groupActual } =
+            calculateGroupTotals(entriesInGroup);
+          const weekNum = parseInt(weekKey.split("-W")[1], 10);
 
-      while (currentDay <= lastDayOfMonth) {
-        const weekNum = getWeekNumber(currentDay);
-        const weekKey = weekNum;
-        const entriesInGroup = groupedByWeek[weekKey] || [];
-        const { groupTarget, groupActual } =
-          calculateGroupTotals(entriesInGroup);
-
-        totalTarget += groupTarget;
-        totalActual += groupActual;
-
-        const groupAccordion = createGroupAccordion(
-          `KW ${weekKey}`,
-          groupTarget,
-          groupActual,
-          entriesInGroup
-        );
-        dom.accordionContainer.appendChild(groupAccordion);
-
-        currentDay.setDate(currentDay.getDate() + 7);
-        if (getWeekNumber(currentDay) === weekNum) {
-          // Handle short years
-          currentDay.setDate(currentDay.getDate() + 7);
-        }
-      }
+          const groupAccordion = createGroupAccordion(
+            `KW ${weekNum}`,
+            groupTarget,
+            groupActual,
+            entriesInGroup
+          );
+          dom.accordionContainer.appendChild(groupAccordion);
+        });
     } else if (selectedView === "year") {
       const monthNames = [
         "Januar",
@@ -307,13 +293,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         totalTarget += groupTarget;
         totalActual += groupActual;
 
-        const groupAccordion = createGroupAccordion(
-          monthName,
-          groupTarget,
-          groupActual,
-          entriesInGroup
-        );
-        dom.accordionContainer.appendChild(groupAccordion);
+        if (entriesInGroup.length > 0) {
+          const groupAccordion = createGroupAccordion(
+            monthName,
+            groupTarget,
+            groupActual,
+            entriesInGroup
+          );
+          dom.accordionContainer.appendChild(groupAccordion);
+        }
       });
     } else {
       // Week view
@@ -334,7 +322,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         dom.accordionContainer.appendChild(dayAccordion);
       });
     }
-
     updateSummary(totalTarget, totalActual);
   }
 
@@ -387,9 +374,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     }
-    return dates.filter(
-      (entry) => entry.date.getDay() !== 0 && entry.date.getDay() !== 6
-    );
+    return dates;
   }
 
   const groupBy = (array, keyGetter) => {
@@ -409,18 +394,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       entries: [],
       status: "nicht dokumentiert",
       breakTime: { h: 0, m: 45 },
+      startTime: null,
+      endTime: null,
     };
-    dayData.workHours = DAILY_WORK_HOURS[dayOfWeek];
-    if (!appData[dateString]) appData[dateString] = dayData;
+    dayData.workHours = DAILY_WORK_HOURS[dayOfWeek] ?? 0;
+    if (!appData[dateString]) {
+      appData[dateString] = dayData;
+    }
 
     let actual = 0;
-    if (dayData.startTime?.h !== null && dayData.endTime?.h !== null) {
-      const startMins = dayData.startTime.h * 60 + (dayData.startTime.m || 0);
-      const endMins = dayData.endTime.h * 60 + (dayData.endTime.m || 0);
+    if (
+      dayData.startTime &&
+      dayData.endTime &&
+      dayData.startTime.h !== null &&
+      dayData.endTime.h !== null
+    ) {
+      const startMins =
+        (dayData.startTime.h || 0) * 60 + (dayData.startTime.m || 0);
+      const endMins = (dayData.endTime.h || 0) * 60 + (dayData.endTime.m || 0);
       const breakMins =
         (dayData.breakTime?.h || 0) * 60 + (dayData.breakTime?.m || 0);
-      if (endMins > startMins) actual = (endMins - startMins - breakMins) / 60;
-    } else {
+      if (endMins > startMins) {
+        actual = (endMins - startMins - breakMins) / 60;
+      }
+    } else if (dayData.entries && dayData.entries.length > 0) {
       actual = dayData.entries.reduce(
         (sum, entry) => sum + (entry.time || 0),
         0
@@ -468,21 +465,23 @@ document.addEventListener("DOMContentLoaded", async () => {
           innerContainer.innerHTML = `<div class="p-3 text-gray-500 italic">Keine Arbeitstage in diesem Zeitraum.</div>`;
           return;
         }
-        entriesInGroup.forEach((entry) => {
-          const { target, actual, diff, dayData } = calculateDayHours(
-            entry.dateString
-          );
-          innerContainer.appendChild(
-            createDayAccordion(
-              entry.date,
-              entry.dateString,
-              dayData,
-              actual,
-              target,
-              diff
-            )
-          );
-        });
+        entriesInGroup
+          .sort((a, b) => a.date - b.date)
+          .forEach((entry) => {
+            const { target, actual, diff, dayData } = calculateDayHours(
+              entry.dateString
+            );
+            innerContainer.appendChild(
+              createDayAccordion(
+                entry.date,
+                entry.dateString,
+                dayData,
+                actual,
+                target,
+                diff
+              )
+            );
+          });
       }
     });
     return item;
@@ -528,13 +527,68 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function populateEditContainer(container, dateString, dayData) {
-    container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"><div><label class="block text-sm font-medium text-gray-700">Tagesstatus</label><select class="status-select mt-1 block w-full rounded-md border-gray-300 p-2"><option value="dokumentiert">Dokumentiert ✔</option><option value="urlaub">Urlaub 🌴</option><option value="krank">Krank 🤒</option><option value="abwesend">Abwesend 🚶</option><option value="nicht dokumentiert">Nicht Dokumentiert</option></select></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label><input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 p-2 mt-1" value="${objectToHHMM(
-      dayData.startTime
-    )}"></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsende</label><input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 p-2 mt-1" value="${objectToHHMM(
-      dayData.endTime
-    )}"></div><div><label class="block text-sm font-medium text-gray-700">Pause</label><input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 p-2 mt-1" value="${objectToHHMM(
-      dayData.breakTime
-    )}"></div></div><h4 class="text-lg font-semibold mt-4 mb-2 border-t pt-4">Einträge</h4><div class="daily-entries-container space-y-2 mb-4"></div><div class="flex justify-between items-center mt-4"><button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">+ Eintrag</button></div>`;
+    const date = new Date(dateString + "T00:00:00");
+    const dayOfWeek = date.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+
+    const dayColorPrefixes = {
+      1: "mon",
+      2: "tue",
+      3: "wed",
+      4: "thu",
+      5: "fri",
+    };
+
+    const colorPrefix = dayColorPrefixes[dayOfWeek] || "gray";
+    const lightClass =
+      colorPrefix !== "gray" ? `day-bg-${colorPrefix}-light` : "bg-gray-100";
+    const darkClass =
+      colorPrefix !== "gray" ? `day-bg-${colorPrefix}-dark` : "bg-gray-200";
+
+    container.innerHTML = `
+        <div class="space-y-4">
+            <fieldset class="border border-gray-300 p-4 rounded-lg ${lightClass}">
+                <legend class="text-md font-semibold px-2 text-gray-700">Zeiten & Status</legend>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tagesstatus</label>
+                        <select class="status-select mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <option value="dokumentiert">Dokumentiert ✔</option>
+                            <option value="urlaub">Urlaub 🌴</option>
+                            <option value="krank">Krank 🤒</option>
+                            <option value="abwesend">Abwesend 🚶</option>
+                            <option value="nicht dokumentiert">Nicht Dokumentiert</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
+                        <input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.startTime
+                        )}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Arbeitsende</label>
+                        <input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.endTime
+                        )}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Pause</label>
+                        <input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.breakTime
+                        )}">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="border border-gray-300 p-4 rounded-lg ${darkClass}">
+                <legend class="text-md font-semibold px-2 text-gray-700">Einträge</legend>
+                <div class="daily-entries-container space-y-3"></div>
+                <div class="mt-4">
+                    <button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">+ Eintrag hinzufügen</button>
+                </div>
+            </fieldset>
+        </div>
+    `;
 
     container
       .querySelectorAll(".start-time-input, .end-time-input, .break-time-input")
@@ -546,7 +600,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const entriesContainer = container.querySelector(
       ".daily-entries-container"
     );
-    dayData.entries.forEach((entry) =>
+    (dayData.entries || []).forEach((entry) =>
       entriesContainer.appendChild(createEntryElement(entry))
     );
     container.querySelector(".add-entry-btn").addEventListener("click", () => {
@@ -569,7 +623,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     timeInput.addEventListener("blur", formatTimeInput);
 
     const tagsContainer = el.querySelector(".selected-tags-container");
-    entry.tagNames.forEach((tagName) =>
+    (entry.tagNames || []).forEach((tagName) =>
       tagsContainer.appendChild(createTagBadge(tagName))
     );
     el.querySelector(".remove-entry-btn").addEventListener("click", () =>
@@ -646,13 +700,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const entries = [];
     container.querySelectorAll(".daily-entry-item").forEach((item) => {
       const time = hhmmToDecimal(item.querySelector(".entry-time-input").value);
-      if (time > 0) {
+      const tagNames = Array.from(item.querySelectorAll(".tag-badge")).map(
+        (b) => b.dataset.tagName
+      );
+      const note = item.querySelector(".entry-note-input").value.trim();
+
+      if (time > 0 || tagNames.length > 0 || note) {
         entries.push({
-          tagNames: Array.from(item.querySelectorAll(".tag-badge")).map(
-            (b) => b.dataset.tagName
-          ),
+          tagNames: tagNames,
           time: time,
-          note: item.querySelector(".entry-note-input").value.trim(),
+          note: note,
         });
       }
     });
