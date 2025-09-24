@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     prevYearBtn: document.getElementById("prev-year-btn"),
     nextYearBtn: document.getElementById("next-year-btn"),
     saveAllBtn: document.getElementById("save-all-btn"),
+    notificationEl: document.getElementById("notification"),
   };
 
   const DAILY_WORK_HOURS = {
@@ -108,16 +109,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function saveDataToServer() {
+    const dataToSave = {
+      appData,
+      tagCategoryMap,
+      projects: allData.projects || [],
+      todos: allData.todos || [],
+    };
     try {
-      allData.appData = appData;
       await fetch("/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(allData),
+        body: JSON.stringify(dataToSave),
       });
+      showNotification("Gespeichert!", false);
     } catch (e) {
-      console.error("Fehler beim Speichern der Daten:", e);
+      showNotification("Speichern fehlgeschlagen.", true);
     }
+  }
+
+  function showNotification(message, isError = false) {
+    dom.notificationEl.textContent = message;
+    dom.notificationEl.classList.toggle("bg-green-500", !isError);
+    dom.notificationEl.classList.toggle("bg-red-500", isError);
+    dom.notificationEl.classList.remove("opacity-0", "translate-x-full");
+    setTimeout(() => {
+      dom.notificationEl.classList.add("opacity-0", "translate-x-full");
+    }, 3000);
   }
 
   function setupEventListeners() {
@@ -146,21 +163,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       const dateString = detail.dataset.date;
       if (dateString) {
         const container = detail.querySelector(".edit-container");
-        if (container) saveDay(dateString, container, false);
-      } else {
-        const openDays = detail.querySelectorAll("details[open]");
-        openDays.forEach((dayDetail) => {
-          const dayDateString = dayDetail.dataset.date;
-          const dayContainer = dayDetail.querySelector(".edit-container");
-          if (dayDateString && dayContainer)
-            saveDay(dayDateString, dayContainer, false);
-        });
+        if (container && container.innerHTML) {
+          saveDayFromDOM(dateString, container);
+        }
       }
     });
-
-    saveDataToServer().then(() => {
-      renderOverview();
-    });
+    saveDataToServer().then(() => renderOverview());
   }
 
   function changeWeek(offset) {
@@ -227,14 +235,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       'input[name="overview-view"]:checked'
     ).value;
     dom.accordionContainer.innerHTML = "";
-
     const allDateEntries = getAllDateEntries(selectedView);
-
     if (allDateEntries.length === 0) {
       updateSummary(0, 0);
       return;
     }
-
     let totalTarget = 0,
       totalActual = 0;
 
@@ -244,11 +249,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         totalTarget += target;
         totalActual += actual;
       });
-
       const groupedByWeek = groupBy(allDateEntries, (entry) =>
         getWeekNumber(entry.date)
       );
-
       Object.keys(groupedByWeek)
         .sort()
         .forEach((weekKey) => {
@@ -256,7 +259,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           const { groupTarget, groupActual } =
             calculateGroupTotals(entriesInGroup);
           const weekNum = parseInt(weekKey.split("-W")[1], 10);
-
           const groupAccordion = createGroupAccordion(
             `KW ${weekNum}`,
             groupTarget,
@@ -284,15 +286,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         allDateEntries,
         (entry) => monthNames[entry.date.getMonth()]
       );
-
       monthNames.forEach((monthName) => {
         const entriesInGroup = groupedByMonth[monthName] || [];
         const { groupTarget, groupActual } =
           calculateGroupTotals(entriesInGroup);
-
         totalTarget += groupTarget;
         totalActual += groupActual;
-
         if (entriesInGroup.length > 0) {
           const groupAccordion = createGroupAccordion(
             monthName,
@@ -398,9 +397,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       endTime: null,
     };
     dayData.workHours = DAILY_WORK_HOURS[dayOfWeek] ?? 0;
-    if (!appData[dateString]) {
-      appData[dateString] = dayData;
-    }
+    if (!appData[dateString]) appData[dateString] = dayData;
 
     let actual = 0;
     if (
@@ -414,9 +411,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const endMins = (dayData.endTime.h || 0) * 60 + (dayData.endTime.m || 0);
       const breakMins =
         (dayData.breakTime?.h || 0) * 60 + (dayData.breakTime?.m || 0);
-      if (endMins > startMins) {
-        actual = (endMins - startMins - breakMins) / 60;
-      }
+      if (endMins > startMins) actual = (endMins - startMins - breakMins) / 60;
     } else if (dayData.entries && dayData.entries.length > 0) {
       actual = dayData.entries.reduce(
         (sum, entry) => sum + (entry.time || 0),
@@ -528,8 +523,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function populateEditContainer(container, dateString, dayData) {
     const date = new Date(dateString + "T00:00:00");
-    const dayOfWeek = date.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-
+    const dayOfWeek = date.getDay();
     const dayColorPrefixes = {
       1: "mon",
       2: "tue",
@@ -537,64 +531,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       4: "thu",
       5: "fri",
     };
-
     const colorPrefix = dayColorPrefixes[dayOfWeek] || "gray";
     const lightClass =
       colorPrefix !== "gray" ? `day-bg-${colorPrefix}-light` : "bg-gray-100";
     const darkClass =
       colorPrefix !== "gray" ? `day-bg-${colorPrefix}-dark` : "bg-gray-200";
 
-    container.innerHTML = `
-        <div class="space-y-4">
-            <fieldset class="border border-gray-300 p-4 rounded-lg ${lightClass}">
-                <legend class="text-md font-semibold px-2 text-gray-700">Zeiten & Status</legend>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tagesstatus</label>
-                        <select class="status-select mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <option value="dokumentiert">Dokumentiert ✔</option>
-                            <option value="urlaub">Urlaub 🌴</option>
-                            <option value="krank">Krank 🤒</option>
-                            <option value="abwesend">Abwesend 🚶</option>
-                            <option value="nicht dokumentiert">Nicht Dokumentiert</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
-                        <input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-                          dayData.startTime
-                        )}">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Arbeitsende</label>
-                        <input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-                          dayData.endTime
-                        )}">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Pause</label>
-                        <input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-                          dayData.breakTime
-                        )}">
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset class="border border-gray-300 p-4 rounded-lg ${darkClass}">
-                <legend class="text-md font-semibold px-2 text-gray-700">Einträge</legend>
-                <div class="daily-entries-container space-y-3"></div>
-                <div class="mt-4">
-                    <button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">+ Eintrag hinzufügen</button>
-                </div>
-            </fieldset>
-        </div>
-    `;
-
-    container
-      .querySelectorAll(".start-time-input, .end-time-input, .break-time-input")
-      .forEach((input) => {
-        input.addEventListener("blur", formatTimeInput);
-      });
+    container.innerHTML = `<div class="space-y-4"><fieldset class="border border-gray-300 p-4 rounded-lg ${lightClass}"><legend class="text-md font-semibold px-2 text-gray-700">Zeiten & Status</legend><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><div><label class="block text-sm font-medium text-gray-700">Tagesstatus</label><select class="status-select mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"><option value="dokumentiert">Dokumentiert ✔</option><option value="urlaub">Urlaub 🌴</option><option value="krank">Krank 🤒</option><option value="abwesend">Abwesend 🚶</option><option value="nicht dokumentiert">Nicht Dokumentiert</option></select></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label><input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+      dayData.startTime
+    )}"></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsende</label><input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+      dayData.endTime
+    )}"></div><div><label class="block text-sm font-medium text-gray-700">Pause</label><input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+      dayData.breakTime
+    )}"></div></div></fieldset><fieldset class="border border-gray-300 p-4 rounded-lg ${darkClass}"><legend class="text-md font-semibold px-2 text-gray-700">Einträge</legend><div class="daily-entries-container space-y-3"></div><div class="mt-4"><button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">+ Eintrag hinzufügen</button></div></fieldset></div>`;
 
     container.querySelector(".status-select").value = dayData.status;
     const entriesContainer = container.querySelector(
@@ -603,11 +552,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     (dayData.entries || []).forEach((entry) =>
       entriesContainer.appendChild(createEntryElement(entry))
     );
-    container.querySelector(".add-entry-btn").addEventListener("click", () => {
-      entriesContainer.appendChild(
-        createEntryElement({ tagNames: [], time: 0, note: "" })
+    container
+      .querySelector(".add-entry-btn")
+      .addEventListener("click", () =>
+        entriesContainer.appendChild(
+          createEntryElement({ tagNames: [], time: 0, note: "" })
+        )
       );
-    });
   }
 
   function createEntryElement(entry) {
@@ -685,8 +636,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  function saveDay(dateString, container, doSave = true) {
-    const dayData = appData[dateString];
+  function saveDayFromDOM(dateString, container) {
+    const dayData = appData[dateString] || {};
     dayData.status = container.querySelector(".status-select").value;
     dayData.startTime = hhmmToObject(
       container.querySelector(".start-time-input").value
@@ -704,13 +655,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         (b) => b.dataset.tagName
       );
       const note = item.querySelector(".entry-note-input").value.trim();
-
-      if (time > 0 || tagNames.length > 0 || note) {
-        entries.push({
-          tagNames: tagNames,
-          time: time,
-          note: note,
-        });
+      if (time >= 0 && (tagNames.length > 0 || note)) {
+        entries.push({ tagNames, time, note });
       }
     });
     dayData.entries = entries;
@@ -719,12 +665,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else if (entries.length === 0 && dayData.status === "dokumentiert") {
       dayData.status = "nicht dokumentiert";
     }
-
-    if (doSave) {
-      saveDataToServer().then(() => {
-        renderOverview();
-      });
-    }
   }
+
   init();
 });

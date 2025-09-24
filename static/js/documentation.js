@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let appData = {},
     tagCategoryMap = {};
   let barChart, radarChart;
+  let autoSaveTimer;
+
   const CATEGORIES = [
     "Technik",
     "Analyse",
@@ -94,18 +96,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const formatTimeInput = (event) => {
     let value = event.target.value.trim();
     if (!value) return;
-
     let parts = value.split(":");
     let hours = parts[0] ? parts[0].padStart(2, "0") : "00";
     let minutes = parts[1] ? parts[1].padStart(2, "0") : "00";
-
     if (!value.includes(":")) {
       if (value.length <= 2) {
         hours = value.padStart(2, "0");
         minutes = "00";
       }
     }
-
     event.target.value = `${hours}:${minutes}`;
   };
 
@@ -187,28 +186,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch("/load");
       const data = await response.json();
-      allData = data;
       appData = data.appData || {};
       tagCategoryMap = data.tagCategoryMap || {};
     } catch (e) {
       showNotification("Keine Verbindung zum Server.", true);
-      appData = {};
-      tagCategoryMap = {};
     }
   }
 
   async function saveDataToServer() {
+    const dataToSave = {
+      appData,
+      tagCategoryMap,
+      projects: allData.projects || [],
+      todos: allData.todos || [],
+    };
     try {
-      allData.appData = appData;
-      allData.tagCategoryMap = tagCategoryMap;
       await fetch("/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(allData),
+        body: JSON.stringify(dataToSave),
       });
-      showNotification("Daten gespeichert!", false);
+      showNotification("Gespeichert!", false);
     } catch (e) {
       showNotification("Speichern fehlgeschlagen.", true);
+    }
+  }
+
+  async function addNewTag() {
+    const tagName = dom.newTagInput.value.trim();
+    if (tagName && !tagCategoryMap[tagName]) {
+      tagCategoryMap[tagName] = dom.newTagCategorySelect.value;
+      renderTagLibrary();
+      await saveDataToServer();
+      showNotification(`Tag "${tagName}" hinzugefügt.`);
+      dom.newTagInput.value = "";
+    } else if (tagName) {
+      showNotification(`Tag "${tagName}" existiert bereits.`, true);
     }
   }
 
@@ -262,34 +275,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       entries: [],
       breakTime: { h: 0, m: 45 },
     };
-
-    // Immer die korrekte Soll-Arbeitszeit aus der Konstante setzen
     dayData.workHours = DAILY_WORK_HOURS[d.getDay()] ?? 8;
-
-    if (dayData.tags && !dayData.entries) {
-      dayData.entries = dayData.tags.map((t) => ({
-        tagNames: [t.name],
-        time: t.time,
-        note: t.note,
-      }));
-      delete dayData.tags;
-    }
     appData[dateString] = dayData;
-    dom.statusSelect.value = dayData.status;
 
+    dom.statusSelect.value = dayData.status;
     dom.startTimeInput.value = objectToHHMM(dayData.startTime);
     dom.endTimeInput.value = objectToHHMM(dayData.endTime);
     dom.breakTimeInput.value = objectToHHMM(dayData.breakTime);
 
     (dayData.entries || []).forEach((e) => renderDailyEntry(e));
     if ((dayData.entries || []).length === 0) renderDailyEntry();
+
     updateTotals();
     handleStatusChange();
     updateCharts();
     calculateAndDisplayOvertime();
   }
 
-  function saveCurrentDay() {
+  async function saveCurrentDay() {
     const dateString = dom.datePicker.value;
     const dailyEntries = [];
     dom.dailyEntriesContainer
@@ -302,19 +305,24 @@ document.addEventListener("DOMContentLoaded", async () => {
           item.querySelector(".entry-time-input").value
         );
         const note = item.querySelector(".entry-note-input").value.trim();
-        if ((tagNames.length > 0 || note) && time > 0) {
+        if ((tagNames.length > 0 || note) && time >= 0) {
           dailyEntries.push({ tagNames, time, note });
         }
       });
+
     appData[dateString] = {
       status: dom.statusSelect.value,
-      workHours: appData[dateString].workHours,
+      workHours:
+        appData[dateString]?.workHours ||
+        DAILY_WORK_HOURS[new Date(dateString).getDay()] ||
+        8,
       entries: dailyEntries,
       startTime: hhmmToObject(dom.startTimeInput.value),
       endTime: hhmmToObject(dom.endTimeInput.value),
       breakTime: hhmmToObject(dom.breakTimeInput.value),
     };
-    saveDataToServer();
+
+    await saveDataToServer();
     updateCharts();
   }
 
@@ -362,9 +370,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function setupEntryEventListeners(el) {
-    const timeInput = el.querySelector(".entry-time-input");
-    timeInput.addEventListener("input", updateTotals);
-    timeInput.addEventListener("blur", formatTimeInput);
+    el.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", updateTotals);
+      if (input.classList.contains("entry-time-input")) {
+        input.addEventListener("blur", formatTimeInput);
+      }
+    });
+
     el.querySelector(".remove-entry-btn").addEventListener("click", () => {
       if (dom.dailyEntriesContainer.children.length > 1) {
         el.remove();
@@ -373,6 +385,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         showNotification("Letzter Eintrag kann nicht gelöscht werden.", true);
       }
     });
+
     const searchInput = el.querySelector(".tag-search-input");
     const suggestionsContainer = el.querySelector(".autocomplete-suggestions");
     searchInput.addEventListener("input", () =>
@@ -431,18 +444,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     b.appendChild(r);
     return b;
   }
-  function addNewTag() {
-    const tagName = dom.newTagInput.value.trim();
-    if (tagName && !tagCategoryMap[tagName]) {
-      tagCategoryMap[tagName] = dom.newTagCategorySelect.value;
-      renderTagLibrary();
-      saveDataToServer();
-      showNotification(`Tag "${tagName}" hinzugefügt.`);
-      dom.newTagInput.value = "";
-    } else if (tagName) {
-      showNotification(`Tag "${tagName}" existiert bereits.`, true);
-    }
-  }
+
   function renderTagLibrary() {
     if (!dom.tagLibrary) return;
     dom.tagLibrary.innerHTML = "";
@@ -450,20 +452,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       .sort()
       .forEach((tag) => dom.tagLibrary.appendChild(createTagBadge(tag)));
   }
+
   function handleStatusChange() {
     const isDoc = dom.statusSelect.value === "dokumentiert";
     dom.mainContentPanel.style.opacity = isDoc ? "1" : "0.6";
     dom.mainContentPanel
       .querySelectorAll("input, button, select")
-      .forEach((el) => (el.disabled = !isDoc));
-    dom.saveDayBtn.disabled = false;
+      .forEach((el) => {
+        if (el.id !== "save-day-btn") el.disabled = !isDoc;
+      });
   }
+
   function updateTotals() {
     const total = Array.from(
       dom.dailyEntriesContainer.querySelectorAll(".entry-time-input")
     ).reduce((sum, el) => sum + hhmmToDecimal(el.value), 0);
     dom.totalHoursEl.textContent = decimalToHHMM(total);
   }
+
   function checkPendingTodos() {
     const todoJSON = localStorage.getItem("pendingTodo");
     if (todoJSON) {
@@ -471,7 +477,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const newEntry = {
         tagNames: todo.tags || [],
         time: 0.25,
-        note: todo.text,
+        note: `Aus To-Do: "${todo.text}"`,
       };
       if (todo.tags) {
         let newTagAdded = false;
@@ -481,13 +487,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             newTagAdded = true;
           }
         });
-        if (newTagAdded) {
-          renderTagLibrary();
-          saveDataToServer();
-        }
+        if (newTagAdded) renderTagLibrary();
       }
       renderDailyEntry(newEntry);
       updateTotals();
+      saveCurrentDay(); // Save the new entry from To-Do
       showNotification(`"${todo.text}" zur Doku hinzugefügt.`);
       localStorage.removeItem("pendingTodo");
     }
@@ -518,7 +522,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       },
     });
   }
-
   function handleDiagramViewChange() {
     const isWeek =
       document.querySelector('input[name="diagram-view"]:checked').value ===
@@ -527,21 +530,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.dayViewControls.classList.toggle("hidden", isWeek);
     updateCharts();
   }
-
   function getWeekNumber(d) {
     d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
     const yStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     return [d.getUTCFullYear(), Math.ceil(((d - yStart) / 86400000 + 1) / 7)];
   }
-
   function setInitialDiagramDates() {
     const today = new Date();
     const [year, week] = getWeekNumber(today);
     dom.diagramWeekPicker.value = `${year}-W${String(week).padStart(2, "0")}`;
     dom.diagramDayPicker.value = today.toISOString().split("T")[0];
   }
-
   function getPeriodDataForCharts() {
     const data = {};
     const isWeek =
@@ -568,7 +568,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     return data;
   }
-
   function updateCharts() {
     if (!barChart || !radarChart) return;
     const periodData = getPeriodDataForCharts();
@@ -578,7 +577,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateBarChart(periodData, isWeek);
     updateRadarChart(periodData, isWeek);
   }
-
   function updateBarChart(periodData, isWeek) {
     const newType = isWeek ? "bar" : "pie";
     if (barChart.config.type !== newType) {
@@ -653,7 +651,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     barChart.update();
   }
-
   function updateRadarChart(periodData, isWeek) {
     dom.radarChartTitle.textContent = isWeek
       ? "Kategorien-Fokus (Woche)"

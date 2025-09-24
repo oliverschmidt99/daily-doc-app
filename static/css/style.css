@@ -35,3 +35,32 @@ li:hover .edit-todo-btn, li:hover .toggle-proj-btn, li:hover .delete-proj-btn { 
 
 .day-bg-fri-light { background-color: #FFF1F2; } /* rose-50 */
 .day-bg-fri-dark  { background-color: #FFE4E6; } /* rose-100 */
+/* Add a smooth transition for the To-do item background colors */
+.todo-list li {
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Pulsating border for tasks without a deadline or overdue */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.no-deadline-task {
+  border: 2px solid #f87171; /* red-400 */
+  animation: pulse-border 2.5s infinite;
+  background-color: #fef2f2; /* red-50 */
+}
+
+.overdue-task {
+  border: 2px solid #b91c1c; /* red-700 */
+  animation: pulse-border 1.5s infinite;
+  background-color: #fee2e2; /* red-100 */
+}
