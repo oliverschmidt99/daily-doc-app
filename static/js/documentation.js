@@ -41,6 +41,8 @@ async function initializeDocumentationModule(context) {
     categoryColorList: document.getElementById("category-color-list"),
     categoryModalCancel: document.getElementById("category-modal-cancel"),
     categoryModalConfirm: document.getElementById("category-modal-confirm"),
+    jsonImporter: document.getElementById("json-importer"),
+    importJsonBtn: document.getElementById("import-json-btn"),
   };
 
   const CATEGORIES = [
@@ -130,6 +132,35 @@ async function initializeDocumentationModule(context) {
       dom.categoryModal.classList.add("hidden")
     );
     dom.categoryModalConfirm.addEventListener("click", saveCategoryStyles);
+    dom.importJsonBtn.addEventListener("click", importJsonFile);
+  }
+
+  // PLATZIERE DEINE NEUE FUNKTION HIER INNERHALB VON 'initializeDocumentationModule'
+  async function importJsonFile() {
+    const file = dom.jsonImporter.files[0];
+    if (!file) {
+      showNotification("Keine Datei ausgewählt.", true);
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await fetch(`/import_json/${context}`, {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+      if (response.ok) {
+        showNotification(result.message);
+        await loadDataFromServer();
+        renderTagLibrary();
+        loadDay(dom.datePicker.value);
+      } else {
+        showNotification(result.message, true);
+      }
+    } catch (e) {
+      showNotification("Fehler beim Senden der Datei an den Server.", true);
+    }
   }
 
   function showNotification(message, isError = false) {

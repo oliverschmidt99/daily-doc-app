@@ -236,6 +236,73 @@ def delete_tag(context):
     return jsonify({"status": "error", "message": "Fehler beim Speichern"}), 500
 
 
+@app.route("/import_json/<context>", methods=["POST"])
+def import_json(context):
+    if "file" not in request.files:
+        return jsonify({"status": "error", "message": "Keine Datei gefunden"}), 400
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"status": "error", "message": "Keine Datei ausgewählt"}), 400
+    if file and file.filename.endswith(".json"):
+        try:
+            imported_data = json.load(file)
+
+            # Überprüfen der grundlegenden Struktur
+            if not isinstance(imported_data, dict):
+                return (
+                    jsonify({"status": "error", "message": "Ungültiges JSON-Format"}),
+                    400,
+                )
+
+            # Lade die vorhandenen Daten
+            current_data = read_data(context)
+
+            # Mergen der Daten
+            # Die importierten Daten haben Vorrang, außer bei 'contextName'
+            if "contextName" in imported_data:
+                del imported_data["contextName"]
+
+            def merge_dicts(dict1, dict2):
+                for key, value in dict2.items():
+                    if (
+                        key in dict1
+                        and isinstance(dict1[key], dict)
+                        and isinstance(value, dict)
+                    ):
+                        merge_dicts(dict1[key], value)
+                    else:
+                        dict1[key] = value
+
+            merge_dicts(current_data, imported_data)
+
+            if write_data(current_data, context):
+                return jsonify(
+                    {"status": "success", "message": "Daten erfolgreich importiert"}
+                )
+            else:
+                return (
+                    jsonify(
+                        {
+                            "status": "error",
+                            "message": "Fehler beim Speichern der Daten",
+                        }
+                    ),
+                    500,
+                )
+        except (IOError, json.JSONDecodeError):
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "Fehler beim Verarbeiten der JSON-Datei",
+                    }
+                ),
+                400,
+            )
+
+    return jsonify({"status": "error", "message": "Ungültiger Dateityp"}), 400
+
+
 if __name__ == "__main__":
     from waitress import serve
 
