@@ -13,7 +13,7 @@
 <div class="space-y-6 mb-8">
     <div class="bg-white p-6 rounded-xl shadow-md">
         <h2 class="text-xl font-bold mb-4 border-b pb-2">Steuerung</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum auswählen</label>
                 <input type="date" id="date-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
@@ -27,48 +27,32 @@
                     <option value="abwesend">Abwesend 🚶</option>
                 </select>
             </div>
-            <div>
-                <label for="work-hours" class="block text-sm font-medium text-gray-700">Arbeitssollzeit (h)</label>
-                <input type="number" id="work-hours" value="8" min="0" max="24" step="0.25"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
-            </div>
 
-            <div class="border-t pt-4 mt-4 col-span-1 md:col-span-3">
+            <div class="border-t pt-4 mt-4 col-span-1 md:col-span-2">
                 <h3 class="text-md font-semibold text-gray-800 mb-2">Zeiterfassung</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="start-time-h" class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
+                        <label for="start-time" class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
                         <div class="flex items-center gap-2 mt-1">
-                            <input type="number" id="start-time-h" placeholder="hh" min="0" max="23"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <span>:</span>
-                            <input type="number" id="start-time-m" placeholder="mm" min="0" max="59"
+                            <input type="text" id="start-time" placeholder="hh:mm"
                                 class="block w-full rounded-md border-gray-300 shadow-sm p-2">
                             <button type="button" id="set-start-now-btn"
                                 class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
                         </div>
                     </div>
                     <div>
-                        <label for="end-time-h" class="block text-sm font-medium text-gray-700">Arbeitsende</label>
+                        <label for="end-time" class="block text-sm font-medium text-gray-700">Arbeitsende</label>
                         <div class="flex items-center gap-2 mt-1">
-                            <input type="number" id="end-time-h" placeholder="hh" min="0" max="23"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <span>:</span>
-                            <input type="number" id="end-time-m" placeholder="mm" min="0" max="59"
+                            <input type="text" id="end-time" placeholder="hh:mm"
                                 class="block w-full rounded-md border-gray-300 shadow-sm p-2">
                             <button type="button" id="set-end-now-btn"
                                 class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
                         </div>
                     </div>
                     <div>
-                        <label for="break-time-h" class="block text-sm font-medium text-gray-700">Pause</label>
-                        <div class="flex items-center gap-2 mt-1">
-                            <input type="number" id="break-time-h" placeholder="hh" min="0" max="23"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <span>:</span>
-                            <input type="number" id="break-time-m" placeholder="mm" min="0" max="59"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                        </div>
+                        <label for="break-time" class="block text-sm font-medium text-gray-700">Pause</label>
+                        <input type="text" id="break-time" placeholder="hh:mm"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                     </div>
                 </div>
             </div>

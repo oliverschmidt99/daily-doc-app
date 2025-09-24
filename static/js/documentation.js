@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // --- Globale Variablen & Konstanten ---
   let allData = {};
   let appData = {},
     tagCategoryMap = {};
@@ -41,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     datePicker: document.getElementById("date-picker"),
     currentDateDisplay: document.getElementById("current-date-display"),
     statusSelect: document.getElementById("status-select"),
-    workHoursInput: document.getElementById("work-hours"),
     dailyEntriesContainer: document.getElementById("daily-entries-container"),
     totalHoursEl: document.getElementById("total-hours"),
     saveDayBtn: document.getElementById("save-day-btn"),
@@ -61,28 +59,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     diagramDayPicker: document.getElementById("diagram-day-picker"),
     barChartTitle: document.getElementById("bar-chart-title"),
     radarChartTitle: document.getElementById("radar-chart-title"),
-    startTimeH: document.getElementById("start-time-h"),
-    startTimeM: document.getElementById("start-time-m"),
-    endTimeH: document.getElementById("end-time-h"),
-    endTimeM: document.getElementById("end-time-m"),
-    breakTimeH: document.getElementById("break-time-h"),
-    breakTimeM: document.getElementById("break-time-m"),
+    startTimeInput: document.getElementById("start-time"),
+    endTimeInput: document.getElementById("end-time"),
+    breakTimeInput: document.getElementById("break-time"),
     overtimeDisplay: document.getElementById("overtime-display"),
     setStartNowBtn: document.getElementById("set-start-now-btn"),
     setEndNowBtn: document.getElementById("set-end-now-btn"),
   };
 
-  function decimalToHHMM(decimalHours) {
+  const decimalToHHMM = (decimalHours) => {
     if (isNaN(decimalHours) || decimalHours < 0) return "00:00";
     const h = Math.floor(decimalHours);
     const m = Math.round((decimalHours - h) * 60);
     return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-  }
-  function hhmmToDecimal(timeString) {
+  };
+  const hhmmToDecimal = (timeString) => {
     if (typeof timeString !== "string" || !timeString.includes(":")) return 0;
     const [h, m] = timeString.split(":").map(Number);
     return isNaN(h) || isNaN(m) ? 0 : h + m / 60;
-  }
+  };
+  const objectToHHMM = (timeObj) => {
+    if (!timeObj || (timeObj.h === null && timeObj.m === null)) return "";
+    const h = String(timeObj.h || 0).padStart(2, "0");
+    const m = String(timeObj.m || 0).padStart(2, "0");
+    return `${h}:${m}`;
+  };
+  const hhmmToObject = (timeString) => {
+    if (typeof timeString !== "string" || !timeString.includes(":"))
+      return { h: null, m: null };
+    const [h, m] = timeString.split(":").map(Number);
+    return { h: isNaN(h) ? null : h, m: isNaN(m) ? null : m };
+  };
+
+  const formatTimeInput = (event) => {
+    let value = event.target.value.trim();
+    if (!value) return;
+
+    let parts = value.split(":");
+    let hours = parts[0] ? parts[0].padStart(2, "0") : "00";
+    let minutes = parts[1] ? parts[1].padStart(2, "0") : "00";
+
+    if (!value.includes(":")) {
+      if (value.length <= 2) {
+        hours = value.padStart(2, "0");
+        minutes = "00";
+      }
+    }
+
+    event.target.value = `${hours}:${minutes}`;
+  };
 
   async function init() {
     await loadDataFromServer();
@@ -90,7 +115,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     populateCategorySelect();
     renderTagLibrary();
     setupEventListeners();
-    const today = new Date().toISOString().split("T")[0];
+    const today =
+      new URLSearchParams(window.location.search).get("date") ||
+      new Date().toISOString().split("T")[0];
     initCharts();
     setInitialDiagramDates();
     loadDay(today);
@@ -117,16 +144,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.diagramDayPicker.addEventListener("change", updateCharts);
 
     const timeInputs = [
-      dom.startTimeH,
-      dom.startTimeM,
-      dom.endTimeH,
-      dom.endTimeM,
-      dom.breakTimeH,
-      dom.breakTimeM,
-      dom.workHoursInput,
+      dom.startTimeInput,
+      dom.endTimeInput,
+      dom.breakTimeInput,
     ];
     timeInputs.forEach((input) => {
-      if (input) input.addEventListener("input", calculateAndDisplayOvertime);
+      if (input) {
+        input.addEventListener("input", calculateAndDisplayOvertime);
+        input.addEventListener("blur", formatTimeInput);
+      }
     });
 
     dom.setStartNowBtn.addEventListener("click", () => setCurrentTime("start"));
@@ -135,15 +161,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function setCurrentTime(type) {
     const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const timeString = `${hours}:${minutes}`;
 
     if (type === "start") {
-      dom.startTimeH.value = hours;
-      dom.startTimeM.value = minutes;
+      dom.startTimeInput.value = timeString;
     } else if (type === "end") {
-      dom.endTimeH.value = hours;
-      dom.endTimeM.value = minutes;
+      dom.endTimeInput.value = timeString;
     }
     calculateAndDisplayOvertime();
   }
@@ -157,12 +182,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       dom.notificationEl.classList.add("opacity-0", "translate-x-full");
     }, 3000);
   }
+
   async function loadDataFromServer() {
     try {
       const response = await fetch("/load");
       const data = await response.json();
-      allData = data; // Store the whole data
-      // Stellt sicher, dass die benötigten Schlüssel immer vorhanden sind
+      allData = data;
       appData = data.appData || {};
       tagCategoryMap = data.tagCategoryMap || {};
     } catch (e) {
@@ -174,19 +199,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function saveDataToServer() {
     try {
-      // We need to update the allData object before saving.
       allData.appData = appData;
       allData.tagCategoryMap = tagCategoryMap;
       await fetch("/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(allData), // Save the whole object
+        body: JSON.stringify(allData),
       });
       showNotification("Daten gespeichert!", false);
     } catch (e) {
       showNotification("Speichern fehlgeschlagen.", true);
     }
   }
+
   function initializeDefaultTags() {
     const defaults = {
       Messen: "Technik",
@@ -209,6 +234,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!tagCategoryMap[tag]) tagCategoryMap[tag] = cat;
     }
   }
+
   function populateCategorySelect() {
     if (!dom.newTagCategorySelect) return;
     dom.newTagCategorySelect.innerHTML = CATEGORIES.map(
@@ -229,12 +255,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       dateString + "T00:00:00"
     ).toLocaleDateString("de-DE", { day: "numeric", month: "long" });
     dom.dailyEntriesContainer.innerHTML = "";
+
     const d = new Date(dateString + "T00:00:00");
-    const dayData = appData[dateString] || {
+    let dayData = appData[dateString] || {
       status: "dokumentiert",
-      workHours: DAILY_WORK_HOURS[d.getDay()] ?? 8,
       entries: [],
+      breakTime: { h: 0, m: 45 },
     };
+
+    // Immer die korrekte Soll-Arbeitszeit aus der Konstante setzen
+    dayData.workHours = DAILY_WORK_HOURS[d.getDay()] ?? 8;
+
     if (dayData.tags && !dayData.entries) {
       dayData.entries = dayData.tags.map((t) => ({
         tagNames: [t.name],
@@ -245,14 +276,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     appData[dateString] = dayData;
     dom.statusSelect.value = dayData.status;
-    dom.workHoursInput.value = dayData.workHours;
 
-    dom.startTimeH.value = dayData.startTime?.h || "";
-    dom.startTimeM.value = dayData.startTime?.m || "";
-    dom.endTimeH.value = dayData.endTime?.h || "";
-    dom.endTimeM.value = dayData.endTime?.m || "";
-    dom.breakTimeH.value = dayData.breakTime?.h || "";
-    dom.breakTimeM.value = dayData.breakTime?.m || "";
+    dom.startTimeInput.value = objectToHHMM(dayData.startTime);
+    dom.endTimeInput.value = objectToHHMM(dayData.endTime);
+    dom.breakTimeInput.value = objectToHHMM(dayData.breakTime);
 
     (dayData.entries || []).forEach((e) => renderDailyEntry(e));
     if ((dayData.entries || []).length === 0) renderDailyEntry();
@@ -281,50 +308,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     appData[dateString] = {
       status: dom.statusSelect.value,
-      workHours: parseFloat(dom.workHoursInput.value) || 8,
+      workHours: appData[dateString].workHours,
       entries: dailyEntries,
-      startTime: {
-        h: parseInt(dom.startTimeH.value) || null,
-        m: parseInt(dom.startTimeM.value) || null,
-      },
-      endTime: {
-        h: parseInt(dom.endTimeH.value) || null,
-        m: parseInt(dom.endTimeM.value) || null,
-      },
-      breakTime: {
-        h: parseInt(dom.breakTimeH.value) || null,
-        m: parseInt(dom.breakTimeM.value) || null,
-      },
+      startTime: hhmmToObject(dom.startTimeInput.value),
+      endTime: hhmmToObject(dom.endTimeInput.value),
+      breakTime: hhmmToObject(dom.breakTimeInput.value),
     };
     saveDataToServer();
     updateCharts();
   }
 
   function calculateAndDisplayOvertime() {
-    const getMinutes = (h, m) =>
-      (parseInt(h.value) || 0) * 60 + (parseInt(m.value) || 0);
+    const startMins = hhmmToDecimal(dom.startTimeInput.value) * 60;
+    const endMins = hhmmToDecimal(dom.endTimeInput.value) * 60;
+    const breakMins = hhmmToDecimal(dom.breakTimeInput.value) * 60;
 
-    const startMins = getMinutes(dom.startTimeH, dom.startTimeM);
-    const endMins = getMinutes(dom.endTimeH, dom.endTimeM);
-    const breakMins = getMinutes(dom.breakTimeH, dom.breakTimeM);
-    const targetHours = parseFloat(dom.workHoursInput.value) || 0;
-    const targetMins = targetHours * 60;
+    const dateString = dom.datePicker.value;
+    const dayData = appData[dateString];
+    const targetMins = (dayData ? dayData.workHours : 0) * 60;
 
     if (endMins <= startMins || targetMins === 0) {
       dom.overtimeDisplay.textContent = "--:--";
       dom.overtimeDisplay.className = "text-gray-600";
       return;
     }
-
     const workedMins = endMins - startMins - breakMins;
     const overtimeMins = workedMins - targetMins;
-
-    const overtimeH = Math.floor(Math.abs(overtimeMins) / 60);
-    const overtimeRemainingM = Math.round(Math.abs(overtimeMins) % 60);
-
-    const formattedOvertime = `${String(overtimeH).padStart(2, "0")}:${String(
-      overtimeRemainingM
-    ).padStart(2, "0")}`;
+    const formattedOvertime = decimalToHHMM(Math.abs(overtimeMins) / 60);
 
     if (overtimeMins >= 0) {
       dom.overtimeDisplay.textContent = `+${formattedOvertime}`;
@@ -352,10 +362,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function setupEntryEventListeners(el) {
-    el.querySelector(".entry-time-input").addEventListener(
-      "input",
-      updateTotals
-    );
+    const timeInput = el.querySelector(".entry-time-input");
+    timeInput.addEventListener("input", updateTotals);
+    timeInput.addEventListener("blur", formatTimeInput);
     el.querySelector(".remove-entry-btn").addEventListener("click", () => {
       if (dom.dailyEntriesContainer.children.length > 1) {
         el.remove();
@@ -404,6 +413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .querySelector(".selected-tags-container")
       .appendChild(createTagBadge(tagName));
   }
+
   function createTagBadge(tagName) {
     const b = document.createElement("span");
     b.className = "tag-badge";
@@ -463,13 +473,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         time: 0.25,
         note: todo.text,
       };
-
-      // Make sure all tags exist in the tagCategoryMap
       if (todo.tags) {
         let newTagAdded = false;
         todo.tags.forEach((tag) => {
           if (!tagCategoryMap[tag]) {
-            tagCategoryMap[tag] = "Sonstiges"; // Default category
+            tagCategoryMap[tag] = "Sonstiges";
             newTagAdded = true;
           }
         });
@@ -478,7 +486,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           saveDataToServer();
         }
       }
-
       renderDailyEntry(newEntry);
       updateTotals();
       showNotification(`"${todo.text}" zur Doku hinzugefügt.`);

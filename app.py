@@ -1,3 +1,10 @@
+"""
+Haupt-Anwendung für die tägliche Dokumentation.
+
+Diese Flask-Anwendung stellt die Endpunkte für das Frontend bereit,
+um Daten zu laden und zu speichern.
+"""
+
 import os
 import json
 from flask import Flask, jsonify, render_template, request
@@ -16,6 +23,12 @@ def index():
 def todo():
     """Zeigt die To-Do-Seite an."""
     return render_template("todo.html")
+
+
+@app.route("/overview")
+def overview():
+    """Zeigt die Übersichts-Seite an."""
+    return render_template("overview.html")
 
 
 @app.route("/load", methods=["GET"])

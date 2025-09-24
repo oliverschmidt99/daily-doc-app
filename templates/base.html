@@ -20,7 +20,7 @@
 
     <div class="container mx-auto p-4 md:p-6 lg:p-8">
         <header class="mb-8 text-center">
-            <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation & To-Do</h1>
+            <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation &amp; To-Do</h1>
             <p class="text-lg text-gray-600 mt-2">Erfasse und analysiere deine täglichen Aktivitäten und Aufgaben.</p>
         </header>
 
@@ -31,6 +31,8 @@
                 <a href="{{ url_for('todo') }}"
                     class="px-4 py-2 rounded-lg font-semibold {% if request.path == '/todo' %}bg-indigo-600 text-white{% else %}text-gray-600 hover:bg-gray-200{% endif %}">To-Do
                     Liste</a>
+                <a href="{{ url_for('overview') }}"
+                    class="px-4 py-2 rounded-lg font-semibold {% if request.path == '/overview' %}bg-indigo-600 text-white{% else %}text-gray-600 hover:bg-gray-200{% endif %}">Übersicht</a>
             </nav>
         </div>
 

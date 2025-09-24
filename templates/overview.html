@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Übersicht{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <h2 class="text-2xl font-bold mb-4 border-b pb-3">Übersicht</h2>
+
+    <div class="flex flex-wrap items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+                <input type="radio" id="view-year" name="overview-view" value="year" class="h-4 w-4">
+                <label for="view-year">Jahr</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="radio" id="view-month" name="overview-view" value="month" checked class="h-4 w-4">
+                <label for="view-month">Monat</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="radio" id="view-week" name="overview-view" value="week" class="h-4 w-4">
+                <label for="view-week">Woche</label>
+            </div>
+        </div>
+
+        <div class="flex-grow flex justify-start">
+            <div id="month-view-controls">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="prev-month-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Vorheriger Monat">
+                        <span class="sr-only">Vorheriger Monat</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <input type="month" id="overview-month-picker" class="rounded-md border-gray-300 shadow-sm p-2">
+                    <button type="button" id="next-month-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Nächster Monat">
+                        <span class="sr-only">Nächster Monat</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="week-view-controls" class="hidden">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="prev-week-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Vorherige Woche">
+                        <span class="sr-only">Vorherige Woche</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <input type="week" id="overview-week-picker" class="rounded-md border-gray-300 shadow-sm p-2">
+                    <button type="button" id="next-week-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Nächste Woche">
+                        <span class="sr-only">Nächste Woche</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="year-view-controls" class="hidden">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="prev-year-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Vorheriges Jahr">
+                        <span class="sr-only">Vorheriges Jahr</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <input type="number" id="overview-year-picker"
+                        class="rounded-md border-gray-300 shadow-sm p-2 w-24 text-center" placeholder="Jahr">
+                    <button type="button" id="next-year-btn" class="p-2 rounded-md hover:bg-gray-200"
+                        title="Nächstes Jahr">
+                        <span class="sr-only">Nächstes Jahr</span>
+                        <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-end mb-4">
+        <button type="button" id="save-all-btn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg">
+            Alle Änderungen speichern
+        </button>
+    </div>
+
+    <div id="overview-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
+        <div class="p-4 bg-blue-100 rounded-lg">
+            <h4 class="font-semibold text-blue-800">Soll-Stunden</h4>
+            <p id="summary-target-hours" class="text-2xl font-bold">0.00 h</p>
+        </div>
+        <div class="p-4 bg-green-100 rounded-lg">
+            <h4 class="font-semibold text-green-800">Ist-Stunden</h4>
+            <p id="summary-actual-hours" class="text-2xl font-bold">0.00 h</p>
+        </div>
+        <div class="p-4 bg-red-100 rounded-lg">
+            <h4 class="font-semibold text-red-800">Differenz</h4>
+            <p id="summary-diff-hours" class="text-2xl font-bold">0.00 h</p>
+        </div>
+    </div>
+
+    <div class="flex bg-gray-50 p-3 rounded-t-lg font-bold text-sm text-gray-600">
+        <div class="w-1/4">Datum</div>
+        <div class="w-1/4 text-center">Status</div>
+        <div class="w-1/4 text-center">Ist/Soll</div>
+        <div class="w-1/4 text-center">Differenz</div>
+    </div>
+    <div id="overview-accordion-container" class="space-y-1">
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+</style>
+<script src="{{ url_for('static', filename='js/overview.js') }}"></script>
+{% endblock %}
