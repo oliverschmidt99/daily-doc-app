@@ -1,13 +1,17 @@
 window.addEventListener("contextReady", (e) => {
   const currentContext = e.detail.context;
-  // Stellt sicher, dass dieses Modul nur auf Seiten läuft, wo es hingehört
   if (document.getElementById("project-list")) {
     initializeTodoModule(currentContext);
   }
 });
 
 async function initializeTodoModule(context) {
-  let allData = { projects: [], todos: [], tagCategoryMap: {} };
+  let allData = {
+    projects: [],
+    todos: [],
+    tagCategoryMap: {},
+    categoryStyles: {},
+  };
   let currentTodoTags = [];
   let currentEditTodoTags = [];
 
@@ -49,9 +53,9 @@ async function initializeTodoModule(context) {
   };
 
   const PRIORITY_COLORS = {
-    3: { light: "254, 226, 226", dark: "252, 165, 165" }, // Red
-    2: { light: "254, 243, 199", dark: "251, 211, 141" }, // Orange
-    1: { light: "254, 252, 232", dark: "253, 224, 71" }, // Yellow
+    3: { light: "254, 226, 226", dark: "252, 165, 165" },
+    2: { light: "254, 243, 199", dark: "251, 211, 141" },
+    1: { light: "254, 252, 232", dark: "253, 224, 71" },
   };
 
   const generateId = () => "_" + Math.random().toString(36).substr(2, 9);
@@ -67,6 +71,7 @@ async function initializeTodoModule(context) {
     allData.todos = allData.todos || [];
     allData.projects = allData.projects || [];
     allData.tagCategoryMap = allData.tagCategoryMap || {};
+    allData.categoryStyles = allData.categoryStyles || {};
   }
 
   async function saveData() {
@@ -100,7 +105,6 @@ async function initializeTodoModule(context) {
   function renderProjects() {
     const currentFilter = dom.projectFilter.value;
     dom.projectList.innerHTML = "";
-
     const projectOptions = allData.projects
       .map(
         (p) =>
@@ -109,12 +113,10 @@ async function initializeTodoModule(context) {
           }>${p.name}</option>`
       )
       .join("");
-
     dom.newTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
     dom.editTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
     dom.projectFilter.innerHTML = `<option value="all">Alle Projekte</option>${projectOptions}`;
     dom.projectFilter.value = currentFilter;
-
     allData.projects.forEach((proj) => {
       const li = document.createElement("li");
       li.className = `flex justify-between items-center p-2 rounded ${
@@ -125,7 +127,7 @@ async function initializeTodoModule(context) {
       }">${
         proj.name
       }</span><div class="flex gap-2"><button type="button" class="toggle-proj-btn text-sm">${
-        proj.status === "completed" ? " reopening" : "✓"
+        proj.status === "completed" ? "reaktivieren" : "✓"
       }</button><button type="button" class="delete-proj-btn text-red-500 font-bold">&times;</button></div>`;
       li.querySelector("span").addEventListener("click", (e) =>
         editProjectName(e.target, proj.id)
@@ -144,7 +146,6 @@ async function initializeTodoModule(context) {
     Object.values(dom.prioLists).forEach((list) => (list.innerHTML = ""));
     dom.completedList.innerHTML = "";
     const selectedProjectId = dom.projectFilter.value;
-
     const activeTodos = allData.todos
       .filter((t) => !t.completed)
       .filter(
@@ -159,7 +160,6 @@ async function initializeTodoModule(context) {
         if (dateB) return 1;
         return 0;
       });
-
     const completedTodos = allData.todos.filter((t) => t.completed);
     activeTodos.forEach((todo) => {
       const list = dom.prioLists[todo.priority];
@@ -178,14 +178,11 @@ async function initializeTodoModule(context) {
     today.setHours(0, 0, 0, 0);
     const dueDate = todo.dueDate ? new Date(todo.dueDate + "T00:00:00") : null;
     const isOverdue = dueDate && dueDate < today;
-
     if (isOverdue) return { style: "", class: "overdue-task" };
     if (!todo.dueDate) return { style: "", class: "no-deadline-task" };
-
     const colors = PRIORITY_COLORS[todo.priority];
     if (!colors)
       return { style: "background-color: rgba(255, 255, 255, 1);", class: "" };
-
     const diffTime = dueDate - today;
     const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const MAX_DAYS = 30;
@@ -204,7 +201,6 @@ async function initializeTodoModule(context) {
       project.status === "completed" ? "opacity-60" : ""
     } ${customClass}`;
     li.style = style;
-
     const dueDate = todo.dueDate ? new Date(todo.dueDate + "T00:00:00") : null;
     const isOverdue = dueDate && !todo.completed && dueDate < new Date();
     const dueDateString = dueDate
@@ -213,7 +209,6 @@ async function initializeTodoModule(context) {
           month: "2-digit",
         })
       : "";
-
     li.innerHTML = `<div class="flex items-start"><input type="checkbox" class="h-5 w-5 mt-1 rounded border-gray-300 text-indigo-600" ${
       todo.completed ? "checked" : ""
     }><div class="ml-3 flex-grow"><p class="${
@@ -228,12 +223,11 @@ async function initializeTodoModule(context) {
             isOverdue ? "font-bold" : ""
           }">${dueDateString}</span>`
         : ""
-    }<div class="todo-tags-container flex flex-wrap gap-1"></div></div></div><div class="flex flex-col items-end gap-2">${
+    }<div class="todo-tags-container flex flex-wrap gap-1 mt-1"></div></div></div><div class="flex flex-col items-end gap-2">${
       !todo.completed
-        ? `<button type="button" class="edit-todo-btn text-blue-600 text-xs">Bearbeiten</button><button type="button" class="add-to-doku-btn bg-green-500 text-white text-xs font-bold py-1 px-2 rounded-full">Doku +</button>`
+        ? `<button type="button" class="edit-todo-btn text-blue-600 text-xs">Bearbeiten</button>`
         : ""
     }<button type="button" class="delete-todo-btn text-red-500 hover:text-red-600 text-xs">Löschen</button></div></div>`;
-
     const tagsContainer = li.querySelector(".todo-tags-container");
     (todo.tags || []).forEach((tag) =>
       tagsContainer.appendChild(createTagBadge(tag, false))
@@ -247,8 +241,6 @@ async function initializeTodoModule(context) {
     const editBtn = li.querySelector(".edit-todo-btn");
     if (editBtn)
       editBtn.addEventListener("click", () => openEditModal(todo.id));
-    const dokuBtn = li.querySelector(".add-to-doku-btn");
-    if (dokuBtn) dokuBtn.addEventListener("click", () => addTodoToDoku(todo));
     return li;
   }
 
@@ -294,6 +286,7 @@ async function initializeTodoModule(context) {
       render();
     }
   }
+
   async function deleteProject(id) {
     if (
       confirm(
@@ -311,7 +304,6 @@ async function initializeTodoModule(context) {
     const text = dom.newTodoText.value.trim();
     if (!text)
       return showNotification("Aufgabentext darf nicht leer sein.", true);
-
     allData.todos.push({
       id: generateId(),
       text,
@@ -337,18 +329,11 @@ async function initializeTodoModule(context) {
       render();
     }
   }
+
   async function deleteTodo(id) {
     allData.todos = allData.todos.filter((t) => t.id !== id);
     await saveData();
     render();
-  }
-  function addTodoToDoku(todo) {
-    localStorage.setItem(
-      "pendingTodo",
-      JSON.stringify({ text: todo.text, tags: todo.tags || [] })
-    );
-    // This will be picked up by the documentation.js module on the same page
-    window.dispatchEvent(new CustomEvent("addTodoToDoku"));
   }
 
   function openEditModal(id) {
@@ -396,7 +381,6 @@ async function initializeTodoModule(context) {
           (tag) => tag.toLowerCase().includes(query) && !existing.has(tag)
         )
         .slice(0, 5);
-
       filtered.forEach((tag) => {
         const item = document.createElement("a");
         item.href = "#";
@@ -443,13 +427,14 @@ async function initializeTodoModule(context) {
     );
 
   function createTagBadge(tagName, isEditable) {
+    const category = allData.tagCategoryMap[tagName];
+    const color = allData.categoryStyles[category]?.color || "#6c757d";
+
     const b = document.createElement("span");
     b.className = "tag-badge text-xs";
     b.textContent = tagName;
-    b.style.backgroundColor =
-      allData.tagCategoryMap && allData.tagCategoryMap[tagName]
-        ? "rgba(107, 114, 128, 0.8)"
-        : "#6c757d";
+    b.style.backgroundColor = color;
+
     if (isEditable) {
       const r = document.createElement("span");
       r.className = "tag-badge-remove";

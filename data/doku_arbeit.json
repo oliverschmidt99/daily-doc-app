@@ -2875,11 +2875,11 @@
             },
             "entries": [
                 {
+                    "note": "Die Simulationssoftware leicht verbessert",
                     "tagNames": [
                         "Programmieren"
                     ],
-                    "time": 8.416666666666666,
-                    "note": "Die Simulationssoftware leicht verbessert"
+                    "time": 8.416666666666666
                 }
             ],
             "startTime": {
@@ -2915,7 +2915,19 @@
         "2025-09-24": {
             "entries": [],
             "status": "nicht dokumentiert",
-            "workHours": 8.25
+            "workHours": 8.25,
+            "startTime": {
+                "h": null,
+                "m": null
+            },
+            "endTime": {
+                "h": null,
+                "m": null
+            },
+            "breakTime": {
+                "h": null,
+                "m": null
+            }
         },
         "2025-09-25": {
             "breakTime": {

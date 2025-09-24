@@ -41,7 +41,11 @@
             </div>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-bold mb-4 border-b pb-2">Tag-Bibliothek</h2>
+            <div class="flex justify-between items-center border-b pb-2 mb-4">
+                <h2 class="text-xl font-bold">Tag-Bibliothek</h2>
+                <button id="manage-categories-btn" type="button" class="text-sm text-indigo-600 hover:underline">Farben
+                    verwalten</button>
+            </div>
             <div id="tag-library" class="flex flex-wrap gap-2 mb-4"></div>
             <div class="space-y-2 border-t pt-4">
                 <input type="text" id="new-tag-input" placeholder="Name des neuen Tags"

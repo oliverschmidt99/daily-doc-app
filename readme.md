@@ -4,7 +4,7 @@ Deine persönliche Webanwendung für tägliche Dokumentation, Aufgabenmanagement
 
 ---
 
-## ✨ Key-Features
+## Key-Features
 
 - **Multi-Kontext-System:** Führe separate Dokumentationen für verschiedene Lebensbereiche (z.B. "Arbeit", "Privat", "Studium"). Jeder Kontext hat seine eigenen Daten und Projekte.
 - **Detaillierte Zeiterfassung:** Dokumentiere deine täglichen Einträge mit anpassbaren Tags, Notizen und der exakten aufgewendeten Zeit.
@@ -15,7 +15,7 @@ Deine persönliche Webanwendung für tägliche Dokumentation, Aufgabenmanagement
 
 ---
 
-## 🚀 Setup & Installation
+## Setup & Installation
 
 **Voraussetzungen:**
 
@@ -37,7 +37,7 @@ Deine persönliche Webanwendung für tägliche Dokumentation, Aufgabenmanagement
 
 ---
 
-## ▶️ Anwendung starten
+## Anwendung starten
 
 ### Windows
 

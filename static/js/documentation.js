@@ -1,15 +1,15 @@
 window.addEventListener("contextReady", (e) => {
-  const currentContext = e.detail.context;
-  // Stellt sicher, dass dieses Modul nur auf Seiten läuft, wo die benötigten Elemente existieren
+  const currentContextId = e.detail.context;
   if (document.getElementById("main-content-panel")) {
-    initializeDocumentationModule(currentContext);
+    initializeDocumentationModule(currentContextId);
   }
 });
 
 async function initializeDocumentationModule(context) {
-  let allData = {};
-  let appData = {};
-  let tagCategoryMap = {};
+  let allData = {},
+    appData = {},
+    tagCategoryMap = {},
+    categoryStyles = {};
 
   const dom = {
     datePicker: document.getElementById("date-picker"),
@@ -29,6 +29,18 @@ async function initializeDocumentationModule(context) {
     newTagCategorySelect: document.getElementById("new-tag-category"),
     addNewTagBtn: document.getElementById("add-new-tag-btn"),
     notificationEl: document.getElementById("notification"),
+    editTagModal: document.getElementById("edit-tag-modal"),
+    editTagModalTitle: document.getElementById("edit-tag-modal-title"),
+    editTagNameInput: document.getElementById("edit-tag-name-input"),
+    editTagOldName: document.getElementById("edit-tag-old-name"),
+    editTagCategorySelect: document.getElementById("edit-tag-category-select"),
+    editTagConfirmBtn: document.getElementById("edit-tag-confirm-btn"),
+    editTagCancelBtn: document.getElementById("edit-tag-cancel-btn"),
+    manageCategoriesBtn: document.getElementById("manage-categories-btn"),
+    categoryModal: document.getElementById("category-modal"),
+    categoryColorList: document.getElementById("category-color-list"),
+    categoryModalCancel: document.getElementById("category-modal-cancel"),
+    categoryModalConfirm: document.getElementById("category-modal-confirm"),
   };
 
   const CATEGORIES = [
@@ -39,14 +51,6 @@ async function initializeDocumentationModule(context) {
     "Soziales",
     "Sonstiges",
   ];
-  const CATEGORY_CHART_COLORS = {
-    Technik: "rgba(239, 68, 68, 0.8)",
-    Analyse: "rgba(59, 130, 246, 0.8)",
-    Dokumentation: "rgba(245, 158, 11, 0.8)",
-    Organisation: "rgba(16, 185, 129, 0.8)",
-    Soziales: "rgba(139, 92, 246, 0.8)",
-    Sonstiges: "rgba(107, 114, 128, 0.8)",
-  };
 
   const decimalToHHMM = (decimalHours) => {
     if (isNaN(decimalHours) || !isFinite(decimalHours)) return "00:00";
@@ -96,7 +100,6 @@ async function initializeDocumentationModule(context) {
     const today = new Date().toISOString().split("T")[0];
     dom.datePicker.value = today;
     loadDay(today);
-    checkPendingTodos();
   }
 
   function setupEventListeners() {
@@ -111,7 +114,6 @@ async function initializeDocumentationModule(context) {
     dom.newTagInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") addNewTag();
     });
-
     [dom.startTimeInput, dom.endTimeInput, dom.breakTimeInput].forEach(
       (input) => {
         if (input) {
@@ -120,6 +122,14 @@ async function initializeDocumentationModule(context) {
         }
       }
     );
+    dom.editTagCancelBtn.addEventListener("click", () =>
+      dom.editTagModal.classList.add("hidden")
+    );
+    dom.manageCategoriesBtn.addEventListener("click", openCategoryModal);
+    dom.categoryModalCancel.addEventListener("click", () =>
+      dom.categoryModal.classList.add("hidden")
+    );
+    dom.categoryModalConfirm.addEventListener("click", saveCategoryStyles);
   }
 
   function showNotification(message, isError = false) {
@@ -138,6 +148,7 @@ async function initializeDocumentationModule(context) {
       allData = await response.json();
       appData = allData.appData || {};
       tagCategoryMap = allData.tagCategoryMap || {};
+      categoryStyles = allData.categoryStyles || {};
     } catch (e) {
       showNotification("Keine Verbindung zum Server.", true);
     }
@@ -146,6 +157,7 @@ async function initializeDocumentationModule(context) {
   async function saveData() {
     allData.appData = appData;
     allData.tagCategoryMap = tagCategoryMap;
+    allData.categoryStyles = categoryStyles; // Sicherstellen, dass Farben mitgespeichert werden
     try {
       await fetch(`/save/${context}`, {
         method: "POST",
@@ -158,6 +170,11 @@ async function initializeDocumentationModule(context) {
     }
   }
 
+  function getTagColor(tagName) {
+    const category = tagCategoryMap[tagName];
+    return categoryStyles[category]?.color || "#6c757d";
+  }
+
   function changeDay(offset) {
     const currentDate = new Date(dom.datePicker.value);
     currentDate.setUTCDate(currentDate.getUTCDate() + offset);
@@ -168,22 +185,22 @@ async function initializeDocumentationModule(context) {
   function loadDay(dateString) {
     dom.currentDateDisplay.textContent = new Date(
       dateString + "T00:00:00"
-    ).toLocaleDateString("de-DE", { day: "numeric", month: "long" });
+    ).toLocaleDateString("de-DE", {
+      day: "numeric",
+      month: "long",
+    });
     dom.dailyEntriesContainer.innerHTML = "";
     const dayData = appData[dateString] || {
       entries: [],
       status: "dokumentiert",
       breakTime: { h: 0, m: 45 },
     };
-
     dom.statusSelect.value = dayData.status || "dokumentiert";
     dom.startTimeInput.value = objectToHHMM(dayData.startTime);
     dom.endTimeInput.value = objectToHHMM(dayData.endTime);
     dom.breakTimeInput.value = objectToHHMM(dayData.breakTime);
-
     (dayData.entries || []).forEach((e) => renderDailyEntry(e));
     if ((dayData.entries || []).length === 0) renderDailyEntry();
-
     calculateAndDisplayOvertime();
   }
 
@@ -204,15 +221,12 @@ async function initializeDocumentationModule(context) {
           dailyEntries.push({ tagNames, time, note });
         }
       });
-
     if (!appData[dateString]) appData[dateString] = {};
-
     appData[dateString].entries = dailyEntries;
     appData[dateString].status = dom.statusSelect.value;
     appData[dateString].startTime = hhmmToObject(dom.startTimeInput.value);
     appData[dateString].endTime = hhmmToObject(dom.endTimeInput.value);
     appData[dateString].breakTime = hhmmToObject(dom.breakTimeInput.value);
-
     await saveData();
   }
 
@@ -232,7 +246,7 @@ async function initializeDocumentationModule(context) {
     const el = document.createElement("div");
     el.className =
       "daily-entry-item p-3 rounded-lg bg-gray-50 border border-gray-200";
-    el.innerHTML = `<div class="flex items-start gap-3"><div class="flex-grow"><div class="selected-tags-container flex flex-wrap mb-2"></div><div class="relative"><input type="text" class="tag-search-input w-full rounded-md border-gray-300 shadow-sm p-1.5" placeholder="+ Tag hinzufügen..."><div class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 hidden"></div></div></div><div class="flex items-center"><input type="text" value="${decimalToHHMM(
+    el.innerHTML = `<div class="flex items-start gap-3"><div class="flex-grow"><div class="selected-tags-container flex flex-wrap gap-1 mb-2"></div><div class="relative"><input type="text" class="tag-search-input w-full rounded-md border-gray-300 shadow-sm p-1.5" placeholder="+ Tag hinzufügen..."><div class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 hidden"></div></div></div><div class="flex items-center"><input type="text" value="${decimalToHHMM(
       entry.time || 0
     )}" class="entry-time-input w-20 text-center rounded-md border-gray-300 p-1" placeholder="hh:mm"><span class="text-gray-500 ml-1">h</span><button type="button" class="remove-entry-btn text-red-500 hover:text-red-700 font-bold text-xl ml-2">&times;</button></div></div><div class="mt-2"><input type="text" class="entry-note-input block w-full rounded-md border-gray-200 shadow-sm p-1.5" placeholder="Notiz..." value="${
       entry.note || ""
@@ -279,7 +293,6 @@ async function initializeDocumentationModule(context) {
     const filtered = Object.keys(tagCategoryMap)
       .filter((tag) => tag.toLowerCase().includes(q) && !existing.has(tag))
       .slice(0, 5);
-
     filtered.forEach((tag) => {
       const item = document.createElement("a");
       item.href = "#";
@@ -305,14 +318,12 @@ async function initializeDocumentationModule(context) {
 
   function createTagBadge(tagName) {
     const b = document.createElement("span");
-    b.className = "tag-badge text-xs";
+    b.className = "tag-badge text-xs inline-flex items-center text-white";
     b.textContent = tagName;
     b.dataset.tagName = tagName;
-    b.style.backgroundColor = tagCategoryMap[tagName]
-      ? CATEGORY_CHART_COLORS[tagCategoryMap[tagName]]
-      : "#6c757d";
+    b.style.backgroundColor = getTagColor(tagName);
     const r = document.createElement("span");
-    r.className = "tag-badge-remove";
+    r.className = "tag-badge-remove ml-2 cursor-pointer font-bold";
     r.innerHTML = "&times;";
     r.onclick = () => b.remove();
     b.appendChild(r);
@@ -320,28 +331,46 @@ async function initializeDocumentationModule(context) {
   }
 
   function populateCategorySelect() {
-    if (!dom.newTagCategorySelect) return;
-    dom.newTagCategorySelect.innerHTML = CATEGORIES.map(
+    const options = CATEGORIES.map(
       (c) => `<option value="${c}">${c}</option>`
     ).join("");
+    if (dom.newTagCategorySelect) dom.newTagCategorySelect.innerHTML = options;
+    if (dom.editTagCategorySelect)
+      dom.editTagCategorySelect.innerHTML = options;
   }
 
   function renderTagLibrary() {
     if (!dom.tagLibrary) return;
     dom.tagLibrary.innerHTML = "";
     Object.keys(tagCategoryMap)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .forEach((tag) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className =
-          "tag-button text-sm font-medium py-1 px-3 rounded-full";
-        button.textContent = tag;
-        button.style.backgroundColor = tagCategoryMap[tag]
-          ? CATEGORY_CHART_COLORS[tagCategoryMap[tag]]
-          : "rgba(107, 114, 128, 0.8)";
-        button.title = tagCategoryMap[tag];
-        dom.tagLibrary.appendChild(button);
+        const color = getTagColor(tag);
+        const el = document.createElement("div");
+        el.className =
+          "flex items-center justify-between gap-2 rounded-lg text-sm font-medium text-white shadow-sm";
+        el.style.backgroundColor = color;
+
+        el.innerHTML = `
+        <span class="py-1 pl-3 pr-2">${tag}</span>
+        <div class="flex items-center">
+            <button title="Tag bearbeiten" class="edit-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+            </button>
+            <button title="Tag löschen" class="delete-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors mr-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+        </div>
+      `;
+
+        el.querySelector(".edit-tag-btn").addEventListener("click", () =>
+          openEditTagModal(tag)
+        );
+        el.querySelector(".delete-tag-btn").addEventListener("click", () =>
+          deleteTag(tag)
+        );
+
+        dom.tagLibrary.appendChild(el);
       });
   }
 
@@ -349,8 +378,8 @@ async function initializeDocumentationModule(context) {
     const tagName = dom.newTagInput.value.trim();
     if (tagName && !tagCategoryMap[tagName]) {
       tagCategoryMap[tagName] = dom.newTagCategorySelect.value;
-      renderTagLibrary();
       await saveData();
+      renderTagLibrary();
       showNotification(`Tag "${tagName}" hinzugefügt.`);
       dom.newTagInput.value = "";
     } else if (tagName) {
@@ -358,28 +387,101 @@ async function initializeDocumentationModule(context) {
     }
   }
 
-  function checkPendingTodos() {
-    window.addEventListener("addTodoToDoku", async () => {
-      const pendingTodo = localStorage.getItem("pendingTodo");
-      if (pendingTodo) {
-        const todo = JSON.parse(pendingTodo);
+  function openEditTagModal(tagName) {
+    dom.editTagOldName.value = tagName;
+    dom.editTagNameInput.value = tagName;
+    dom.editTagCategorySelect.value = tagCategoryMap[tagName];
+    dom.editTagModal.classList.remove("hidden");
 
-        const today = new Date().toISOString().split("T")[0];
-        if (dom.datePicker.value !== today) {
-          loadDay(today);
-          dom.datePicker.value = today;
-        }
+    dom.editTagConfirmBtn.onclick = handleTagSaveChanges;
+  }
 
-        renderDailyEntry({
-          tagNames: todo.tags || [],
-          time: 0.25,
-          note: `Aus To-Do: "${todo.text}"`,
-        });
-        showNotification(`"${todo.text}" zur Doku hinzugefügt.`, false);
-        localStorage.removeItem("pendingTodo");
-        await saveCurrentDay();
+  async function handleTagSaveChanges() {
+    const oldName = dom.editTagOldName.value;
+    const newName = dom.editTagNameInput.value.trim();
+    const newCategory = dom.editTagCategorySelect.value;
+
+    if (!newName) {
+      showNotification("Tag-Name darf nicht leer sein.", true);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/edit_tag/${context}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oldName, newName, newCategory }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
       }
-    });
+      showNotification(`Tag "${oldName}" erfolgreich aktualisiert.`);
+      dom.editTagModal.classList.add("hidden");
+      await loadDataFromServer();
+      renderTagLibrary();
+      loadDay(dom.datePicker.value);
+    } catch (error) {
+      showNotification(`Fehler: ${error.message}`, true);
+    }
+  }
+
+  async function deleteTag(tagName) {
+    if (
+      confirm(
+        `Möchtest du den Tag "${tagName}" wirklich löschen? Er wird aus allen Einträgen und To-Dos entfernt.`
+      )
+    ) {
+      try {
+        const response = await fetch(`/delete_tag/${context}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tagName }),
+        });
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message);
+        }
+        showNotification(`Tag "${tagName}" wurde gelöscht.`);
+        await loadDataFromServer();
+        renderTagLibrary();
+        loadDay(dom.datePicker.value);
+      } catch (error) {
+        showNotification(`Fehler: ${error.message}`, true);
+      }
+    }
+  }
+
+  function openCategoryModal() {
+    dom.categoryColorList.innerHTML = "";
+    for (const category of CATEGORIES) {
+      const color = categoryStyles[category]?.color || "#000000";
+      const row = document.createElement("div");
+      row.className = "flex items-center justify-between";
+      row.innerHTML = `
+              <label for="color-${category}" class="font-semibold">${category}</label>
+              <input type="color" id="color-${category}" value="${color}" class="w-12 h-8 p-0 border-0 rounded">
+          `;
+      dom.categoryColorList.appendChild(row);
+    }
+    dom.categoryModal.classList.remove("hidden");
+  }
+
+  async function saveCategoryStyles() {
+    for (const category of CATEGORIES) {
+      const colorInput = document.getElementById(`color-${category}`);
+      categoryStyles[category] = { color: colorInput.value };
+    }
+
+    try {
+      await saveData();
+      dom.categoryModal.classList.add("hidden");
+      await loadDataFromServer();
+      renderTagLibrary();
+      loadDay(dom.datePicker.value);
+    } catch (e) {
+      showNotification("Farben konnten nicht gespeichert werden.", true);
+    }
   }
 
   init();

@@ -1,15 +1,15 @@
 window.addEventListener("contextReady", (e) => {
   const currentContext = e.detail.context;
-  // Stellt sicher, dass dieses Modul nur auf Seiten läuft, wo es hingehört
   if (document.getElementById("overview-accordion-container")) {
     initializeOverviewModule(currentContext);
   }
 });
 
 async function initializeOverviewModule(context) {
-  let allData = {};
-  let appData = {};
-  let tagCategoryMap = {};
+  let allData = {},
+    appData = {},
+    tagCategoryMap = {},
+    categoryStyles = {};
 
   const dom = {
     viewRadios: document.querySelectorAll('input[name="overview-view"]'),
@@ -31,8 +31,8 @@ async function initializeOverviewModule(context) {
     nextYearBtn: document.getElementById("next-year-btn"),
     saveAllBtn: document.getElementById("save-all-btn"),
     notificationEl: document.getElementById("notification"),
-    barChart: document.getElementById("bar-chart"),
-    radarChart: document.getElementById("radar-chart"),
+    barChartEl: document.getElementById("bar-chart"),
+    radarChartEl: document.getElementById("radar-chart"),
     barChartTitle: document.getElementById("bar-chart-title"),
     radarChartTitle: document.getElementById("radar-chart-title"),
   };
@@ -44,15 +44,8 @@ async function initializeOverviewModule(context) {
     "Dokumentation",
     "Organisation",
     "Soziales",
+    "Sonstiges",
   ];
-  const CATEGORY_CHART_COLORS = {
-    Technik: "rgba(239, 68, 68, 0.8)",
-    Analyse: "rgba(59, 130, 246, 0.8)",
-    Dokumentation: "rgba(245, 158, 11, 0.8)",
-    Organisation: "rgba(16, 185, 129, 0.8)",
-    Soziales: "rgba(139, 92, 246, 0.8)",
-    Sonstiges: "rgba(107, 114, 128, 0.8)",
-  };
 
   const DAILY_WORK_HOURS = {
     1: 8.25,
@@ -96,20 +89,6 @@ async function initializeOverviewModule(context) {
     const [h, m] = timeString.split(":").map(Number);
     return { h: isNaN(h) ? null : h, m: isNaN(m) ? null : m };
   };
-  const formatTimeInput = (event) => {
-    let value = event.target.value.trim();
-    if (!value) return;
-    let parts = value.split(":");
-    let hours = parts[0] ? parts[0].padStart(2, "0") : "00";
-    let minutes = parts[1] ? parts[1].padStart(2, "0") : "00";
-    if (!value.includes(":")) {
-      if (value.length <= 2) {
-        hours = value.padStart(2, "0");
-        minutes = "00";
-      }
-    }
-    event.target.value = `${hours}:${minutes}`;
-  };
 
   async function init() {
     await loadDataFromServer();
@@ -151,6 +130,7 @@ async function initializeOverviewModule(context) {
       allData = await response.json();
       appData = allData.appData || {};
       tagCategoryMap = allData.tagCategoryMap || {};
+      categoryStyles = allData.categoryStyles || {};
     } catch (e) {
       console.error("Fehler beim Laden der Daten:", e);
     }
@@ -159,6 +139,7 @@ async function initializeOverviewModule(context) {
   async function saveData() {
     allData.appData = appData;
     allData.tagCategoryMap = tagCategoryMap;
+    allData.categoryStyles = categoryStyles;
     try {
       await fetch(`/save/${context}`, {
         method: "POST",
@@ -270,7 +251,6 @@ async function initializeOverviewModule(context) {
           ? (entry) => `KW ${getWeekNumber(entry.date, true)}`
           : (entry) =>
               new Date(entry.date).toLocaleString("de-DE", { month: "long" });
-
       const groupedEntries = groupBy(allDateEntries, groupKeyFn);
 
       Object.keys(groupedEntries).forEach((groupKey) => {
@@ -286,7 +266,6 @@ async function initializeOverviewModule(context) {
         dom.accordionContainer.appendChild(groupAccordion);
       });
     } else {
-      // Week view
       allDateEntries.forEach((entry) => {
         const { target, actual, diff, dayData } = calculateDayHours(
           entry.dateString
@@ -380,7 +359,6 @@ async function initializeOverviewModule(context) {
     };
     dayData.workHours = DAILY_WORK_HOURS[dayOfWeek] ?? 0;
     if (!appData[dateString]) appData[dateString] = dayData;
-
     let actual = 0;
     if (
       dayData.startTime &&
@@ -503,27 +481,50 @@ async function initializeOverviewModule(context) {
   }
 
   function populateEditContainer(container, dateString, dayData) {
-    const dayOfWeek = new Date(dateString + "T00:00:00").getDay();
-    const dayColorPrefixes = {
-      1: "mon",
-      2: "tue",
-      3: "wed",
-      4: "thu",
-      5: "fri",
-    };
-    const colorPrefix = dayColorPrefixes[dayOfWeek] || "gray";
-    const lightClass =
-      colorPrefix !== "gray" ? `day-bg-${colorPrefix}-light` : "bg-gray-100";
-    const darkClass =
-      colorPrefix !== "gray" ? `day-bg-${colorPrefix}-dark` : "bg-gray-200";
-
-    container.innerHTML = `<div class="space-y-4"><fieldset class="border border-gray-300 p-4 rounded-lg ${lightClass}"><legend class="text-md font-semibold px-2 text-gray-700">Zeiten & Status</legend><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><div><label class="block text-sm font-medium text-gray-700">Tagesstatus</label><select class="status-select mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"><option value="dokumentiert">Dokumentiert ✔</option><option value="urlaub">Urlaub 🌴</option><option value="krank">Krank 🤒</option><option value="abwesend">Abwesend 🚶</option><option value="nicht dokumentiert">Nicht Dokumentiert</option></select></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label><input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-      dayData.startTime
-    )}"></div><div><label class="block text-sm font-medium text-gray-700">Arbeitsende</label><input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-      dayData.endTime
-    )}"></div><div><label class="block text-sm font-medium text-gray-700">Pause</label><input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
-      dayData.breakTime
-    )}"></div></div></fieldset><fieldset class="border border-gray-300 p-4 rounded-lg ${darkClass}"><legend class="text-md font-semibold px-2 text-gray-700">Einträge</legend><div class="daily-entries-container space-y-3"></div><div class="mt-4"><button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">+ Eintrag hinzufügen</button></div></fieldset></div>`;
+    container.innerHTML = `
+        <div class="space-y-4">
+            <fieldset class="border border-gray-300 p-4 rounded-lg bg-white">
+                <legend class="text-md font-semibold px-2 text-gray-700">Zeiten & Status</legend>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tagesstatus</label>
+                        <select class="status-select mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <option value="dokumentiert">Dokumentiert ✔</option>
+                            <option value="urlaub">Urlaub 🌴</option>
+                            <option value="krank">Krank 🤒</option>
+                            <option value="abwesend">Abwesend 🚶</option>
+                            <option value="nicht dokumentiert">Nicht Dokumentiert</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
+                        <input type="text" placeholder="hh:mm" class="start-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.startTime
+                        )}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Arbeitsende</label>
+                        <input type="text" placeholder="hh:mm" class="end-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.endTime
+                        )}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Pause</label>
+                        <input type="text" placeholder="hh:mm" class="break-time-input block w-full rounded-md border-gray-300 shadow-sm p-2 mt-1" value="${objectToHHMM(
+                          dayData.breakTime
+                        )}">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border border-gray-300 p-4 rounded-lg bg-white">
+                <legend class="text-md font-semibold px-2 text-gray-700">Einträge</legend>
+                <div class="daily-entries-container space-y-3"></div>
+                <div class="mt-4">
+                    <button type="button" class="add-entry-btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">+ Eintrag hinzufügen</button>
+                </div>
+            </fieldset>
+        </div>
+    `;
 
     container.querySelector(".status-select").value = dayData.status;
     const entriesContainer = container.querySelector(
@@ -532,6 +533,7 @@ async function initializeOverviewModule(context) {
     (dayData.entries || []).forEach((entry) =>
       entriesContainer.appendChild(createEntryElement(entry))
     );
+
     container
       .querySelector(".add-entry-btn")
       .addEventListener("click", () =>
@@ -539,119 +541,112 @@ async function initializeOverviewModule(context) {
           createEntryElement({ tagNames: [], time: 0, note: "" })
         )
       );
-  }
 
-  function createEntryElement(entry) {
-    const el = document.createElement("div");
-    el.className = "daily-entry-item p-3 rounded-lg bg-white border";
-    el.innerHTML = `<div class="flex items-start gap-3"><div class="flex-grow"><div class="selected-tags-container flex flex-wrap mb-2"></div><div class="relative"><input type="text" class="tag-search-input w-full rounded-md border-gray-300 p-1.5" placeholder="+ Tag hinzufügen..."><div class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 hidden"></div></div></div><div class="flex items-center"><input type="text" value="${decimalToHHMM(
-      entry.time || 0
-    )}" class="entry-time-input w-20 text-center rounded-md border-gray-300 p-1" placeholder="hh:mm"><span class="text-gray-500 ml-1">h</span><button type="button" class="remove-entry-btn text-red-500 font-bold text-xl ml-2">&times;</button></div></div><input type="text" class="entry-note-input block w-full rounded-md border-gray-200 p-1.5 mt-2" placeholder="Notiz..." value="${
-      entry.note || ""
-    }">`;
-    el.querySelector(".entry-time-input").addEventListener(
-      "blur",
-      formatTimeInput
-    );
-    const tagsContainer = el.querySelector(".selected-tags-container");
-    (entry.tagNames || []).forEach((tagName) =>
-      tagsContainer.appendChild(createTagBadge(tagName))
-    );
-    el.querySelector(".remove-entry-btn").addEventListener("click", () =>
-      el.remove()
-    );
-    const searchInput = el.querySelector(".tag-search-input");
-    const suggestions = el.querySelector(".autocomplete-suggestions");
-    searchInput.addEventListener("input", () =>
-      handleTagAutocomplete(searchInput, suggestions, el)
-    );
-    return el;
-  }
+    function createEntryElement(entry) {
+      const el = document.createElement("div");
+      el.className = "daily-entry-item p-3 rounded-lg bg-gray-50 border";
+      el.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="flex-grow">
+                    <div class="selected-tags-container flex flex-wrap gap-1 mb-2"></div>
+                    <div class="relative">
+                        <input type="text" class="tag-search-input w-full rounded-md border-gray-300 p-1.5" placeholder="+ Tag hinzufügen...">
+                        <div class="autocomplete-suggestions absolute w-full bg-white border rounded-md z-10 hidden"></div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <input type="text" value="${decimalToHHMM(
+                      entry.time || 0
+                    )}" class="entry-time-input w-20 text-center rounded-md border-gray-300 p-1" placeholder="hh:mm">
+                    <span class="text-gray-500 ml-1">h</span>
+                    <button type="button" class="remove-entry-btn text-red-500 font-bold text-xl ml-2">&times;</button>
+                </div>
+            </div>
+            <input type="text" class="entry-note-input block w-full rounded-md border-gray-200 p-1.5 mt-2" placeholder="Notiz..." value="${
+              entry.note || ""
+            }">
+        `;
 
-  function createTagBadge(tagName) {
-    const b = document.createElement("span");
-    b.className = "tag-badge text-xs";
-    b.textContent = tagName;
-    b.dataset.tagName = tagName;
-    b.style.backgroundColor =
-      allData.tagCategoryMap && allData.tagCategoryMap[tagName]
-        ? "rgba(107, 114, 128, 0.8)"
-        : "#6c757d";
-    const r = document.createElement("span");
-    r.className = "tag-badge-remove";
-    r.innerHTML = "&times;";
-    r.onclick = () => b.remove();
-    b.appendChild(r);
-    return b;
-  }
-
-  function handleTagAutocomplete(input, suggestions, entryEl) {
-    const q = input.value.toLowerCase();
-    suggestions.innerHTML = "";
-    suggestions.classList.add("hidden");
-    if (!q) return;
-    const existing = Array.from(entryEl.querySelectorAll(".tag-badge")).map(
-      (b) => b.dataset.tagName
-    );
-    const filtered = Object.keys(allData.tagCategoryMap || {})
-      .filter((t) => t.toLowerCase().includes(q) && !existing.includes(t))
-      .slice(0, 5);
-    if (filtered.length > 0) {
-      filtered.forEach((tag) => {
-        const item = document.createElement("a");
-        item.href = "#";
-        item.className = "block p-2 hover:bg-gray-100";
-        item.textContent = tag;
-        item.onclick = (e) => {
-          e.preventDefault();
-          entryEl
-            .querySelector(".selected-tags-container")
-            .appendChild(createTagBadge(tag));
-          input.value = "";
-          suggestions.innerHTML = "";
-          suggestions.classList.add("hidden");
-        };
-        suggestions.appendChild(item);
+      el.querySelector(".entry-time-input").addEventListener("blur", (e) => {
+        let value = e.target.value.trim();
+        if (!value) return;
+        let parts = value.split(":");
+        let hours = parts[0] ? parts[0].padStart(2, "0") : "00";
+        let minutes = parts[1] ? parts[1].padStart(2, "0") : "00";
+        e.target.value = `${hours}:${minutes}`;
       });
-      suggestions.classList.remove("hidden");
-    }
-  }
 
-  function saveDayFromDOM(dateString, container) {
-    const dayData = appData[dateString] || {};
-    dayData.status = container.querySelector(".status-select").value;
-    dayData.startTime = hhmmToObject(
-      container.querySelector(".start-time-input").value
-    );
-    dayData.endTime = hhmmToObject(
-      container.querySelector(".end-time-input").value
-    );
-    dayData.breakTime = hhmmToObject(
-      container.querySelector(".break-time-input").value
-    );
-    const entries = [];
-    container.querySelectorAll(".daily-entry-item").forEach((item) => {
-      const time = hhmmToDecimal(item.querySelector(".entry-time-input").value);
-      const tagNames = Array.from(item.querySelectorAll(".tag-badge")).map(
+      const tagsContainer = el.querySelector(".selected-tags-container");
+      (entry.tagNames || []).forEach((tagName) =>
+        tagsContainer.appendChild(createTagBadge(tagName))
+      );
+      el.querySelector(".remove-entry-btn").addEventListener("click", () =>
+        el.remove()
+      );
+
+      const searchInput = el.querySelector(".tag-search-input");
+      const suggestions = el.querySelector(".autocomplete-suggestions");
+      searchInput.addEventListener("input", () =>
+        handleTagAutocomplete(searchInput, suggestions, el)
+      );
+
+      return el;
+    }
+
+    function createTagBadge(tagName) {
+      const b = document.createElement("span");
+      const category = tagCategoryMap[tagName];
+      const color = categoryStyles[category]?.color || "#6c757d";
+      b.className = "tag-badge text-xs inline-flex items-center text-white";
+      b.textContent = tagName;
+      b.dataset.tagName = tagName;
+      b.style.backgroundColor = color;
+      const r = document.createElement("span");
+      r.className = "tag-badge-remove ml-2 cursor-pointer font-bold";
+      r.innerHTML = "&times;";
+      r.onclick = () => b.remove();
+      b.appendChild(r);
+      return b;
+    }
+
+    function handleTagAutocomplete(input, suggestions, entryEl) {
+      const q = input.value.toLowerCase();
+      suggestions.innerHTML = "";
+      suggestions.classList.add("hidden");
+      if (!q) return;
+
+      const existing = Array.from(entryEl.querySelectorAll(".tag-badge")).map(
         (b) => b.dataset.tagName
       );
-      const note = item.querySelector(".entry-note-input").value.trim();
-      if (time >= 0 && (tagNames.length > 0 || note)) {
-        entries.push({ tagNames, time, note });
+      const filtered = Object.keys(tagCategoryMap || {})
+        .filter((t) => t.toLowerCase().includes(q) && !existing.includes(t))
+        .slice(0, 5);
+
+      if (filtered.length > 0) {
+        filtered.forEach((tag) => {
+          const item = document.createElement("a");
+          item.href = "#";
+          item.className = "block p-2 hover:bg-gray-100";
+          item.textContent = tag;
+          item.onclick = (e) => {
+            e.preventDefault();
+            entryEl
+              .querySelector(".selected-tags-container")
+              .appendChild(createTagBadge(tag));
+            input.value = "";
+            suggestions.innerHTML = "";
+            suggestions.classList.add("hidden");
+          };
+          suggestions.appendChild(item);
+        });
+        suggestions.classList.remove("hidden");
       }
-    });
-    dayData.entries = entries;
-    if (entries.length > 0 && dayData.status === "nicht dokumentiert") {
-      dayData.status = "dokumentiert";
-    } else if (entries.length === 0 && dayData.status === "dokumentiert") {
-      dayData.status = "nicht dokumentiert";
     }
   }
 
-  // --- Chart Functions ---
   function initCharts() {
-    if (!dom.barChart || !dom.radarChart) return;
-    const barCtx = dom.barChart.getContext("2d");
+    if (!dom.barChartEl || !dom.radarChartEl) return;
+    const barCtx = dom.barChartEl.getContext("2d");
     barChart = new Chart(barCtx, {
       type: "bar",
       options: {
@@ -670,7 +665,7 @@ async function initializeOverviewModule(context) {
         },
       },
     });
-    const radarCtx = dom.radarChart.getContext("2d");
+    const radarCtx = dom.radarChartEl.getContext("2d");
     radarChart = new Chart(radarCtx, {
       type: "radar",
       data: { labels: RADAR_CATEGORIES },
@@ -692,9 +687,13 @@ async function initializeOverviewModule(context) {
       }
       return acc;
     }, {});
-
     updateBarChart(periodData);
     updateRadarChart(periodData);
+  }
+
+  function getTagColor(tagName) {
+    const category = tagCategoryMap[tagName];
+    return categoryStyles[category]?.color || "#6c757d";
   }
 
   function updateBarChart(periodData) {
@@ -706,7 +705,6 @@ async function initializeOverviewModule(context) {
         )
       ),
     ];
-
     const labels = Object.keys(periodData);
     barChart.data.labels = labels.map((d) =>
       new Date(d + "T00:00:00").toLocaleDateString("de-DE", {
@@ -727,7 +725,7 @@ async function initializeOverviewModule(context) {
             0
           ) || 0
       ),
-      backgroundColor: CATEGORY_CHART_COLORS[tagCategoryMap[tag]] || "#6B7280",
+      backgroundColor: getTagColor(tag),
     }));
     barChart.update();
   }
@@ -741,27 +739,26 @@ async function initializeOverviewModule(context) {
     const documentedDays = Object.values(periodData).filter(
       (d) => d && d.status === "dokumentiert"
     );
-
     documentedDays.forEach((day) => {
       day.entries?.forEach((entry) => {
         entry.tagNames.forEach((tn) => {
           const category = tagCategoryMap[tn];
           if (category in categoryTotals) {
-            categoryTotals[category] += entry.time / entry.tagNames.length;
+            categoryTotals[category] +=
+              entry.time / (entry.tagNames.length || 1);
           }
         });
       });
     });
-
     radarChart.data.datasets = [
       {
         label: "Stunden",
-        data: Object.values(categoryTotals),
+        data: RADAR_CATEGORIES.map((cat) => categoryTotals[cat]),
         fill: true,
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgb(54, 162, 235)",
         pointBackgroundColor: RADAR_CATEGORIES.map(
-          (cat) => CATEGORY_CHART_COLORS[cat]
+          (cat) => categoryStyles[cat]?.color || "#6c757d"
         ),
       },
     ];
