@@ -1,4 +1,12 @@
-document.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("contextReady", (e) => {
+  const currentContext = e.detail.context;
+  // Stellt sicher, dass dieses Modul nur auf Seiten läuft, wo es hingehört
+  if (document.getElementById("overview-accordion-container")) {
+    initializeOverviewModule(currentContext);
+  }
+});
+
+async function initializeOverviewModule(context) {
   let allData = {};
   let appData = {};
   let tagCategoryMap = {};
@@ -23,6 +31,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     nextYearBtn: document.getElementById("next-year-btn"),
     saveAllBtn: document.getElementById("save-all-btn"),
     notificationEl: document.getElementById("notification"),
+    barChart: document.getElementById("bar-chart"),
+    radarChart: document.getElementById("radar-chart"),
+    barChartTitle: document.getElementById("bar-chart-title"),
+    radarChartTitle: document.getElementById("radar-chart-title"),
+  };
+
+  let barChart, radarChart;
+  const RADAR_CATEGORIES = [
+    "Technik",
+    "Analyse",
+    "Dokumentation",
+    "Organisation",
+    "Soziales",
+  ];
+  const CATEGORY_CHART_COLORS = {
+    Technik: "rgba(239, 68, 68, 0.8)",
+    Analyse: "rgba(59, 130, 246, 0.8)",
+    Dokumentation: "rgba(245, 158, 11, 0.8)",
+    Organisation: "rgba(16, 185, 129, 0.8)",
+    Soziales: "rgba(139, 92, 246, 0.8)",
+    Sonstiges: "rgba(107, 114, 128, 0.8)",
   };
 
   const DAILY_WORK_HOURS = {
@@ -33,14 +62,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     5: 7.0,
     6: 0,
     0: 0,
-  };
-  const CATEGORY_CHART_COLORS = {
-    Technik: "rgba(239, 68, 68, 0.8)",
-    Analyse: "rgba(59, 130, 246, 0.8)",
-    Dokumentation: "rgba(245, 158, 11, 0.8)",
-    Organisation: "rgba(16, 185, 129, 0.8)",
-    Soziales: "rgba(139, 92, 246, 0.8)",
-    Sonstiges: "rgba(107, 114, 128, 0.8)",
   };
   const STATUS_MAP = {
     dokumentiert: { icon: "🟢", text: "Dokumentiert" },
@@ -92,39 +113,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function init() {
     await loadDataFromServer();
+    initCharts();
     setupEventListeners();
     setInitialPickerValues();
     handleViewChange();
   }
 
-  async function loadDataFromServer() {
-    try {
-      const response = await fetch("/load");
-      allData = await response.json();
-      appData = allData.appData || {};
-      tagCategoryMap = allData.tagCategoryMap || {};
-    } catch (e) {
-      console.error("Fehler beim Laden der Daten:", e);
-    }
-  }
-
-  async function saveDataToServer() {
-    const dataToSave = {
-      appData,
-      tagCategoryMap,
-      projects: allData.projects || [],
-      todos: allData.todos || [],
-    };
-    try {
-      await fetch("/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSave),
-      });
-      showNotification("Gespeichert!", false);
-    } catch (e) {
-      showNotification("Speichern fehlgeschlagen.", true);
-    }
+  function setupEventListeners() {
+    dom.viewRadios.forEach((radio) =>
+      radio.addEventListener("change", handleViewChange)
+    );
+    dom.monthPicker.addEventListener("change", renderOverview);
+    dom.weekPicker.addEventListener("change", renderOverview);
+    dom.yearPicker.addEventListener("change", renderOverview);
+    dom.prevWeekBtn.addEventListener("click", () => changeWeek(-1));
+    dom.nextWeekBtn.addEventListener("click", () => changeWeek(1));
+    dom.prevMonthBtn.addEventListener("click", () => changeMonth(-1));
+    dom.nextMonthBtn.addEventListener("click", () => changeMonth(1));
+    dom.prevYearBtn.addEventListener("click", () => changeYear(-1));
+    dom.nextYearBtn.addEventListener("click", () => changeYear(1));
+    dom.saveAllBtn.addEventListener("click", saveAllOpenDays);
   }
 
   function showNotification(message, isError = false) {
@@ -137,28 +145,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 3000);
   }
 
-  function setupEventListeners() {
-    dom.viewRadios.forEach((radio) =>
-      radio.addEventListener("change", handleViewChange)
-    );
-    dom.monthPicker.addEventListener("change", renderOverview);
-    dom.weekPicker.addEventListener("change", renderOverview);
-    dom.yearPicker.addEventListener("change", renderOverview);
+  async function loadDataFromServer() {
+    try {
+      const response = await fetch(`/load/${context}`);
+      allData = await response.json();
+      appData = allData.appData || {};
+      tagCategoryMap = allData.tagCategoryMap || {};
+    } catch (e) {
+      console.error("Fehler beim Laden der Daten:", e);
+    }
+  }
 
-    dom.prevWeekBtn.addEventListener("click", () => changeWeek(-1));
-    dom.nextWeekBtn.addEventListener("click", () => changeWeek(1));
-    dom.prevMonthBtn.addEventListener("click", () => changeMonth(-1));
-    dom.nextMonthBtn.addEventListener("click", () => changeMonth(1));
-    dom.prevYearBtn.addEventListener("click", () => changeYear(-1));
-    dom.nextYearBtn.addEventListener("click", () => changeYear(1));
-    dom.saveAllBtn.addEventListener("click", saveAllOpenDays);
+  async function saveData() {
+    allData.appData = appData;
+    allData.tagCategoryMap = tagCategoryMap;
+    try {
+      await fetch(`/save/${context}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(allData),
+      });
+      showNotification("Gespeichert!", false);
+    } catch (e) {
+      showNotification("Speichern fehlgeschlagen.", true);
+    }
   }
 
   function saveAllOpenDays() {
     const openDetails =
       dom.accordionContainer.querySelectorAll("details[open]");
     if (openDetails.length === 0) return;
-
     openDetails.forEach((detail) => {
       const dateString = detail.dataset.date;
       if (dateString) {
@@ -168,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     });
-    saveDataToServer().then(() => renderOverview());
+    saveData().then(() => renderOverview());
   }
 
   function changeWeek(offset) {
@@ -242,65 +258,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     let totalTarget = 0,
       totalActual = 0;
+    allDateEntries.forEach((entry) => {
+      const { target, actual } = calculateDayHours(entry.dateString);
+      totalTarget += target;
+      totalActual += actual;
+    });
 
-    if (selectedView === "month") {
-      allDateEntries.forEach((entry) => {
-        const { target, actual } = calculateDayHours(entry.dateString);
-        totalTarget += target;
-        totalActual += actual;
-      });
-      const groupedByWeek = groupBy(allDateEntries, (entry) =>
-        getWeekNumber(entry.date)
-      );
-      Object.keys(groupedByWeek)
-        .sort()
-        .forEach((weekKey) => {
-          const entriesInGroup = groupedByWeek[weekKey];
-          const { groupTarget, groupActual } =
-            calculateGroupTotals(entriesInGroup);
-          const weekNum = parseInt(weekKey.split("-W")[1], 10);
-          const groupAccordion = createGroupAccordion(
-            `KW ${weekNum}`,
-            groupTarget,
-            groupActual,
-            entriesInGroup
-          );
-          dom.accordionContainer.appendChild(groupAccordion);
-        });
-    } else if (selectedView === "year") {
-      const monthNames = [
-        "Januar",
-        "Februar",
-        "März",
-        "April",
-        "Mai",
-        "Juni",
-        "Juli",
-        "August",
-        "September",
-        "Oktober",
-        "November",
-        "Dezember",
-      ];
-      const groupedByMonth = groupBy(
-        allDateEntries,
-        (entry) => monthNames[entry.date.getMonth()]
-      );
-      monthNames.forEach((monthName) => {
-        const entriesInGroup = groupedByMonth[monthName] || [];
+    if (selectedView === "month" || selectedView === "year") {
+      const groupKeyFn =
+        selectedView === "month"
+          ? (entry) => `KW ${getWeekNumber(entry.date, true)}`
+          : (entry) =>
+              new Date(entry.date).toLocaleString("de-DE", { month: "long" });
+
+      const groupedEntries = groupBy(allDateEntries, groupKeyFn);
+
+      Object.keys(groupedEntries).forEach((groupKey) => {
+        const entriesInGroup = groupedEntries[groupKey];
         const { groupTarget, groupActual } =
           calculateGroupTotals(entriesInGroup);
-        totalTarget += groupTarget;
-        totalActual += groupActual;
-        if (entriesInGroup.length > 0) {
-          const groupAccordion = createGroupAccordion(
-            monthName,
-            groupTarget,
-            groupActual,
-            entriesInGroup
-          );
-          dom.accordionContainer.appendChild(groupAccordion);
-        }
+        const groupAccordion = createGroupAccordion(
+          groupKey,
+          groupTarget,
+          groupActual,
+          entriesInGroup
+        );
+        dom.accordionContainer.appendChild(groupAccordion);
       });
     } else {
       // Week view
@@ -308,8 +291,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const { target, actual, diff, dayData } = calculateDayHours(
           entry.dateString
         );
-        totalTarget += target;
-        totalActual += actual;
         const dayAccordion = createDayAccordion(
           entry.date,
           entry.dateString,
@@ -322,6 +303,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
     updateSummary(totalTarget, totalActual);
+    updateCharts();
   }
 
   function calculateGroupTotals(entriesInGroup) {
@@ -418,7 +400,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         0
       );
     }
-
     const target = dayData.workHours;
     const diff = actual - target;
     return { target, actual, diff, dayData };
@@ -457,7 +438,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.addEventListener("toggle", () => {
       if (item.open && !innerContainer.innerHTML) {
         if (entriesInGroup.length === 0) {
-          innerContainer.innerHTML = `<div class="p-3 text-gray-500 italic">Keine Arbeitstage in diesem Zeitraum.</div>`;
+          innerContainer.innerHTML = `<div class="p-3 text-gray-500 italic">Keine Einträge in diesem Zeitraum.</div>`;
           return;
         }
         entriesInGroup
@@ -522,8 +503,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function populateEditContainer(container, dateString, dayData) {
-    const date = new Date(dateString + "T00:00:00");
-    const dayOfWeek = date.getDay();
+    const dayOfWeek = new Date(dateString + "T00:00:00").getDay();
     const dayColorPrefixes = {
       1: "mon",
       2: "tue",
@@ -569,10 +549,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     )}" class="entry-time-input w-20 text-center rounded-md border-gray-300 p-1" placeholder="hh:mm"><span class="text-gray-500 ml-1">h</span><button type="button" class="remove-entry-btn text-red-500 font-bold text-xl ml-2">&times;</button></div></div><input type="text" class="entry-note-input block w-full rounded-md border-gray-200 p-1.5 mt-2" placeholder="Notiz..." value="${
       entry.note || ""
     }">`;
-
-    const timeInput = el.querySelector(".entry-time-input");
-    timeInput.addEventListener("blur", formatTimeInput);
-
+    el.querySelector(".entry-time-input").addEventListener(
+      "blur",
+      formatTimeInput
+    );
     const tagsContainer = el.querySelector(".selected-tags-container");
     (entry.tagNames || []).forEach((tagName) =>
       tagsContainer.appendChild(createTagBadge(tagName))
@@ -593,9 +573,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     b.className = "tag-badge text-xs";
     b.textContent = tagName;
     b.dataset.tagName = tagName;
-    b.style.backgroundColor = tagCategoryMap[tagName]
-      ? CATEGORY_CHART_COLORS[tagCategoryMap[tagName]]
-      : "#6c757d";
+    b.style.backgroundColor =
+      allData.tagCategoryMap && allData.tagCategoryMap[tagName]
+        ? "rgba(107, 114, 128, 0.8)"
+        : "#6c757d";
     const r = document.createElement("span");
     r.className = "tag-badge-remove";
     r.innerHTML = "&times;";
@@ -612,7 +593,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const existing = Array.from(entryEl.querySelectorAll(".tag-badge")).map(
       (b) => b.dataset.tagName
     );
-    const filtered = Object.keys(tagCategoryMap)
+    const filtered = Object.keys(allData.tagCategoryMap || {})
       .filter((t) => t.toLowerCase().includes(q) && !existing.includes(t))
       .slice(0, 5);
     if (filtered.length > 0) {
@@ -667,5 +648,125 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // --- Chart Functions ---
+  function initCharts() {
+    if (!dom.barChart || !dom.radarChart) return;
+    const barCtx = dom.barChart.getContext("2d");
+    barChart = new Chart(barCtx, {
+      type: "bar",
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (c) => `${c.dataset.label}: ${c.formattedValue}h`,
+            },
+          },
+        },
+      },
+    });
+    const radarCtx = dom.radarChart.getContext("2d");
+    radarChart = new Chart(radarCtx, {
+      type: "radar",
+      data: { labels: RADAR_CATEGORIES },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { r: { beginAtZero: true, suggestedMax: 4 } },
+      },
+    });
+  }
+
+  function updateCharts() {
+    if (!barChart || !radarChart) return;
+    const periodData = getAllDateEntries(
+      document.querySelector('input[name="overview-view"]:checked').value
+    ).reduce((acc, entry) => {
+      if (appData[entry.dateString]) {
+        acc[entry.dateString] = appData[entry.dateString];
+      }
+      return acc;
+    }, {});
+
+    updateBarChart(periodData);
+    updateRadarChart(periodData);
+  }
+
+  function updateBarChart(periodData) {
+    dom.barChartTitle.textContent = "Tätigkeiten";
+    const allTags = [
+      ...new Set(
+        Object.values(periodData).flatMap(
+          (d) => d?.entries?.flatMap((e) => e.tagNames) || []
+        )
+      ),
+    ];
+
+    const labels = Object.keys(periodData);
+    barChart.data.labels = labels.map((d) =>
+      new Date(d + "T00:00:00").toLocaleDateString("de-DE", {
+        month: "short",
+        day: "numeric",
+      })
+    );
+    barChart.data.datasets = allTags.map((tag) => ({
+      label: tag,
+      data: labels.map(
+        (date) =>
+          periodData[date]?.entries?.reduce(
+            (sum, entry) =>
+              sum +
+              (entry.tagNames.includes(tag)
+                ? entry.time / entry.tagNames.length
+                : 0),
+            0
+          ) || 0
+      ),
+      backgroundColor: CATEGORY_CHART_COLORS[tagCategoryMap[tag]] || "#6B7280",
+    }));
+    barChart.update();
+  }
+
+  function updateRadarChart(periodData) {
+    dom.radarChartTitle.textContent = "Kategorien-Fokus";
+    const categoryTotals = RADAR_CATEGORIES.reduce(
+      (acc, cat) => ({ ...acc, [cat]: 0 }),
+      {}
+    );
+    const documentedDays = Object.values(periodData).filter(
+      (d) => d && d.status === "dokumentiert"
+    );
+
+    documentedDays.forEach((day) => {
+      day.entries?.forEach((entry) => {
+        entry.tagNames.forEach((tn) => {
+          const category = tagCategoryMap[tn];
+          if (category in categoryTotals) {
+            categoryTotals[category] += entry.time / entry.tagNames.length;
+          }
+        });
+      });
+    });
+
+    radarChart.data.datasets = [
+      {
+        label: "Stunden",
+        data: Object.values(categoryTotals),
+        fill: true,
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgb(54, 162, 235)",
+        pointBackgroundColor: RADAR_CATEGORIES.map(
+          (cat) => CATEGORY_CHART_COLORS[cat]
+        ),
+      },
+    ];
+    radarChart.update();
+  }
+
   init();
-});
+}

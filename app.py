@@ -1,8 +1,6 @@
 """
 Haupt-Anwendung für die tägliche Dokumentation.
-
-Diese Flask-Anwendung stellt die Endpunkte für das Frontend bereit,
-um Daten zu laden und zu speichern.
+Verwaltet mehrere Dokumentations-Kontexte (z.B. Arbeit, Privat).
 """
 
 import os
@@ -10,15 +8,26 @@ import json
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
-DATA_FILE = "doku.json"
+DATA_DIR = "data"  # Ein Ordner für alle JSON-Dateien
 
 
-def read_data():
-    """Liest die JSON-Daten aus der Datei und stellt Standardwerte sicher."""
-    if not os.path.exists(DATA_FILE):
+def get_context_file(context):
+    """Gibt den Dateipfad für einen gegebenen Kontext zurück."""
+    if not context or not context.strip():
+        context = "default"
+    safe_context = "".join(c for c in context if c.isalnum())
+    return os.path.join(DATA_DIR, f"doku_{safe_context}.json")
+
+
+def read_data(context="default"):
+    """Liest die JSON-Daten für einen spezifischen Kontext."""
+    data_file = get_context_file(context)
+    if not os.path.exists(data_file):
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
         return {"appData": {}, "tagCategoryMap": {}, "projects": [], "todos": []}
     try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
+        with open(data_file, "r", encoding="utf-8") as f:
             data = json.load(f)
             data.setdefault("projects", [])
             data.setdefault("todos", [])
@@ -29,10 +38,13 @@ def read_data():
         return {"appData": {}, "tagCategoryMap": {}, "projects": [], "todos": []}
 
 
-def write_data(data):
-    """Schreibt die übergebenen Daten in die JSON-Datei."""
+def write_data(data, context="default"):
+    """Schreibt die Daten für einen spezifischen Kontext."""
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+    data_file = get_context_file(context)
     try:
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
+        with open(data_file, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
         return True
     except IOError:
@@ -41,14 +53,14 @@ def write_data(data):
 
 @app.route("/")
 def index():
-    """Zeigt die Hauptseite (Dokumentation) an."""
-    return render_template("documentation.html")
-
-
-@app.route("/todo")
-def todo():
-    """Zeigt die To-Do-Seite an."""
+    """Zeigt die To-Do-Listen-Seite als Hauptseite an."""
     return render_template("todo.html")
+
+
+@app.route("/documentation")
+def documentation():
+    """Zeigt die Dokumentations-Seite an."""
+    return render_template("documentation.html")
 
 
 @app.route("/overview")
@@ -57,26 +69,39 @@ def overview():
     return render_template("overview.html")
 
 
-@app.route("/load", methods=["GET"])
-def load_data():
-    """Lädt alle Daten (Doku, Tags, Projekte, Todos) aus der JSON-Datei."""
-    return jsonify(read_data())
+@app.route("/contexts", methods=["GET"])
+def get_contexts():
+    """Listet alle verfügbaren Kontexte auf."""
+    if not os.path.exists(DATA_DIR):
+        return jsonify(["default"])
+    files = [
+        f for f in os.listdir(DATA_DIR) if f.startswith("doku_") and f.endswith(".json")
+    ]
+    contexts = [f.replace("doku_", "").replace(".json", "") for f in files]
+    if not contexts:
+        return jsonify(["default"])
+    return jsonify(sorted(contexts))
 
 
-@app.route("/save", methods=["POST"])
-def save_data():
-    """Speichert alle Daten (Doku, Tags, Projekte, Todos)."""
+@app.route("/load/<context>", methods=["GET"])
+def load_data(context):
+    """Lädt alle Daten für einen spezifischen Kontext."""
+    return jsonify(read_data(context))
+
+
+@app.route("/save/<context>", methods=["POST"])
+def save_data(context):
+    """Speichert alle Daten für einen spezifischen Kontext."""
     data = request.get_json()
     if not data:
         return jsonify({"status": "error", "message": "Keine Daten empfangen"}), 400
 
-    # Stelle sicher, dass alle Hauptschlüssel vorhanden sind, bevor gespeichert wird
     data.setdefault("projects", [])
     data.setdefault("todos", [])
     data.setdefault("tagCategoryMap", {})
     data.setdefault("appData", {})
 
-    if write_data(data):
+    if write_data(data, context):
         return jsonify({"status": "success", "message": "Daten gespeichert"})
 
     return jsonify({"status": "error", "message": "Fehler beim Speichern"}), 500

@@ -2,140 +2,86 @@
 {% extends "base.html" %}
 {% block title %}Dokumentation{% endblock %}
 
-{% block header %}
-<header class="mb-8 text-center">
-    <h1 class="text-4xl font-bold text-gray-900">Tägliche Dokumentation</h1>
-    <p class="text-lg text-gray-600 mt-2">Erfasse und analysiere deine täglichen Aktivitäten.</p>
-</header>
-{% endblock %}
-
 {% block content %}
-<div class="space-y-6 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-md">
-        <h2 class="text-xl font-bold mb-4 border-b pb-2">Steuerung</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum auswählen</label>
-                <input type="date" id="date-picker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">Steuerung</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="date-picker" class="block text-sm font-medium text-gray-700">Datum auswählen</label>
+                    <input type="date" id="date-picker"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
+                <div>
+                    <label for="status-select" class="block text-sm font-medium text-gray-700">Tagesstatus</label>
+                    <select id="status-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <option value="dokumentiert">Dokumentiert ✔</option>
+                        <option value="urlaub">Urlaub 🌴</option>
+                        <option value="krank">Krank 🤒</option>
+                        <option value="abwesend">Abwesend 🚶</option>
+                        <option value="nicht dokumentiert">Nicht Dokumentiert</option>
+                    </select>
+                </div>
+                <div class="border-t pt-4">
+                    <label class="block text-sm font-medium text-gray-700">Zeiterfassung</label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <input type="text" id="start-time" placeholder="hh:mm"
+                            class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <span>-</span>
+                        <input type="text" id="end-time" placeholder="hh:mm"
+                            class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    </div>
+                </div>
+                <div>
+                    <label for="break-time" class="block text-sm font-medium text-gray-700">Pause (hh:mm)</label>
+                    <input type="text" id="break-time" placeholder="hh:mm"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
             </div>
-            <div>
-                <label for="status-select" class="block text-sm font-medium text-gray-700">Tagesstatus</label>
-                <select id="status-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
-                    <option value="dokumentiert">Dokumentiert ✔</option>
-                    <option value="urlaub">Urlaub 🌴</option>
-                    <option value="krank">Krank 🤒</option>
-                    <option value="abwesend">Abwesend 🚶</option>
-                </select>
-            </div>
-
-            <div class="border-t pt-4 mt-4 col-span-1 md:col-span-2">
-                <h3 class="text-md font-semibold text-gray-800 mb-2">Zeiterfassung</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="start-time" class="block text-sm font-medium text-gray-700">Arbeitsbeginn</label>
-                        <div class="flex items-center gap-2 mt-1">
-                            <input type="text" id="start-time" placeholder="hh:mm"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <button type="button" id="set-start-now-btn"
-                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="end-time" class="block text-sm font-medium text-gray-700">Arbeitsende</label>
-                        <div class="flex items-center gap-2 mt-1">
-                            <input type="text" id="end-time" placeholder="hh:mm"
-                                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-                            <button type="button" id="set-end-now-btn"
-                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-lg text-sm">Jetzt</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="break-time" class="block text-sm font-medium text-gray-700">Pause</label>
-                        <input type="text" id="break-time" placeholder="hh:mm"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
-                    </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">Tag-Bibliothek</h2>
+            <div id="tag-library" class="flex flex-wrap gap-2 mb-4"></div>
+            <div class="space-y-2 border-t pt-4">
+                <input type="text" id="new-tag-input" placeholder="Name des neuen Tags"
+                    class="block w-full rounded-md border-gray-300 shadow-sm p-2">
+                <div class="flex gap-2">
+                    <select id="new-tag-category"
+                        class="flex-grow block w-full rounded-md border-gray-300 shadow-sm p-2"></select>
+                    <button type="button" id="add-new-tag-btn"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">+</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="main-content-panel" class="bg-white p-6 rounded-xl shadow-md">
-        <div class="flex justify-between items-center border-b pb-2 mb-4">
-            <div class="flex items-center gap-4">
-                <svg id="prev-day-btn" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-                <h2 class="text-2xl font-bold text-center">Eintrag für <span id="current-date-display"></span></h2>
-                <svg id="next-day-btn" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+    <div class="lg:col-span-2 space-y-6">
+        <div id="main-content-panel" class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex justify-between items-center border-b pb-2 mb-4">
+                <div class="flex items-center gap-4">
+                    <svg id="prev-day-btn" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <h2 class="text-2xl font-bold text-center">Eintrag für <span id="current-date-display"></span></h2>
+                    <svg id="next-day-btn" class="h-6 w-6 text-gray-600 hover:text-indigo-600 nav-arrow" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-semibold">Arbeitszeit: <span id="overtime-display">00:00</span>h</p>
+                </div>
             </div>
-            <div class="text-right">
-                <p class="text-lg font-semibold">Gesamt Doku: <span id="total-hours">00:00</span>h</p>
-                <p class="text-sm font-medium">Arbeitszeit: <span id="overtime-display">--:--</span>h</p>
+            <div id="daily-entries-container" class="space-y-4 mb-4"></div>
+            <div class="mt-6 flex justify-between items-center">
+                <button type="button" id="add-entry-btn"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">+ Eintrag</button>
+                <button type="button" id="save-day-btn"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Tag
+                    speichern</button>
             </div>
-        </div>
-        <div id="daily-entries-container" class="space-y-4 mb-4"></div>
-        <div class="mt-6 flex justify-between items-center">
-            <button type="button" id="add-entry-btn"
-                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">+ Eintrag</button>
-            <button type="button" id="save-day-btn"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Tag
-                speichern</button>
-        </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl shadow-md">
-        <h2 class="text-xl font-bold mb-4 border-b pb-2">Tag-Bibliothek</h2>
-        <div id="tag-library" class="flex flex-wrap gap-2 mb-4"></div>
-        <div class="space-y-2 border-t pt-4">
-            <h3 class="text-md font-semibold">Neuen Tag erstellen:</h3>
-            <input type="text" id="new-tag-input" placeholder="Name des neuen Tags"
-                class="block w-full rounded-md border-gray-300 shadow-sm p-2">
-            <div class="flex gap-2">
-                <select id="new-tag-category"
-                    class="flex-grow block w-full rounded-md border-gray-300 shadow-sm p-2"></select>
-                <button type="button" id="add-new-tag-btn"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">+</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="mt-8 bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-2xl font-bold mb-4 border-b pb-3">Analyse &amp; Berichte</h2>
-
-    <div class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
-        <div class="flex items-center gap-2"><input type="radio" id="view-day" name="diagram-view" value="day"
-                class="h-4 w-4"><label for="view-day">Tagesansicht</label></div>
-        <div class="flex items-center gap-2"><input type="radio" id="view-week" name="diagram-view" value="week" checked
-                class="h-4 w-4"><label for="view-week">Wochenansicht</label></div>
-        <div id="day-view-controls" class="hidden"><input type="date" id="diagram-day-picker"
-                class="ml-4 rounded-md border-gray-300 shadow-sm p-2"></div>
-        <div id="week-view-controls"><input type="week" id="diagram-week-picker"
-                class="ml-4 rounded-md border-gray-300 shadow-sm p-2"></div>
-    </div>
-
-    <div class="mb-6 border-t pt-4">
-        <h3 class="text-lg font-semibold mb-2">Berichte exportieren:</h3>
-        <div class="flex gap-4">
-            <button type="button" id="generate-week-report"
-                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">Wochenbericht</button>
-            <button type="button" id="generate-month-report"
-                class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">Monatsbericht</button>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-6">
-        <div>
-            <h3 id="bar-chart-title" class="text-xl font-bold mb-4 text-center">&nbsp;</h3>
-            <div class="chart-container"><canvas id="bar-chart"></canvas></div>
-        </div>
-        <div>
-            <h3 id="radar-chart-title" class="text-xl font-bold mb-4 text-center">&nbsp;</h3>
-            <div class="chart-container"><canvas id="radar-chart"></canvas></div>
         </div>
     </div>
 </div>

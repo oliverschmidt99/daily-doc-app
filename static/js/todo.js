@@ -1,4 +1,12 @@
-document.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("contextReady", (e) => {
+  const currentContext = e.detail.context;
+  // Stellt sicher, dass dieses Modul nur auf Seiten läuft, wo es hingehört
+  if (document.getElementById("project-list")) {
+    initializeTodoModule(currentContext);
+  }
+});
+
+async function initializeTodoModule(context) {
   let allData = { projects: [], todos: [], tagCategoryMap: {} };
   let currentTodoTags = [];
   let currentEditTodoTags = [];
@@ -40,19 +48,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     completedSection: document.getElementById("completed-section"),
   };
 
-  const CATEGORY_CHART_COLORS = {
-    Technik: "rgba(239, 68, 68, 0.8)",
-    Analyse: "rgba(59, 130, 246, 0.8)",
-    Dokumentation: "rgba(245, 158, 11, 0.8)",
-    Organisation: "rgba(16, 185, 129, 0.8)",
-    Soziales: "rgba(139, 92, 246, 0.8)",
-    Sonstiges: "rgba(107, 114, 128, 0.8)",
-  };
-
   const PRIORITY_COLORS = {
-    3: { light: "254, 226, 226", dark: "252, 165, 165" }, // Dringend (Red)
-    2: { light: "254, 243, 199", dark: "251, 211, 141" }, // Wichtig (Orange)
-    1: { light: "254, 252, 232", dark: "253, 224, 71" }, // Optional (Yellow)
+    3: { light: "254, 226, 226", dark: "252, 165, 165" }, // Red
+    2: { light: "254, 243, 199", dark: "251, 211, 141" }, // Orange
+    1: { light: "254, 252, 232", dark: "253, 224, 71" }, // Yellow
   };
 
   const generateId = () => "_" + Math.random().toString(36).substr(2, 9);
@@ -62,16 +61,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       status: "active",
     };
 
-  async function loadAllData() {
-    const response = await fetch("/load");
+  async function loadData() {
+    const response = await fetch(`/load/${context}`);
     allData = await response.json();
     allData.todos = allData.todos || [];
     allData.projects = allData.projects || [];
+    allData.tagCategoryMap = allData.tagCategoryMap || {};
   }
 
   async function saveData() {
     try {
-      await fetch("/save", {
+      await fetch(`/save/${context}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(allData),
@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function renderProjects() {
+    const currentFilter = dom.projectFilter.value;
     dom.projectList.innerHTML = "";
 
     const projectOptions = allData.projects
@@ -112,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.newTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
     dom.editTodoProject.innerHTML = `<option value="">Kein Projekt</option>${projectOptions}`;
     dom.projectFilter.innerHTML = `<option value="all">Alle Projekte</option>${projectOptions}`;
+    dom.projectFilter.value = currentFilter;
 
     allData.projects.forEach((proj) => {
       const li = document.createElement("li");
@@ -141,7 +143,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   function renderTodos() {
     Object.values(dom.prioLists).forEach((list) => (list.innerHTML = ""));
     dom.completedList.innerHTML = "";
-
     const selectedProjectId = dom.projectFilter.value;
 
     const activeTodos = allData.todos
@@ -160,12 +161,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
     const completedTodos = allData.todos.filter((t) => t.completed);
-
     activeTodos.forEach((todo) => {
       const list = dom.prioLists[todo.priority];
       if (list) list.appendChild(createTodoElement(todo));
     });
-
     completedTodos.forEach((todo) =>
       dom.completedList.appendChild(createTodoElement(todo))
     );
@@ -173,21 +172,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function getTodoBackgroundStyle(todo) {
-    if (todo.completed) {
+    if (todo.completed)
       return { style: "background-color: rgba(243, 244, 246, 1);", class: "" };
-    }
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const dueDate = todo.dueDate ? new Date(todo.dueDate + "T00:00:00") : null;
     const isOverdue = dueDate && dueDate < today;
 
-    if (isOverdue) {
-      return { style: "", class: "overdue-task" };
-    }
-    if (!todo.dueDate) {
-      return { style: "", class: "no-deadline-task" };
-    }
+    if (isOverdue) return { style: "", class: "overdue-task" };
+    if (!todo.dueDate) return { style: "", class: "no-deadline-task" };
 
     const colors = PRIORITY_COLORS[todo.priority];
     if (!colors)
@@ -195,26 +188,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const diffTime = dueDate - today;
     const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
     const MAX_DAYS = 30;
     let progress = ((MAX_DAYS - daysRemaining) / MAX_DAYS) * 100;
     progress = Math.max(0, Math.min(100, progress));
-
-    const neutralColor = "249, 250, 251"; // gray-50
+    const neutralColor = "249, 250, 251";
     const gradient = `background: linear-gradient(to right, rgb(${colors.light}) 0%, rgb(${colors.dark}) ${progress}%, rgba(${neutralColor}, 1) ${progress}%, rgba(${neutralColor}, 1) 100%);`;
-
     return { style: gradient, class: "" };
   }
 
   function createTodoElement(todo) {
     const li = document.createElement("li");
     const project = getProjectById(todo.projectId);
-    const isProjectDone = project.status === "completed";
-
     const { style, class: customClass } = getTodoBackgroundStyle(todo);
-
     li.className = `p-3 border rounded-md transition-all duration-300 text-gray-800 ${
-      isProjectDone ? "opacity-60" : ""
+      project.status === "completed" ? "opacity-60" : ""
     } ${customClass}`;
     li.style = style;
 
@@ -226,6 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           month: "2-digit",
         })
       : "";
+
     li.innerHTML = `<div class="flex items-start"><input type="checkbox" class="h-5 w-5 mt-1 rounded border-gray-300 text-indigo-600" ${
       todo.completed ? "checked" : ""
     }><div class="ml-3 flex-grow"><p class="${
@@ -238,18 +226,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       dueDate
         ? `<span class="${
             isOverdue ? "font-bold" : ""
-          }">Frist: ${dueDateString}</span>`
+          }">${dueDateString}</span>`
         : ""
     }<div class="todo-tags-container flex flex-wrap gap-1"></div></div></div><div class="flex flex-col items-end gap-2">${
       !todo.completed
         ? `<button type="button" class="edit-todo-btn text-blue-600 text-xs">Bearbeiten</button><button type="button" class="add-to-doku-btn bg-green-500 text-white text-xs font-bold py-1 px-2 rounded-full">Doku +</button>`
         : ""
     }<button type="button" class="delete-todo-btn text-red-500 hover:text-red-600 text-xs">Löschen</button></div></div>`;
+
     const tagsContainer = li.querySelector(".todo-tags-container");
-    (todo.tags || []).forEach((tag) => {
-      const badge = createTagBadge(tag, false);
-      tagsContainer.appendChild(badge);
-    });
+    (todo.tags || []).forEach((tag) =>
+      tagsContainer.appendChild(createTagBadge(tag, false))
+    );
     li.querySelector('input[type="checkbox"]').addEventListener("change", () =>
       toggleTodoStatus(todo.id)
     );
@@ -260,22 +248,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (editBtn)
       editBtn.addEventListener("click", () => openEditModal(todo.id));
     const dokuBtn = li.querySelector(".add-to-doku-btn");
-    if (dokuBtn) {
-      dokuBtn.addEventListener("click", () => addTodoToDoku(todo));
-    }
+    if (dokuBtn) dokuBtn.addEventListener("click", () => addTodoToDoku(todo));
     return li;
   }
 
-  function addProject() {
+  async function addProject() {
     const name = dom.newProjectName.value.trim();
     if (name && !allData.projects.some((p) => p.name === name)) {
       allData.projects.push({ id: generateId(), name, status: "active" });
       dom.newProjectName.value = "";
-      saveData();
+      await saveData();
       render();
     }
   }
-  function editProjectName(spanElement, id) {
+
+  async function editProjectName(spanElement, id) {
     const currentName = spanElement.textContent;
     const input = document.createElement("input");
     input.type = "text";
@@ -283,33 +270,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     input.className = "font-semibold form-input p-0 border-blue-500";
     spanElement.replaceWith(input);
     input.focus();
-    input.addEventListener("blur", () => saveName());
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") saveName();
-      if (e.key === "Escape") cancelEdit();
-    });
-    function saveName() {
+    const saveName = async () => {
       const newName = input.value.trim();
       if (newName) {
         const proj = allData.projects.find((p) => p.id === id);
         if (proj) proj.name = newName;
       }
-      saveData();
+      await saveData();
       render();
-    }
-    function cancelEdit() {
-      render();
-    }
+    };
+    input.addEventListener("blur", saveName);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") input.blur();
+      if (e.key === "Escape") render();
+    });
   }
-  function toggleProjectStatus(id) {
+
+  async function toggleProjectStatus(id) {
     const proj = allData.projects.find((p) => p.id === id);
     if (proj) {
       proj.status = proj.status === "active" ? "completed" : "active";
-      saveData();
+      await saveData();
       render();
     }
   }
-  function deleteProject(id) {
+  async function deleteProject(id) {
     if (
       confirm(
         "Sollen dieses Projekt und alle zugehörigen Aufgaben wirklich gelöscht werden?"
@@ -317,17 +302,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     ) {
       allData.projects = allData.projects.filter((p) => p.id !== id);
       allData.todos = allData.todos.filter((t) => t.projectId !== id);
-      saveData();
+      await saveData();
       render();
     }
   }
 
-  function addTodo() {
+  async function addTodo() {
     const text = dom.newTodoText.value.trim();
-    if (!text) {
-      showNotification("Aufgabentext darf nicht leer sein.", true);
-      return;
-    }
+    if (!text)
+      return showNotification("Aufgabentext darf nicht leer sein.", true);
+
     allData.todos.push({
       id: generateId(),
       text,
@@ -341,21 +325,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.newTodoDueDate.value = "";
     dom.newTodoTagsContainer.innerHTML = "";
     currentTodoTags = [];
-    saveData();
+    await saveData();
     render();
   }
 
-  function toggleTodoStatus(id) {
+  async function toggleTodoStatus(id) {
     const todo = allData.todos.find((t) => t.id === id);
     if (todo) {
       todo.completed = !todo.completed;
-      saveData();
+      await saveData();
       render();
     }
   }
-  function deleteTodo(id) {
+  async function deleteTodo(id) {
     allData.todos = allData.todos.filter((t) => t.id !== id);
-    saveData();
+    await saveData();
     render();
   }
   function addTodoToDoku(todo) {
@@ -363,7 +347,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       "pendingTodo",
       JSON.stringify({ text: todo.text, tags: todo.tags || [] })
     );
-    window.location.href = "/";
+    // This will be picked up by the documentation.js module on the same page
+    window.dispatchEvent(new CustomEvent("addTodoToDoku"));
   }
 
   function openEditModal(id) {
@@ -383,7 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.editModal.classList.add("hidden");
   }
 
-  function saveTodoChanges() {
+  async function saveTodoChanges() {
     const id = dom.editTodoId.value;
     const todo = allData.todos.find((t) => t.id === id);
     if (!todo) return;
@@ -393,7 +378,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     todo.dueDate = dom.editTodoDueDate.value;
     todo.tags = currentEditTodoTags;
     closeEditModal();
-    saveData();
+    await saveData();
     render();
   }
 
@@ -401,26 +386,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     input.addEventListener("input", () => {
       suggestions.innerHTML = "";
       const query = input.value.toLowerCase();
-      if (!query) return;
-      Object.keys(allData.tagCategoryMap)
+      if (!query) {
+        suggestions.classList.add("hidden");
+        return;
+      }
+      const existing = new Set(tagsArray);
+      const filtered = Object.keys(allData.tagCategoryMap || {})
         .filter(
-          (tag) => tag.toLowerCase().includes(query) && !tagsArray.includes(tag)
+          (tag) => tag.toLowerCase().includes(query) && !existing.has(tag)
         )
-        .slice(0, 5)
-        .forEach((tag) => {
-          const item = document.createElement("a");
-          item.href = "#";
-          item.className = "block p-2 hover:bg-gray-100 text-sm";
-          item.textContent = tag;
-          item.onclick = (e) => {
-            e.preventDefault();
-            tagsArray.push(tag);
-            renderFn();
-            input.value = "";
-            suggestions.innerHTML = "";
-          };
-          suggestions.appendChild(item);
-        });
+        .slice(0, 5);
+
+      filtered.forEach((tag) => {
+        const item = document.createElement("a");
+        item.href = "#";
+        item.className = "block p-2 hover:bg-gray-100 text-sm";
+        item.textContent = tag;
+        item.onclick = (e) => {
+          e.preventDefault();
+          tagsArray.push(tag);
+          renderFn();
+          input.value = "";
+          suggestions.innerHTML = "";
+          suggestions.classList.add("hidden");
+        };
+        suggestions.appendChild(item);
+      });
+      suggestions.classList.toggle("hidden", filtered.length === 0);
     });
   }
 
@@ -430,9 +422,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const badge = createTagBadge(tag, true);
       badge.querySelector(".tag-badge-remove").onclick = () => {
         const index = tagsArray.indexOf(tag);
-        if (index > -1) {
-          tagsArray.splice(index, 1);
-        }
+        if (index > -1) tagsArray.splice(index, 1);
         renderFn();
       };
       container.appendChild(badge);
@@ -456,9 +446,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const b = document.createElement("span");
     b.className = "tag-badge text-xs";
     b.textContent = tagName;
-    b.style.backgroundColor = allData.tagCategoryMap[tagName]
-      ? CATEGORY_CHART_COLORS[allData.tagCategoryMap[tagName]]
-      : "#6c757d";
+    b.style.backgroundColor =
+      allData.tagCategoryMap && allData.tagCategoryMap[tagName]
+        ? "rgba(107, 114, 128, 0.8)"
+        : "#6c757d";
     if (isEditable) {
       const r = document.createElement("span");
       r.className = "tag-badge-remove";
@@ -469,7 +460,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function run() {
-    await loadAllData();
+    await loadData();
     setupTagSearch(
       dom.newTodoTagSearch,
       dom.newTodoTagSuggestions,
@@ -489,5 +480,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.projectFilter.addEventListener("change", renderTodos);
     render();
   }
+
   run();
-});
+}
