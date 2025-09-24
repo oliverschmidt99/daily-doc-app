@@ -8,6 +8,11 @@ env/
 venv/
 .venv/
 
+# PyInstaller
+build/
+dist/
+*.spec
+
 # VS Code
 .vscode/
 
@@ -16,7 +21,7 @@ venv/
 *.swp
 *.swo
 
-# Generierte Daten 
+# Generierte Daten & Backups
 *.json.backup
 data/
 
