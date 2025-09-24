@@ -5,10 +5,28 @@ Verwaltet mehrere Dokumentations-Kontexte (z.B. Arbeit, Privat).
 
 import os
 import json
+import tkinter as tk
+from tkinter import messagebox
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
-DATA_DIR = "data"  # Ein Ordner für alle JSON-Dateien
+
+# --- DATENORDNER IM BENUTZERVERZEICHNIS ---
+USER_HOME = os.path.expanduser("~")
+DATA_DIR = os.path.join(USER_HOME, "DailyDocApp", "data")
+
+
+# --- FUNKTION FÜR DIE ERFOLGSMELDUNG ---
+def show_first_run_message():
+    """Zeigt eine Willkommensnachricht beim ersten Start an."""
+    root = tk.Tk()
+    root.withdraw()  # Versteckt das leere Hauptfenster von Tkinter
+    messagebox.showinfo(
+        "Einrichtung erfolgreich",
+        f"Willkommen zur Daily Doc App!\n\nDeine Daten werden sicher im folgenden Ordner gespeichert:\n{DATA_DIR}",
+    )
+    root.destroy()
+
 
 # Standard-Stile für Kategorien
 DEFAULT_CATEGORY_STYLES = {
@@ -22,7 +40,6 @@ DEFAULT_CATEGORY_STYLES = {
 
 
 def get_context_file(context):
-    """Gibt den Dateipfad für einen gegebenen Kontext zurück."""
     if not context or not context.strip():
         context = "default"
     safe_context = "".join(c for c in context if c.isalnum())
@@ -30,7 +47,6 @@ def get_context_file(context):
 
 
 def read_data(context="default"):
-    """Liest die JSON-Daten für einen spezifischen Kontext."""
     data_file = get_context_file(context)
     default_data = {
         "contextName": context.capitalize(),
@@ -40,9 +56,12 @@ def read_data(context="default"):
         "todos": [],
         "categoryStyles": DEFAULT_CATEGORY_STYLES,
     }
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+        # Da der Ordner neu ist, ist dies der erste Start
+        show_first_run_message()
+
     if not os.path.exists(data_file):
-        if not os.path.exists(DATA_DIR):
-            os.makedirs(DATA_DIR)
         return default_data
     try:
         with open(data_file, "r", encoding="utf-8") as f:
@@ -52,7 +71,6 @@ def read_data(context="default"):
             data.setdefault("todos", [])
             data.setdefault("tagCategoryMap", {})
             data.setdefault("appData", {})
-            # Fügt categoryStyles hinzu oder aktualisiert es mit neuen Defaults
             if "categoryStyles" not in data:
                 data["categoryStyles"] = DEFAULT_CATEGORY_STYLES
             else:
@@ -64,7 +82,6 @@ def read_data(context="default"):
 
 
 def write_data(data, context="default"):
-    """Schreibt die Daten für einen spezifischen Kontext."""
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
     data_file = get_context_file(context)
@@ -76,33 +93,7 @@ def write_data(data, context="default"):
         return False
 
 
-@app.route("/create_context", methods=["POST"])
-def create_context():
-    data = request.get_json()
-    context_id, context_name = data.get("id"), data.get("name")
-    if not context_id or not context_name:
-        return (
-            jsonify({"status": "error", "message": "ID und Name sind erforderlich"}),
-            400,
-        )
-    if os.path.exists(get_context_file(context_id)):
-        return jsonify({"status": "error", "message": "Kontext existiert bereits"}), 409
-    default_data = {
-        "contextName": context_name,
-        "appData": {},
-        "tagCategoryMap": {},
-        "projects": [],
-        "todos": [],
-        "categoryStyles": DEFAULT_CATEGORY_STYLES,
-    }
-    if write_data(default_data, context_id):
-        return jsonify({"status": "success", "message": "Kontext erstellt"})
-    return (
-        jsonify({"status": "error", "message": "Fehler beim Erstellen der Datei"}),
-        500,
-    )
-
-
+# Alle @app.route(...) Funktionen bleiben unverändert
 @app.route("/")
 def index():
     return render_template("todo.html")
@@ -139,6 +130,33 @@ def get_contexts():
         )
         contexts_list.append({"id": "default", "name": "Default"})
     return jsonify(sorted(contexts_list, key=lambda x: x["name"]))
+
+
+@app.route("/create_context", methods=["POST"])
+def create_context():
+    data = request.get_json()
+    context_id, context_name = data.get("id"), data.get("name")
+    if not context_id or not context_name:
+        return (
+            jsonify({"status": "error", "message": "ID und Name sind erforderlich"}),
+            400,
+        )
+    if os.path.exists(get_context_file(context_id)):
+        return jsonify({"status": "error", "message": "Kontext existiert bereits"}), 409
+    default_data = {
+        "contextName": context_name,
+        "appData": {},
+        "tagCategoryMap": {},
+        "projects": [],
+        "todos": [],
+        "categoryStyles": DEFAULT_CATEGORY_STYLES,
+    }
+    if write_data(default_data, context_id):
+        return jsonify({"status": "success", "message": "Kontext erstellt"})
+    return (
+        jsonify({"status": "error", "message": "Fehler beim Erstellen der Datei"}),
+        500,
+    )
 
 
 @app.route("/load/<context>", methods=["GET"])
@@ -220,5 +238,10 @@ def delete_tag(context):
 
 if __name__ == "__main__":
     from waitress import serve
+
+    # Prüfen, ob dies der erste Start ist, BEVOR der Server startet
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+        show_first_run_message()
 
     serve(app, host="0.0.0.0", port=5050)
