@@ -11,19 +11,20 @@ from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
-# --- DATENORDNER IM BENUTZERVERZEICHNIS ---
-USER_HOME = os.path.expanduser("~")
-DATA_DIR = os.path.join(USER_HOME, "DailyDocApp", "data")
+# --- DATENORDNER DYNAMISCH FESTLEGEN ---
+# Standardpfad im Benutzerverzeichnis.
+app.config["DATA_DIR"] = os.path.expanduser("~") + "/DailyDocApp/data"
 
 
-# --- FUNKTION FÜR DIE ERFOLGSMELDUNG ---
+# --- FUNKTION FÜR DIE ERFOLGSMELDUNG (nicht mehr für den Start) ---
 def show_first_run_message():
     """Zeigt eine Willkommensnachricht beim ersten Start an."""
     root = tk.Tk()
     root.withdraw()  # Versteckt das leere Hauptfenster von Tkinter
     messagebox.showinfo(
         "Einrichtung erfolgreich",
-        f"Willkommen zur Daily Doc App!\n\nDeine Daten werden sicher im folgenden Ordner gespeichert:\n{DATA_DIR}",
+        f"Willkommen zur Daily Doc App!\n\nDeine Daten werden sicher im folgenden Ordner gespeichert:\n"
+        f"{app.config['DATA_DIR']}",
     )
     root.destroy()
 
@@ -40,13 +41,15 @@ DEFAULT_CATEGORY_STYLES = {
 
 
 def get_context_file(context):
+    """Gibt den vollständigen Pfad zur JSON-Datei eines Kontextes zurück."""
     if not context or not context.strip():
         context = "default"
     safe_context = "".join(c for c in context if c.isalnum())
-    return os.path.join(DATA_DIR, f"doku_{safe_context}.json")
+    return os.path.join(app.config["DATA_DIR"], f"doku_{safe_context}.json")
 
 
 def read_data(context="default"):
+    """Liest Daten aus einer Kontext-Datei oder gibt Standarddaten zurück."""
     data_file = get_context_file(context)
     default_data = {
         "contextName": context.capitalize(),
@@ -56,10 +59,9 @@ def read_data(context="default"):
         "todos": [],
         "categoryStyles": DEFAULT_CATEGORY_STYLES,
     }
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-        # Da der Ordner neu ist, ist dies der erste Start
-        show_first_run_message()
+    # Erstelle den Datenordner, falls er nicht existiert
+    if not os.path.exists(app.config["DATA_DIR"]):
+        os.makedirs(app.config["DATA_DIR"])
 
     if not os.path.exists(data_file):
         return default_data
@@ -82,8 +84,9 @@ def read_data(context="default"):
 
 
 def write_data(data, context="default"):
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
+    """Schreibt Daten in eine Kontext-Datei."""
+    if not os.path.exists(app.config["DATA_DIR"]):
+        os.makedirs(app.config["DATA_DIR"])
     data_file = get_context_file(context)
     try:
         with open(data_file, "w", encoding="utf-8") as f:
@@ -93,29 +96,66 @@ def write_data(data, context="default"):
         return False
 
 
-# Alle @app.route(...) Funktionen bleiben unverändert
+@app.route("/set_data_path", methods=["POST"])
+def set_data_path():
+    """Setzt den Datenpfad basierend auf dem POST-Request."""
+    data = request.get_json()
+    new_path = data.get("path")
+    if not new_path:
+        return (
+            jsonify({"status": "error", "message": "Pfad fehlt."}),
+            400,
+        )
+    # Entferne alle Anführungszeichen, die in der Eingabe enthalten sein könnten.
+    new_path = new_path.strip().replace('"', "")
+    # Sicherstellen, dass der Pfad absolut ist
+    new_path = os.path.abspath(os.path.expanduser(new_path))
+    try:
+        if not os.path.exists(new_path):
+            os.makedirs(new_path)
+        app.config["DATA_DIR"] = new_path
+        print(f"Neuer Datenpfad: {app.config['DATA_DIR']}")
+        return jsonify({"status": "success", "message": "Datenpfad aktualisiert"})
+    except (IOError, OSError) as e:
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": f"Fehler beim Festlegen des Pfades: {str(e)}",
+                }
+            ),
+            500,
+        )
+
+
 @app.route("/")
 def index():
+    """Rendert die To-Do-Liste-Seite."""
     return render_template("todo.html")
 
 
 @app.route("/documentation")
 def documentation():
+    """Rendert die Dokumentationsseite."""
     return render_template("documentation.html")
 
 
 @app.route("/overview")
 def overview():
+    """Rendert die Übersichtsseite."""
     return render_template("overview.html")
 
 
 @app.route("/contexts", methods=["GET"])
 def get_contexts():
+    """Gibt eine Liste aller vorhandenen Kontexte zurück."""
     contexts_list = []
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
+    if not os.path.exists(app.config["DATA_DIR"]):
+        os.makedirs(app.config["DATA_DIR"])
     files = [
-        f for f in os.listdir(DATA_DIR) if f.startswith("doku_") and f.endswith(".json")
+        f
+        for f in os.listdir(app.config["DATA_DIR"])
+        if f.startswith("doku_") and f.endswith(".json")
     ]
     for f in files:
         context_id = f.replace("doku_", "").replace(".json", "")
@@ -134,6 +174,7 @@ def get_contexts():
 
 @app.route("/create_context", methods=["POST"])
 def create_context():
+    """Erstellt einen neuen Kontext."""
     data = request.get_json()
     context_id, context_name = data.get("id"), data.get("name")
     if not context_id or not context_name:
@@ -161,11 +202,13 @@ def create_context():
 
 @app.route("/load/<context>", methods=["GET"])
 def load_data(context):
+    """Lädt die Daten für einen bestimmten Kontext."""
     return jsonify(read_data(context))
 
 
 @app.route("/save/<context>", methods=["POST"])
 def save_data(context):
+    """Speichert Daten für einen bestimmten Kontext."""
     data = request.get_json()
     if not data:
         return jsonify({"status": "error", "message": "Keine Daten empfangen"}), 400
@@ -178,6 +221,7 @@ def save_data(context):
 
 @app.route("/edit_tag/<context>", methods=["POST"])
 def edit_tag(context):
+    """Bearbeitet einen Tag in einem Kontext."""
     data = request.get_json()
     old_name, new_name, new_category = (
         data.get("oldName"),
@@ -217,6 +261,7 @@ def edit_tag(context):
 
 @app.route("/delete_tag/<context>", methods=["POST"])
 def delete_tag(context):
+    """Löscht einen Tag aus einem Kontext."""
     tag_name = request.get_json().get("tagName")
     if not tag_name:
         return jsonify({"status": "error", "message": "Tag-Name fehlt"}), 400
@@ -238,6 +283,7 @@ def delete_tag(context):
 
 @app.route("/import_json/<context>", methods=["POST"])
 def import_json(context):
+    """Importiert eine JSON-Datei in einen Kontext."""
     if "file" not in request.files:
         return jsonify({"status": "error", "message": "Keine Datei gefunden"}), 400
     file = request.files["file"]
@@ -306,9 +352,8 @@ def import_json(context):
 if __name__ == "__main__":
     from waitress import serve
 
-    # Prüfen, ob dies der erste Start ist, BEVOR der Server startet
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-        show_first_run_message()
+    # Prüfen, ob der Datenordner existiert, BEVOR der Server startet
+    if not os.path.exists(app.config["DATA_DIR"]):
+        os.makedirs(app.config["DATA_DIR"])
 
-    serve(app, host="0.0.0.0", port=5050)
+    serve(app, host="0.0.0.0", port=5051)
