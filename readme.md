@@ -1,68 +1,69 @@
 # Daily Doc App
 
-Deine persönliche Webanwendung für tägliche Dokumentation, Aufgabenmanagement und Analyse. Erfasse deine Aktivitäten, verwalte To-Dos und visualisiere deinen Fortschritt – alles lokal auf deinem Rechner.
+Eine lokale Webanwendung zur täglichen Dokumentation von Aufgaben, Arbeitszeiten und To-Dos. Perfekt für Entwickler, Studenten und alle, die ihre täglichen Aktivitäten strukturiert erfassen und auswerten möchten.
 
----
+## Features
 
-## Key-Features
+- **Kontext-Management:** Trenne verschiedene Lebensbereiche (z.B. Arbeit, Studium, Privat) in eigenständigen Dokumentationen.
+- **Tägliche Erfassung:** Protokolliere deine Aktivitäten mit Tags, Notizen und Zeiterfassung.
+- **To-Do-Liste:** Verwalte deine Aufgaben mit Prioritäten, Projekten, Fälligkeitsdaten und Tags.
+- **Dynamische Auswertungen:** Visualisiere deine erfassten Daten mit Diagrammen in der Übersichtsseite.
+- **Flexible Datenhaltung:** Wähle selbst, wo deine Dokumentationsdateien gespeichert werden sollen – ideal für Cloud-Sync (z.B. via Nextcloud, Dropbox).
 
-- **Multi-Kontext-System:** Führe separate Dokumentationen für verschiedene Lebensbereiche (z.B. "Arbeit", "Privat", "Studium"). Jeder Kontext hat seine eigenen Daten und Projekte.
-- **Detaillierte Zeiterfassung:** Dokumentiere deine täglichen Einträge mit anpassbaren Tags, Notizen und der exakten aufgewendeten Zeit.
-- **Integriertes To-Do-Management:** Organisiere deine Aufgaben in Projekten, setze Prioritäten (Dringend, Wichtig, Optional) und verfolge Fälligkeitsdaten.
-- **Visuelle Analyse:** Gewinne Einblicke in deine Zeitnutzung durch interaktive Balken- und Radardiagramme in der Übersichtsseite.
-- **Lokale Datenspeicherung:** Deine Daten gehören dir. Alles wird in einfachen JSON-Dateien im `data`-Verzeichnis gespeichert.
-- **Einfaches Setup:** Starte schnell und unkompliziert mit den mitgelieferten Installationsskripten für Windows und Linux/macOS.
+## Installation & Start
 
----
+Die Einrichtung erfolgt über Skripte, die alle Abhängigkeiten (Python & Node.js) für dich verwalten.
 
-## Setup & Installation
+### Für Windows-Benutzer
 
-**Voraussetzungen:**
+1.  **Einrichtung (einmalig):**
 
-- **Python 3** muss auf deinem System installiert sein.
-- **Node.js und npm** werden für das Styling mit Tailwind CSS benötigt.
+    - Führe die Datei `install.bat` aus.
+    - Dieses Skript erstellt eine virtuelle Python-Umgebung, installiert alle nötigen Pakete aus `requirements.txt` und richtet Tailwind CSS ein.
 
-### Für Windows
+2.  **Anwendung starten:**
 
-1.  Klone das Repository oder lade es als ZIP-Datei herunter.
-2.  Führe die `install.bat`-Datei per Doppelklick aus. Das Skript richtet alles Notwendige ein.
+    - **Normaler Start:** Führe `start-doku.bat` aus. Ein Konsolenfenster öffnet sich, das den Server-Log anzeigt.
+    - **Stiller Start:** Führe `start-doku-silent.vbs` aus. Die Anwendung startet im Hintergrund ohne sichtbares Konsolenfenster.
 
-### Für Linux / macOS
+    Die Anwendung ist anschließend in deinem Browser unter `http://127.0.0.1:5051` erreichbar.
 
-1.  Klone das Repository.
-2.  Öffne ein Terminal im Projektverzeichnis und führe das Installationsskript aus:
-    ```bash
-    bash install.sh
+### Für Linux-Benutzer (z.B. Arch / EndeavourOS)
+
+1.  **Skripte ausführbar machen (einmalig):**
+
+    ```
+    chmod +x install.sh
+    chmod +x start-doku.sh
     ```
 
----
+2.  **Einrichtung (einmalig):**
 
-## Anwendung starten
+    - Führe das Installationsskript aus:
+      ```
+      ./install.sh
+      ```
+    - Dieses Skript erledigt alles Notwendige, von der virtuellen Umgebung bis zur Einrichtung von Tailwind CSS.
 
-### Windows
+3.  **Anwendung starten:**
 
-Der einfachste Weg ist, die `start-doku.bat` per Doppelklick auszuführen. Es gibt auch eine `start-doku-silent.vbs`, die das schwarze Konsolenfenster im Hintergrund ausführt.
+    - Führe das Start-Skript aus:
+      ```
+      ./start-doku.sh
+      ```
+    - Die Anwendung ist anschließend in deinem Browser unter `http://127.0.0.1:5051` erreichbar.
 
-### Linux / macOS
+## Datenhaltung
 
-1.  Aktiviere die virtuelle Umgebung:
-    ```bash
-    source venv/bin/activate
-    ```
-2.  Starte den Flask-Server:
-    ```bash
-    python app.py
-    ```
+Die Anwendung trennt zwischen Konfiguration und Nutzerdaten, um Flexibilität zu gewährleisten.
 
-### Im Browser öffnen
+- **Konfigurationsdatei (`config.json`):**
 
-Nach dem Start ist die Anwendung unter folgender Adresse in deinem Browser erreichbar:
-**[http://127.0.0.1:5050](http://127.0.0.1:5050)**
+  - Diese Datei speichert den Pfad zu deinem Datenordner.
+  - Sie wird an einem benutzerspezifischen Ort abgelegt, um Berechtigungsprobleme bei installierten Versionen zu vermeiden (`%APPDATA%\DailyDocApp` unter Windows).
 
----
+- **Nutzerdaten (`doku_*.json`):**
 
-## 🛠️ Technologie-Stack
-
-- **Backend:** Python mit Flask
-- **Frontend:** HTML, Tailwind CSS, Chart.js für die Diagramme
-- **Datenbank:** Lokale JSON-Dateien
+  - Das sind deine eigentlichen Dokumentationsdateien.
+  - Standardmäßig werden sie im Ordner `Dokumente/DailyDocApp` in deinem Benutzerverzeichnis gespeichert.
+  - **Du kannst diesen Pfad jederzeit innerhalb der Anwendung über den "Datenpfad ändern"-Button anpassen\!**

@@ -10,7 +10,8 @@ from waitress import serve
 
 app = Flask(__name__)
 
-# --- Konfigurations-Management ---
+# --- Konfigurations-Management (vereinfacht für lokale Entwicklung) ---
+# Die Konfigurationsdatei wird jetzt direkt im Projektordner gespeichert.
 CONFIG_FILE = "config.json"
 
 
@@ -22,8 +23,10 @@ def load_config():
                 return json.load(f)
             except json.JSONDecodeError:
                 return {}  # Fallback bei leerer oder korrupter Datei
-    default_path = os.path.join(os.path.expanduser("~"), "DailyDocApp", "data")
-    return {"data_path": default_path}
+
+    # Standard-Speicherort für die Doku-Dateien ist ein 'data'-Ordner im Projekt.
+    default_data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+    return {"data_path": default_data_path}
 
 
 def save_config(app_config):
@@ -42,7 +45,7 @@ def get_data_path():
     """
     path = config.get("data_path")
     if not path:
-        path = os.path.join(os.path.expanduser("~"), "DailyDocApp", "data")
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
         config["data_path"] = path
         save_config(config)
     os.makedirs(path, exist_ok=True)
@@ -115,21 +118,19 @@ def write_data(data, context="default"):
 
 @app.route("/set_data_path", methods=["POST"])
 def set_data_path():
-    """Setzt den Datenpfad in der Konfiguration ohne 'global'."""
+    """Setzt den Datenpfad in der Konfiguration."""
     data = request.get_json()
     new_path = data.get("path")
     if not new_path:
         return jsonify({"status": "error", "message": "Pfad fehlt."}), 400
 
     new_path = os.path.abspath(os.path.expanduser(new_path.strip().replace('"', "")))
-
     try:
         os.makedirs(new_path, exist_ok=True)
         current_config = load_config()
         current_config["data_path"] = new_path
         save_config(current_config)
         config.update(current_config)
-        print(f"Neuer Datenpfad: {new_path}")
         return jsonify({"status": "success", "message": "Datenpfad aktualisiert"})
     except (IOError, OSError) as e:
         return jsonify({"status": "error", "message": f"Fehler: {str(e)}"}), 500
@@ -178,7 +179,7 @@ def get_contexts():
 
 @app.route("/create_context", methods=["POST"])
 def create_context():
-    """Erstellt eine neue Kontextdatei basierend auf der POST-Anfrage."""
+    """Erstellt eine neue Kontextdatei."""
     data = request.get_json()
     context_id, context_name = data.get("id"), data.get("name")
     if not context_id or not context_name:
@@ -206,13 +207,13 @@ def create_context():
 
 @app.route("/load/<context>", methods=["GET"])
 def load_data(context):
-    """Lädt und liefert die Daten für einen bestimmten Kontext als JSON."""
+    """Lädt die Daten für einen bestimmten Kontext."""
     return jsonify(read_data(context))
 
 
 @app.route("/save/<context>", methods=["POST"])
 def save_data(context):
-    """Speichert die übermittelten JSON-Daten für einen bestimmten Kontext."""
+    """Speichert die Daten für einen bestimmten Kontext."""
     data = request.get_json()
     if not data:
         return jsonify({"status": "error", "message": "Keine Daten empfangen"}), 400
@@ -225,7 +226,7 @@ def save_data(context):
 
 @app.route("/edit_tag/<context>", methods=["POST"])
 def edit_tag(context):
-    """Bearbeitet einen Tag (umbenennen, Kategorie ändern) in allen relevanten Daten."""
+    """Bearbeitet einen Tag."""
     data = request.get_json()
     old_name, new_name, new_category = (
         data.get("oldName"),
@@ -262,7 +263,7 @@ def edit_tag(context):
 
 @app.route("/delete_tag/<context>", methods=["POST"])
 def delete_tag(context):
-    """Löscht einen Tag aus der Tag-Map und allen Einträgen."""
+    """Löscht einen Tag."""
     tag_name = request.get_json().get("tagName")
     if not tag_name:
         return jsonify({"status": "error", "message": "Tag-Name fehlt"}), 400
@@ -285,7 +286,7 @@ def delete_tag(context):
 
 @app.route("/import_json/<context>", methods=["POST"])
 def import_json(context):
-    """Importiert und verschmilzt Daten aus einer hochgeladenen JSON-Datei."""
+    """Importiert eine JSON-Datei."""
     if "file" not in request.files:
         return jsonify({"status": "error", "message": "Keine Datei gefunden"}), 400
     file = request.files["file"]
