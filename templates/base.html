@@ -15,7 +15,7 @@
 <body class="text-gray-800 bg-gray-50">
 
     <div id="notification"
-        class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50">
+        class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-x-full opacity-0 z-50 transition-all duration-500">
     </div>
 
     <div class="container mx-auto p-4 md:p-6 lg:p-8">
@@ -46,13 +46,12 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-
                     <button type="button" id="set-path-btn" title="Datenpfad ändern"
                         class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-full transition-colors duration-200">
                         <span class="sr-only">Datenpfad ändern</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path
-                                d="M2 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm2-2h6v2H4V2zm8 4h-2V4h2v2zm-2 2H4v8h8V8zm4-2h2v4h-2V6z" />
+                                d="M2 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm2 2v2h6V6H4zm0 4v6h6v-6H4zm8-4v2h2V6h-2zm2 4h-2v2h2v-2z" />
                         </svg>
                     </button>
                 </div>
@@ -65,17 +64,16 @@
         <div class="mb-8 p-1.5 bg-gray-200/50 rounded-xl shadow-inner max-w-md mx-auto">
             <nav class="flex justify-center space-x-2">
                 {% set common_classes = "px-4 py-2 rounded-lg font-semibold transition-colors duration-200" %}
-
                 <a href="{{ url_for('index') }}"
-                    class="{{ common_classes }} {% if request.path == '/' %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
+                    class="{{ common_classes }} {% if request.path == url_for('index') %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
                     To-Do Liste
                 </a>
                 <a href="{{ url_for('documentation') }}"
-                    class="{{ common_classes }} {% if request.path == '/documentation' %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
+                    class="{{ common_classes }} {% if request.path == url_for('documentation') %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
                     Dokumentation
                 </a>
                 <a href="{{ url_for('overview') }}"
-                    class="{{ common_classes }} {% if request.path == '/overview' %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
+                    class="{{ common_classes }} {% if request.path == url_for('overview') %}bg-indigo-600 text-white shadow-md{% else %}text-gray-500 hover:bg-white hover:text-gray-800{% endif %}">
                     Übersicht
                 </a>
             </nav>

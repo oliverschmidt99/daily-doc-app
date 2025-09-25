@@ -1,9 +1,9 @@
-window.addEventListener("contextReady", (e) => {
-  const currentContextId = e.detail.context;
-  if (document.getElementById("main-content-panel")) {
+if (document.getElementById("documentation-container")) {
+  window.addEventListener("contextReady", (e) => {
+    const currentContextId = e.detail.context;
     initializeDocumentationModule(currentContextId);
-  }
-});
+  });
+}
 
 async function initializeDocumentationModule(context) {
   let allData = {},
@@ -100,22 +100,31 @@ async function initializeDocumentationModule(context) {
     renderTagLibrary();
     setupEventListeners();
     const today = new Date().toISOString().split("T")[0];
-    dom.datePicker.value = today;
-    loadDay(today);
+    if (dom.datePicker) {
+      dom.datePicker.value = today;
+      loadDay(today);
+    }
   }
 
   function setupEventListeners() {
-    dom.datePicker.addEventListener("change", () =>
-      loadDay(dom.datePicker.value)
-    );
-    dom.saveDayBtn.addEventListener("click", saveCurrentDay);
-    dom.addEntryBtn.addEventListener("click", () => renderDailyEntry());
-    dom.prevDayBtn.addEventListener("click", () => changeDay(-1));
-    dom.nextDayBtn.addEventListener("click", () => changeDay(1));
-    dom.addNewTagBtn.addEventListener("click", addNewTag);
-    dom.newTagInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") addNewTag();
-    });
+    if (dom.datePicker)
+      dom.datePicker.addEventListener("change", () =>
+        loadDay(dom.datePicker.value)
+      );
+    if (dom.saveDayBtn)
+      dom.saveDayBtn.addEventListener("click", saveCurrentDay);
+    if (dom.addEntryBtn)
+      dom.addEntryBtn.addEventListener("click", () => renderDailyEntry());
+    if (dom.prevDayBtn)
+      dom.prevDayBtn.addEventListener("click", () => changeDay(-1));
+    if (dom.nextDayBtn)
+      dom.nextDayBtn.addEventListener("click", () => changeDay(1));
+    if (dom.addNewTagBtn) dom.addNewTagBtn.addEventListener("click", addNewTag);
+    if (dom.newTagInput)
+      dom.newTagInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") addNewTag();
+      });
+
     [dom.startTimeInput, dom.endTimeInput, dom.breakTimeInput].forEach(
       (input) => {
         if (input) {
@@ -124,18 +133,23 @@ async function initializeDocumentationModule(context) {
         }
       }
     );
-    dom.editTagCancelBtn.addEventListener("click", () =>
-      dom.editTagModal.classList.add("hidden")
-    );
-    dom.manageCategoriesBtn.addEventListener("click", openCategoryModal);
-    dom.categoryModalCancel.addEventListener("click", () =>
-      dom.categoryModal.classList.add("hidden")
-    );
-    dom.categoryModalConfirm.addEventListener("click", saveCategoryStyles);
-    dom.importJsonBtn.addEventListener("click", importJsonFile);
+
+    if (dom.editTagCancelBtn)
+      dom.editTagCancelBtn.addEventListener("click", () =>
+        dom.editTagModal.classList.add("hidden")
+      );
+    if (dom.manageCategoriesBtn)
+      dom.manageCategoriesBtn.addEventListener("click", openCategoryModal);
+    if (dom.categoryModalCancel)
+      dom.categoryModalCancel.addEventListener("click", () =>
+        dom.categoryModal.classList.add("hidden")
+      );
+    if (dom.categoryModalConfirm)
+      dom.categoryModalConfirm.addEventListener("click", saveCategoryStyles);
+    if (dom.importJsonBtn)
+      dom.importJsonBtn.addEventListener("click", importJsonFile);
   }
 
-  // PLATZIERE DEINE NEUE FUNKTION HIER INNERHALB VON 'initializeDocumentationModule'
   async function importJsonFile() {
     const file = dom.jsonImporter.files[0];
     if (!file) {
@@ -152,9 +166,7 @@ async function initializeDocumentationModule(context) {
       const result = await response.json();
       if (response.ok) {
         showNotification(result.message);
-        await loadDataFromServer();
-        renderTagLibrary();
-        loadDay(dom.datePicker.value);
+        await init(); // Re-initialize to reflect imported data
       } else {
         showNotification(result.message, true);
       }
@@ -164,12 +176,15 @@ async function initializeDocumentationModule(context) {
   }
 
   function showNotification(message, isError = false) {
+    if (!dom.notificationEl) return;
     dom.notificationEl.textContent = message;
     dom.notificationEl.classList.toggle("bg-green-500", !isError);
     dom.notificationEl.classList.toggle("bg-red-500", isError);
-    dom.notificationEl.classList.remove("opacity-0", "translate-x-full");
+    dom.notificationEl.style.transform = "translateX(0)";
+    dom.notificationEl.style.opacity = "1";
     setTimeout(() => {
-      dom.notificationEl.classList.add("opacity-0", "translate-x-full");
+      dom.notificationEl.style.transform = "translateX(100%)";
+      dom.notificationEl.style.opacity = "0";
     }, 3000);
   }
 
@@ -188,7 +203,7 @@ async function initializeDocumentationModule(context) {
   async function saveData() {
     allData.appData = appData;
     allData.tagCategoryMap = tagCategoryMap;
-    allData.categoryStyles = categoryStyles; // Sicherstellen, dass Farben mitgespeichert werden
+    allData.categoryStyles = categoryStyles;
     try {
       await fetch(`/save/${context}`, {
         method: "POST",
@@ -381,26 +396,13 @@ async function initializeDocumentationModule(context) {
         el.className =
           "flex items-center justify-between gap-2 rounded-lg text-sm font-medium text-white shadow-sm";
         el.style.backgroundColor = color;
-
-        el.innerHTML = `
-        <span class="py-1 pl-3 pr-2">${tag}</span>
-        <div class="flex items-center">
-            <button title="Tag bearbeiten" class="edit-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
-            </button>
-            <button title="Tag löschen" class="delete-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors mr-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-            </button>
-        </div>
-      `;
-
+        el.innerHTML = `<span class="py-1 pl-3 pr-2">${tag}</span><div class="flex items-center"><button title="Tag bearbeiten" class="edit-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg></button><button title="Tag löschen" class="delete-tag-btn p-1.5 rounded-full hover:bg-white/20 transition-colors mr-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button></div>`;
         el.querySelector(".edit-tag-btn").addEventListener("click", () =>
           openEditTagModal(tag)
         );
         el.querySelector(".delete-tag-btn").addEventListener("click", () =>
           deleteTag(tag)
         );
-
         dom.tagLibrary.appendChild(el);
       });
   }
@@ -423,7 +425,6 @@ async function initializeDocumentationModule(context) {
     dom.editTagNameInput.value = tagName;
     dom.editTagCategorySelect.value = tagCategoryMap[tagName];
     dom.editTagModal.classList.remove("hidden");
-
     dom.editTagConfirmBtn.onclick = handleTagSaveChanges;
   }
 
@@ -431,27 +432,20 @@ async function initializeDocumentationModule(context) {
     const oldName = dom.editTagOldName.value;
     const newName = dom.editTagNameInput.value.trim();
     const newCategory = dom.editTagCategorySelect.value;
-
     if (!newName) {
       showNotification("Tag-Name darf nicht leer sein.", true);
       return;
     }
-
     try {
       const response = await fetch(`/edit_tag/${context}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ oldName, newName, newCategory }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
+      if (!response.ok) throw new Error((await response.json()).message);
       showNotification(`Tag "${oldName}" erfolgreich aktualisiert.`);
       dom.editTagModal.classList.add("hidden");
-      await loadDataFromServer();
-      renderTagLibrary();
-      loadDay(dom.datePicker.value);
+      await init(); // Re-initialize all data
     } catch (error) {
       showNotification(`Fehler: ${error.message}`, true);
     }
@@ -469,14 +463,9 @@ async function initializeDocumentationModule(context) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ tagName }),
         });
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message);
-        }
+        if (!response.ok) throw new Error((await response.json()).message);
         showNotification(`Tag "${tagName}" wurde gelöscht.`);
-        await loadDataFromServer();
-        renderTagLibrary();
-        loadDay(dom.datePicker.value);
+        await init(); // Re-initialize all data
       } catch (error) {
         showNotification(`Fehler: ${error.message}`, true);
       }
@@ -485,31 +474,25 @@ async function initializeDocumentationModule(context) {
 
   function openCategoryModal() {
     dom.categoryColorList.innerHTML = "";
-    for (const category of CATEGORIES) {
+    CATEGORIES.forEach((category) => {
       const color = categoryStyles[category]?.color || "#000000";
       const row = document.createElement("div");
       row.className = "flex items-center justify-between";
-      row.innerHTML = `
-              <label for="color-${category}" class="font-semibold">${category}</label>
-              <input type="color" id="color-${category}" value="${color}" class="w-12 h-8 p-0 border-0 rounded">
-          `;
+      row.innerHTML = `<label for="color-${category}" class="font-semibold">${category}</label><input type="color" id="color-${category}" value="${color}" class="w-12 h-8 p-0 border-0 rounded">`;
       dom.categoryColorList.appendChild(row);
-    }
+    });
     dom.categoryModal.classList.remove("hidden");
   }
 
   async function saveCategoryStyles() {
-    for (const category of CATEGORIES) {
+    CATEGORIES.forEach((category) => {
       const colorInput = document.getElementById(`color-${category}`);
       categoryStyles[category] = { color: colorInput.value };
-    }
-
+    });
     try {
       await saveData();
       dom.categoryModal.classList.add("hidden");
-      await loadDataFromServer();
-      renderTagLibrary();
-      loadDay(dom.datePicker.value);
+      await init(); // Re-initialize all data
     } catch (e) {
       showNotification("Farben konnten nicht gespeichert werden.", true);
     }

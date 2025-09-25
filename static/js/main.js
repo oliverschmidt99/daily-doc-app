@@ -7,11 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainTitle = document.getElementById("main-title");
 
   // Modal-Elemente
-  const mainModal = document.getElementById("main-modal"); // Geändert von contextModal
-  const modalTitle = document.getElementById("modal-title"); // Geändert
-  const modalInput = document.getElementById("modal-input"); // Geändert
-  const modalConfirm = document.getElementById("modal-confirm-btn"); // Geändert
-  const modalCancel = document.getElementById("modal-cancel-btn"); // Geändert
+  const mainModal = document.getElementById("main-modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalInput = document.getElementById("modal-input");
+  const modalConfirm = document.getElementById("modal-confirm-btn");
+  const modalCancel = document.getElementById("modal-cancel-btn");
 
   let currentContext = { id: "default", name: "Default" };
   let allContexts = [];
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // --- NEUER EVENT-LISTENER FÜR DEN DATENPFAD ---
+  // --- EVENT-LISTENER FÜR DEN DATENPFAD ---
   setPathBtn.addEventListener("click", async () => {
     const newPath = await showModal({
       title: "Datenpfad ändern",
